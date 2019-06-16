@@ -52,6 +52,7 @@
 #include <rte_common.h>
 #include <rte_mbuf.h>
 #include <rte_ip.h>
+#include <rte_ether.h>
 
 #include "onvm_nflib.h"
 #include "onvm_pkt_helper.h"
@@ -62,11 +63,12 @@
 struct onvm_nf_info *nf_info;
 
 /* number of package between each print */
-static uint32_t print_delay = 1000000;
+static uint32_t print_delay = 5000000;
 
 
 static uint32_t destination;
 
+extern struct port_info *ports;
 /*
  * Print a usage message
  */
@@ -149,6 +151,68 @@ do_stats_display(struct rte_mbuf* pkt) {
         }
 }
 
+void
+do_check_and_insert_vlan_tag(struct rte_mbuf* pkt);
+void
+do_check_and_insert_vlan_tag(struct rte_mbuf* pkt) {
+        /* This function will check if it is a valid ETH Packet
+         * and if it is not a vlan_tagged, inserts a vlan tag
+         */
+        struct ether_hdr *eth = rte_pktmbuf_mtod(pkt, struct ether_hdr *);
+        if (!eth) {
+                exit(0);
+                return ;
+        }
+        if (ETHER_TYPE_IPv4 == rte_be_to_cpu_16(eth->ether_type)) {
+                if (rte_vlan_insert(&pkt)) {
+                        printf("\nFailed to Insert Vlan Header to the Packet!!!!\n");
+                        return;
+                }
+                struct vlan_hdr *vlan = (struct vlan_hdr*)(rte_pktmbuf_mtod(pkt, uint8_t*) + sizeof(struct ether_hdr));
+                vlan->vlan_tci = rte_cpu_to_be_16((uint16_t)0x10);
+                //vlan->eth_proto = rte_cpu_to_be_16(ETHER_TYPE_ARP);
+                //printf("\nVLAN [0x%x, 0x%x] is already inserted!\n", rte_be_to_cpu_16(vlan->vlan_tci), rte_be_to_cpu_16(vlan->eth_proto));
+        }
+        else if (ETHER_TYPE_VLAN == rte_be_to_cpu_16(eth->ether_type)) {
+                /*
+                 struct vlan_hdr *vlan = (struct vlan_hdr*)(rte_pktmbuf_mtod(pkt, uint8_t*) + sizeof(struct ether_hdr));
+                 if (vlan) {
+                         printf("\nVLAN [0x%x, 0x%x] is already inserted!\n", rte_be_to_cpu_16(vlan->vlan_tci), rte_be_to_cpu_16(vlan->eth_proto));
+                }
+                */
+        }
+        else {
+                printf("\nUnknown Ethernet Type [0x%x]!\n ", rte_be_to_cpu_16(eth->ether_type));
+        }
+
+        return;
+}
+#undef ENABLE_ND_MARKING_IN_NFS
+#ifdef ENABLE_ND_MARKING_IN_NFS
+/* Frequency of Non-determinism events : after every nondet_freq micro seconds */
+//static uint32_t nondet_freq = (1000);
+static uint64_t cycles_per_nd_mark = (3*1000*1000*100);  //10ms
+//static uint64_t cycles_per_nd_mark =(nondet_freq*rte_get_timer_hz())/(1000*1000);
+static volatile uint32_t nd_counter = 1;
+static uint64_t last_cycle;
+static uint64_t cur_cycle;
+static int
+callback_handler(void) {
+        //return 0;
+        cur_cycle = rte_get_tsc_cycles();
+        uint64_t delta_cycles = cur_cycle - last_cycle;
+        if (last_cycle && (((delta_cycles)) >=  cycles_per_nd_mark)) {
+#ifdef ENABLE_LOCAL_LATENCY_PROFILER
+                printf("Total elapsed cycles  %"PRIu64" (%"PRIu64" us) and packets before nd_sync: %" PRIu32 "\n", (delta_cycles),(((delta_cycles)*SECOND_TO_MICRO_SECOND)/rte_get_tsc_hz()), nd_counter);
+#endif
+                last_cycle = cur_cycle;
+                nd_counter=0;
+        }
+
+        return 0;
+}
+#endif
+
 static int
 packet_handler(struct rte_mbuf* pkt, struct onvm_pkt_meta* meta) {
         static uint32_t counter = 0;
@@ -156,9 +220,31 @@ packet_handler(struct rte_mbuf* pkt, struct onvm_pkt_meta* meta) {
                 do_stats_display(pkt);
                 counter = 0;
         }
+#ifdef ENABLE_ND_MARKING_IN_NFS
+        if(nd_counter == 0) {
+                meta->reserved_word |= NF_NEED_ND_SYNC;
+                //printf("\n NF is raising ND Event!\n\n");
+        } nd_counter++;
+        if(0 == last_cycle) last_cycle = rte_get_tsc_cycles();
+#endif
+
+        //do_check_and_insert_vlan_tag(pkt);
+        //if(0 == counter) do_stats_display(pkt);
 
         meta->action = ONVM_NF_ACTION_TONF;
         meta->destination = destination;
+
+
+        if(likely(ports->num_ports > 1)) {
+                meta->destination = (pkt->port == 0)? (PRIMARY_OUT_PORT):(0);
+                if((PRIMARY_OUT_PORT == meta->destination) && (ports->down_status[PRIMARY_OUT_PORT])) {
+                        meta->destination = SECONDARY_OUT_PORT;
+                        //printf("Shifted traffic from primary out port sts=%d, to secondary out port\n", ports->down_status[PRIMARY_OUT_PORT]);
+                }
+        }
+        meta->action = ONVM_NF_ACTION_OUT;
+        //meta->destination = pkt->port;
+
         return 0;
 }
 
@@ -168,7 +254,7 @@ int main(int argc, char *argv[]) {
 
         const char *progname = argv[0];
 
-        if ((arg_offset = onvm_nf_init(argc, argv, NF_TAG)) < 0)
+        if ((arg_offset = onvm_nflib_init(argc, argv, NF_TAG)) < 0)
                 return -1;
         argc -= arg_offset;
         argv += arg_offset;
@@ -176,7 +262,11 @@ int main(int argc, char *argv[]) {
         if (parse_app_args(argc, argv, progname) < 0)
                 rte_exit(EXIT_FAILURE, "Invalid command-line arguments\n");
 
-        onvm_nf_run(nf_info, &packet_handler);
+#ifndef ENABLE_ND_MARKING_IN_NFS
+        onvm_nflib_run(nf_info, &packet_handler);
+#else
+        onvm_nflib_run_callback(nf_info, &packet_handler, &callback_handler);
+#endif
         printf("If we reach here, program is ending");
         return 0;
 }

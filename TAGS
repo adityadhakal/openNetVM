@@ -1,0 +1,4190 @@
+
+cntk_lib/onvm_cntk_api.h,60
+#define ONVM_CNTK_API_H2,24
+#define NUMBER_OF_MODELS 4,49
+
+onvm/lib/cJSON.c,3461
+    #define INTEGER_SIZE 38,1403
+    #define INTEGER_SIZE 41,1481
+    #define INTEGER_SIZE 44,1568
+typedef int cjbool;50,1704
+#define true 51,1724
+#define false 52,1749
+static const char *global_ep global_ep54,1776
+const char *cJSON_GetErrorPtr(cJSON_GetErrorPtr56,1814
+extern const char* cJSON_Version(61,1877
+static int cJSON_strcasecmp(70,2098
+static char* cJSON_strdup(94,2643
+void cJSON_InitHooks(114,2940
+static cJSON *cJSON_New_Item(cJSON_New_Item129,3269
+void cJSON_Delete(141,3483
+static const char *parse_number(parse_number165,4063
+static int pow2gt 235,5527
+    char *buffer;buffer257,5864
+    int length;258,5882
+    int offset;259,5898
+    cjbool noalloc;260,5914
+} printbuffer;261,5934
+static char* ensure(264,6026
+static int update(304,6808
+static char *print_number(print_number317,7067
+static unsigned parse_hex4(392,8774
+static const unsigned char firstByteMark[firstByteMark478,10336
+static const char *parse_string(parse_string490,10616
+static char *print_string_ptr(print_string_ptr668,16259
+static char *print_string(print_string814,19465
+static const char *skip(skip828,20158
+cJSON *cJSON_ParseWithOpts(cJSON_ParseWithOpts839,20352
+cJSON *cJSON_Parse(cJSON_Parse879,21321
+char *cJSON_Print(cJSON_Print885,21461
+char *cJSON_PrintUnformatted(cJSON_PrintUnformatted890,21542
+char *cJSON_PrintBuffered(cJSON_PrintBuffered895,21634
+int cJSON_PrintPreallocated(910,21939
+static const char *parse_value(parse_value921,22241
+static char *print_value(print_value969,23247
+static const char *parse_array(parse_array1072,26053
+static char *print_array(print_array1139,27448
+static const char *parse_object(parse_object1308,31275
+static char *print_object(print_object1403,33298
+int    cJSON_GetArraySize(1684,39643
+cJSON *cJSON_GetArrayItem(cJSON_GetArrayItem1696,39811
+cJSON *cJSON_GetObjectItem(cJSON_GetObjectItem1708,40006
+cjbool cJSON_HasObjectItem(1718,40225
+static void suffix_object(1724,40392
+static cJSON *create_reference(create_reference1731,40534
+void   cJSON_AddItemToArray(1746,40851
+void   cJSON_AddItemToObject(1769,41233
+void   cJSON_AddItemToObjectCS(1787,41606
+void cJSON_AddItemReferenceToArray(1805,42053
+void cJSON_AddItemReferenceToObject(1810,42177
+cJSON *cJSON_DetachItemFromArray(cJSON_DetachItemFromArray1815,42333
+void cJSON_DeleteItemFromArray(1847,42925
+cJSON *cJSON_DetachItemFromObject(cJSON_DetachItemFromObject1852,43045
+void cJSON_DeleteItemFromObject(1869,43356
+void cJSON_InsertItemInArray(1875,43538
+void cJSON_ReplaceItemInArray(1901,44013
+void cJSON_ReplaceItemInObject(1931,44551
+cJSON *cJSON_CreateNull(cJSON_CreateNull1954,45112
+cJSON *cJSON_CreateTrue(cJSON_CreateTrue1965,45259
+cJSON *cJSON_CreateFalse(cJSON_CreateFalse1976,45406
+cJSON *cJSON_CreateBool(cJSON_CreateBool1987,45555
+cJSON *cJSON_CreateNumber(cJSON_CreateNumber1998,45724
+cJSON *cJSON_CreateString(cJSON_CreateString2011,45949
+extern cJSON *cJSON_CreateRaw(cJSON_CreateRaw2028,46272
+cJSON *cJSON_CreateArray(cJSON_CreateArray2045,46590
+cJSON *cJSON_CreateObject(cJSON_CreateObject2056,46737
+cJSON *cJSON_CreateIntArray(cJSON_CreateIntArray2068,46910
+cJSON *cJSON_CreateFloatArray(cJSON_CreateFloatArray2096,47408
+cJSON *cJSON_CreateDoubleArray(cJSON_CreateDoubleArray2124,47909
+cJSON *cJSON_CreateStringArray(cJSON_CreateStringArray2152,48411
+cJSON *cJSON_Duplicate(cJSON_Duplicate2181,48931
+void cJSON_Minify(2254,50745
+
+onvm/lib/cJSON.h,1289
+#define cJSON__h24,1111
+#define CJSON_VERSION_MAJOR 32,1191
+#define CJSON_VERSION_MINOR 33,1221
+#define CJSON_VERSION_PATCH 34,1251
+#define cJSON_False 42,1410
+#define cJSON_True 43,1440
+#define cJSON_NULL 44,1470
+#define cJSON_Number 45,1500
+#define cJSON_String 46,1530
+#define cJSON_Array 47,1560
+#define cJSON_Object 48,1590
+#define cJSON_Raw 49,1620
+#define cJSON_IsReference 51,1666
+#define cJSON_StringIsConst 52,1696
+typedef struct cJSON55,1756
+    struct cJSON *next;next58,1897
+    struct cJSON *prev;prev59,1921
+    struct cJSON *child;child61,2059
+    int type;64,2127
+    char *valuestring;valuestring67,2216
+    int valueint;69,2290
+    double valuedouble;71,2359
+    char *string;string74,2492
+} cJSON;75,2510
+typedef struct cJSON_Hooks77,2520
+      void *(*malloc_fn)malloc_fn79,2549
+      void (*free_fn)free_fn80,2586
+} cJSON_Hooks;81,2620
+#define cJSON_AddNullToObject(163,7722
+#define cJSON_AddTrueToObject(164,7821
+#define cJSON_AddFalseToObject(165,7920
+#define cJSON_AddBoolToObject(166,8021
+#define cJSON_AddNumberToObject(167,8123
+#define cJSON_AddStringToObject(168,8229
+#define cJSON_AddRawToObject(169,8335
+#define cJSON_SetIntValue(172,8521
+#define cJSON_SetNumberValue(173,8631
+#define cJSON_ArrayForEach(176,8785
+
+onvm/onvm_nflib/onvm_flow_table.h,989
+#define _ONVM_FLOW_TABLE_H_42,1996
+#define DEFAULT_HASH_FUNC 58,2330
+#define DEFAULT_HASH_FUNC 61,2404
+struct onvm_ft 64,2454
+        struct rte_hash* hash;65,2471
+        char* data;66,2502
+        int cnt;67,2522
+        int entry_size;68,2539
+struct onvm_ft_ipv4_5tuple 71,2567
+        uint32_t src_addr;72,2596
+        uint32_t dst_addr;73,2623
+        uint16_t src_port;74,2650
+        uint16_t dst_port;75,2677
+        uint8_t  proto;76,2704
+union ipv4_5tuple_host 82,2903
+                uint8_t  pad0;84,2945
+                uint8_t  proto;85,2976
+                uint16_t virt_port;86,3008
+                uint32_t ip_src;87,3044
+                uint32_t ip_dst;88,3077
+                uint16_t port_src;89,3110
+                uint16_t port_dst;90,3145
+        __m128i xmm;92,3191
+_onvm_ft_print_key(128,4115
+onvm_ft_get_data(139,4692
+onvm_ft_fill_key(144,4824
+onvm_ft_fill_key_symmetric(173,5865
+onvm_ft_ipv4_hash_crc(195,6529
+onvm_softrss(222,7434
+
+onvm/onvm_nflib/onvm_comm_utils.h,1119
+#define _ONVM_COMM_UTILS_H_42,2043
+#define HAS_CLOCK_GETTIME_MONOTONIC65,2665
+#define USE_THIS_CLOCK 67,2708
+typedef struct onvm_time_s 69,2907
+  struct timespec t;71,2971
+  struct timeval t;73,2998
+} __rte_cache_aligned onvm_time_t;75,3025
+typedef struct onvm_interval_timer_s 77,3061
+        onvm_time_t ts;78,3100
+        onvm_time_t tp;79,3124
+} __rte_cache_aligned onvm_interval_timer_t;80,3148
+#define SECOND_TO_MICRO_SECOND 95,3605
+#define NANO_SECOND_TO_MICRO_SECOND(96,3657
+#define MICRO_SECOND_TO_SECOND(97,3718
+typedef struct stats_time_info 99,3910
+        uint8_t in_read;100,3943
+        onvm_time_t prev_time;101,3968
+        onvm_time_t cur_time;102,3999
+} __rte_cache_aligned nf_stats_time_info_t;103,4029
+typedef struct stats_cycle_info 106,4098
+        uint8_t in_read;107,4132
+        uint64_t prev_cycles;108,4157
+        uint64_t cur_cycles;109,4187
+} __rte_cache_aligned stats_cycle_info_t;110,4216
+#define TS_TYPE_LOGICAL 124,4680
+#define TS_TYPE_SYS_CLOCK 126,4762
+#define TS_TYPE_CPU_CYCLES 128,4855
+#define TS_RX_PACKET_RATE 130,4888
+#define USE_TS_TYPE 131,4960
+
+onvm/onvm_nflib/onvm_pkt_helper.h,611
+#define _ONVM_PKT_HELPER_H_42,1998
+#define IP_PROTOCOL_TCP 53,2160
+#define IP_PROTOCOL_UDP 54,2186
+#define TCP_FLAGS57,2232
+#define TCP_FLAG_FIN 58,2250
+#define TCP_FLAG_SYN 59,2278
+#define TCP_FLAG_RST 60,2306
+#define TCP_FLAG_PSH 61,2334
+#define TCP_FLAG_ACK 62,2362
+#define TCP_FLAG_URG 63,2390
+#define TCP_FLAG_ECE 65,2425
+#define TCP_FLAG_CWR 66,2453
+#define TCP_FLAG_NS 67,2481
+#define SUPPORTS_IPV4_CHECKSUM_OFFLOAD 69,2510
+#define SUPPORTS_TCP_CHECKSUM_OFFLOAD 70,2556
+#define SUPPORTS_UDP_CHECKSUM_OFFLOAD 71,2601
+#define ONVM_PKT_GET_FLAGS(74,2692
+#define ONVM_PKT_SET_FLAGS(80,2898
+
+onvm/onvm_nflib/onvm_images.h,1431
+#define _ONVM_IMAGES_H2,23
+#define NUM_IN_PKTS 4,47
+#define NUM_SIZE 5,70
+#define IMAGE_NUM_ELE 6,106
+#define IMAGE_SIZE 7,138
+#define NUM_OF_PKTS 8,169
+#define IMAGE_BATCH 9,223
+#define IMAGENET_OUTPUT_SIZE 10,245
+#define NF_IMAGE_STATS_PERIOD_MS 11,279
+#define NF_INFERENCE_PERIOD 12,340
+typedef enum data_status{data_status17,422
+typedef enum data_status{empty,empty17,422
+typedef enum data_status{empty, occupied,17,422
+typedef enum data_status{empty, occupied, ready}ready17,422
+typedef enum data_status{empty, occupied, ready} data_status;17,422
+typedef struct __attribute__ ((__packed__)) data_struct{data_struct18,597
+  int file_id;19,654
+  int position;20,669
+  int number_of_elements;21,685
+  float data_array[data_array22,711
+}data_struct;data_struct23,744
+typedef struct image_data{image_data30,882
+  int image_id;31,909
+  void ** img_data_ptrs;32,925
+  int batch_size;33,950
+  float image_data_arr[image_data_arr34,998
+  float output[output35,1128
+  int data_per_image[data_per_image37,1233
+  int image_ready[image_ready38,1331
+  float stats[stats40,1403
+  struct timespec timestamps[timestamps41,1482
+  int num_data_points_stored;42,1742
+  data_status status;43,1864
+} image_data;44,1985
+struct gpu_callback{gpu_callback47,2045
+    struct onvm_nf_info *nf_info;nf_info48,2066
+    struct image_data *ready_image;ready_image49,2100
+int gpu_finish_work_flag;54,2199
+
+onvm/onvm_nflib/onvm_nflib_internal.h,2226
+#define _ONVM_NFLIB_INTERNAL_H_53,2288
+#define NF_PKT_BATCH_SIZE 83,3084
+#define RTDSC_CYCLE_COST 86,3222
+#define ENABLE_TIMER_BASED_NF_CYCLE_COMPUTATION96,3663
+#define ENABLE_STATIC_ID 99,3775
+#define ENABLE_LOCAL_LATENCY_PROFILER 102,3920
+#define NF_STATS_PERIOD_IN_MS 111,4287
+#define MEMCPY_SIZE 116,4429
+#define TEST_MEMCPY_MODE_PER_PACKET117,4462
+#define TEST_MEMCPY_MODE_PER_BATCH119,4534
+struct port_info *ports;ports125,4758
+static struct rte_ring *mgr_msg_ring;mgr_msg_ring128,4825
+static struct rte_ring *nf_msg_ring;nf_msg_ring131,4900
+static struct rte_ring *tx_ring,tx_ring134,4992
+static struct rte_ring *tx_ring, *rx_ring;rx_ring134,4992
+static struct rte_ring *tx_sring,tx_sring137,5069
+static struct rte_ring *tx_sring, *rx_sring;rx_sring137,5069
+static struct rte_ring *mgr_rsp_ring;mgr_rsp_ring142,5203
+struct onvm_nf *nfs nfs146,5304
+struct onvm_nf *this_nf this_nf147,5367
+uint16_t **services;services150,5514
+uint16_t *nf_per_service_count;nf_per_service_count151,5535
+static struct rte_mempool *nf_info_mp;nf_info_mp157,5669
+static struct rte_mempool *nf_msg_pool;nf_msg_pool160,5749
+static struct rte_mempool *pktmbuf_pool;pktmbuf_pool163,5817
+static struct rte_mempool *nf_image_pool;nf_image_pool167,5904
+static char *ml_model_file;ml_model_file168,5966
+static uint16_t ml_model_number;169,6014
+static uint16_t initial_instance_id 174,6143
+static uint16_t service_id 178,6221
+static uint8_t keep_running 182,6313
+struct onvm_service_chain *default_chain;default_chain187,6399
+uint64_t counter 192,6528
+static rte_atomic16_t * flag_p;197,6833
+static sem_t *mutex;mutex202,6951
+struct rte_timer stats_timer;207,7070
+onvm_interval_timer_t ts,211,7187
+onvm_interval_timer_t ts, g_ts;211,7187
+void *base_memory base_memory215,7287
+pkt_handler_func pkt_hdl_func 220,7442
+callback_handler_func cb_func 221,7480
+#define ONVM_NO_CALLBACK 222,7518
+#define YEILD_DUE_TO_EXPLICIT_REQ 289,8984
+#define YIELD_DUE_TO_EMPTY_RX_RING 290,9024
+#define YIELD_DUE_TO_FULL_TX_RING 291,9064
+void *pReplicaStateMempool pReplicaStateMempool306,9534
+dirty_mon_state_map_tbl_t *dirty_state_map dirty_state_map315,9835
+uint8_t SV_ACCES_PER_PACKET;319,10027
+
+onvm/onvm_nflib/histogram.h,1677
+#define _HISTOGRAM_H_ 3,23
+#define HIST_BUCKETS 6,127
+#define HIST_RATE_MAX_VAL 8,153
+#define HIST_COST_MAX_VAL 10,190
+struct histogram 12,222
+        uint32_t data[data14,242
+        uint32_t bucket_size;15,279
+        uint32_t max;16,309
+        uint32_t min;17,367
+        uint32_t max_val;19,425
+        uint32_t min_val;20,494
+        uint32_t total_count;22,562
+        uint32_t running_avg;23,663
+typedef struct histogram histogram_t;25,757
+#define MAX_HISTOGRAM_SAMPLES 36,1179
+#define MIN_SAMPLES_FOR_HISTOGRAM 37,1215
+#define DISCARD_INITIAL_SAMPLES_COUNT 38,1254
+typedef struct histogram_v2 41,1400
+        uint32_t val[val42,1430
+        uint32_t cur_index;43,1491
+        uint32_t min_val;44,1554
+        uint32_t max_val;45,1611
+        uint32_t running_avg;46,1668
+        uint32_t ewma_avg;47,1759
+        histogram_t histogram;49,1815
+        uint8_t is_initialized;50,1866
+        uint32_t mean_val;51,1948
+        uint32_t median_val;52,1996
+        uint32_t mode_val;53,2046
+        uint32_t perctl_val;54,2094
+        uint32_t discard_mode;55,2145
+}histogram_v2_t;histogram_v2_t57,2232
+typedef enum HIST_VAL_TYPE 58,2249
+        VAL_TYPE_RUNNING_AVG 59,2278
+        VAL_TYPE_MEAN 60,2311
+        VAL_TYPE_MEDIAN 61,2337
+        VAL_TYPE_MODE 62,2365
+        VAL_TYPE_ABS_MIN 63,2391
+        VAL_TYPE_ABS_MAX 64,2421
+        VAL_TYPE_25_PERCENTILE=65,2450
+        VAL_TYPE_50_PERCENTILE=66,2484
+        VAL_TYPE_50_PERCENTILE=VAL_TYPE_MEDIAN,66,2484
+        VAL_TYPE_75_PERCENTILE=67,2532
+        VAL_TYPE_90_PERCENTILE=68,2566
+        VAL_TYPE_99_PERCENTILE=69,2600
+}HIST_VAL_TYPE_E;HIST_VAL_TYPE_E70,2634
+
+onvm/onvm_nflib/onvm_pkt_helper.c,991
+onvm_pkt_mac_addr_swap(59,2270
+onvm_pkt_set_mac_addr(87,2906
+onvm_pkt_swap_src_mac_addr(110,3597
+onvm_pkt_swap_dst_mac_addr(137,4331
+onvm_pkt_ether_hdr(164,5075
+onvm_pkt_tcp_hdr(172,5271
+onvm_pkt_udp_hdr(188,5810
+onvm_pkt_ipv4_hdr(204,6350
+onvm_pkt_vlan_hdr(225,7314
+onvm_pkt_is_tcp(237,7680
+onvm_pkt_is_udp(242,7773
+onvm_pkt_is_ipv4(247,7866
+onvm_pkt_print(253,7963
+onvm_pkt_print_tcp(271,8419
+onvm_pkt_print_udp(302,9905
+onvm_pkt_print_ipv4(310,10200
+void onvm_pkt_print_ether(345,11903
+onvm_pkt_parse_ip(391,13747
+onvm_pkt_parse_mac(408,14132
+onvm_pkt_get_checksum_offload_flags(428,14624
+calculate_tcpudp_cksum(452,15476
+                uint32_t saddr;458,15725
+                uint32_t daddr;459,15757
+                uint8_t reserved;460,15789
+                uint8_t protocol;461,15839
+                uint16_t total_length;462,15873
+calculate_ip_cksum(488,16628
+onvm_pkt_set_checksums(494,16810
+onvm_tcp_con_close(542,18901
+onvm_tcp_ack_close(554,19231
+
+onvm/onvm_nflib/onvm_nflib.c,3106
+#define NF_MODE_UNKNOWN 77,2859
+#define NF_MODE_SINGLE 78,2885
+#define NF_MODE_RING 79,2910
+#define ONVM_NO_CALLBACK 81,2934
+#define ENABLE_NF_PAUSE_TILL_OUTSTANDING_NDSYNC_COMMIT84,2966
+#define __DEBUG__NDSYNC_LOGS__85,3021
+onvm_interval_timer_t nd_ts;89,3137
+int64_t max_nd,90,3166
+int64_t max_nd, min_nd,90,3166
+int64_t max_nd, min_nd, avg_nd,90,3166
+int64_t max_nd, min_nd, avg_nd, delta_nd;90,3166
+static inline void allocate_base_memory(98,3467
+static inline void do_memcopy(101,3564
+nf_explicit_callback_function nf_ecb 109,3843
+static uint8_t need_ecb 110,3888
+void register_explicit_callback_function(111,3917
+gpu_message_processing_func nf_gpu_func;124,4459
+void register_gpu_msg_handling_function(125,4500
+uint32_t get_nf_core_id(147,5109
+int set_cgroup_cpu_share(151,5175
+void init_cgroup_info(167,5899
+typedef struct pal_packet 197,7205
+        uint64_t pal_counter;198,7233
+        uint64_t pal_info;199,7263
+}pal_packet_t;pal_packet_t200,7290
+static inline int send_packets_out(201,7305
+int generate_and_transmit_pals_for_batch(221,8241
+stats_timer_cb(297,12047
+init_nflib_timers(310,12542
+void onvm_nf_yeild(327,13305
+static inline void  onvm_nf_wake_notify(361,14412
+static inline void onvm_nflib_implicit_wakeup(370,14694
+static inline void start_ppkt_processing_cost(378,14933
+static inline void end_ppkt_processing_cost(383,15173
+onvm_nflib_wait_till_notification(414,16627
+static inline void onvm_nflib_check_and_wait_if_interrupted(433,17585
+static inline void onvm_nflib_handle_tx_shadow_ring(450,18488
+static inline void synchronize_replica_nf_state_memory(482,20176
+static inline void update_processed_packet_ts(526,22191
+static inline int onvm_nflib_fetch_packets(551,23473
+inline int onvm_nflib_post_process_packets_batch(586,25158
+static inline int onvm_nflib_process_packets_batch(684,30689
+onvm_nflib_run_callback(778,34215
+onvm_nflib_run(844,36790
+onvm_nflib_return_pkt(850,36947
+onvm_nflib_return_pkt_bulk(867,37503
+onvm_nflib_stop(882,38107
+onvm_nflib_init(887,38227
+onvm_nflib_drop_pkt(1030,43414
+void notify_for_ecb(1036,43544
+onvm_nflib_handle_msg(1047,43744
+onvm_nflib_dequeue_messages(1123,47021
+onvm_nflib_info_init(1135,47542
+onvm_nflib_usage(1184,49174
+onvm_nflib_parse_args(1194,49390
+onvm_nflib_handle_signal(1254,51313
+onvm_nflib_cleanup(1266,51612
+onvm_nflib_notify_ready(1307,53305
+static void get_image_state_mempool(1388,56417
+void onvm_send_gpu_msg_to_mgr(1420,57559
+void load_ml_file(1439,58171
+void evaluate_the_image(1466,59075
+void evaluate_an_image_from_mempool(1473,59464
+void gpu_image_callback_function(1555,64321
+static int get_image_index(1611,66413
+static image_data *get_image(get_image1622,66625
+ static void delete_image(1643,67367
+void copy_data_to_image(1655,67741
+void copy_data_to_image_batch(1676,68858
+void initialize_ml_timers(1707,70408
+void compute_ml_stats(1729,71230
+void prepare_to_restart(1744,72058
+void execute_dummy_image(1756,72587
+onvm_nflib_start_nf(1771,73262
+static void set_cpu_sched_policy_and_mode(1882,78098
+init_shared_cpu_info(1893,78379
+
+onvm/onvm_nflib/onvm_comm_utils.c,1169
+  struct timespec start,52,2273
+  struct timespec start, stop;52,2273
+  struct timespec gstart,53,2304
+  struct timespec gstart, gstop;53,2304
+  struct timeval start,55,2343
+  struct timeval start, stop;55,2343
+  struct timeval gstart,56,2373
+  struct timeval gstart, gstop;56,2373
+inline int onvm_util_get_cur_time(60,2414
+inline int onvm_util_get_start_time(76,2817
+inline int onvm_util_get_stop_time(91,3217
+inline int64_t onvm_util_get_elapsed_time(106,3616
+inline int64_t onvm_util_get_diff_time_now(118,4066
+inline unsigned long onvm_util_get_difftime_us(131,4503
+uint64_t onvm_util_get_current_cpu_cycles(143,4944
+uint64_t onvm_util_get_diff_cpu_cycles(148,5043
+uint64_t onvm_util_get_diff_cpu_cycles_in_us(156,5229
+uint64_t onvm_util_get_elapsed_cpu_cycles(164,5465
+uint64_t onvm_util_get_elapsed_cpu_cycles_in_us(169,5627
+uint64_t gPkts=174,5828
+#define USE_DISTINCT_FIELDS177,5892
+int onvm_util_mark_timestamp_on_RX_packets(180,5937
+    uint64_t total_cycles;206,6850
+    uint64_t total_pkts;207,6877
+} latency_numbers;208,6902
+int onvm_util_calc_chain_processing_latency(210,6931
+int onvm_util_get_marked_packet_timestamp(268,9253
+
+onvm/onvm_nflib/onvm_sort.h,709
+#define _ONVM_SORT_H_3,23
+typedef enum ONVM_SORT_DATA_TYPE 6,126
+        ONVM_SORT_TYPE_INT 7,161
+        ONVM_SORT_TYPE_UINT32 8,193
+        ONVM_SORT_TYPE_UINT64 9,228
+        ONVM_SORT_TYPE_CUSTOM 10,263
+}ONVM_SORT_DATA_TYPE_E;ONVM_SORT_DATA_TYPE_E11,298
+typedef enum ONVM_SORT_MODE 12,322
+        SORT_ASCENDING 13,352
+        SORT_DESCENDING 14,379
+}ONVM_SORT_MODE_E;ONVM_SORT_MODE_E15,407
+typedef int (*comp_func)comp_func17,427
+typedef int (*comp_func_s)comp_func_s18,481
+typedef struct onvm_callback_thunk 40,1450
+        ONVM_SORT_DATA_TYPE_E type;41,1487
+        ONVM_SORT_MODE_E mode;42,1523
+        comp_func_s cf;43,1554
+}onvm_callback_thunk_t;onvm_callback_thunk_t44,1578
+
+onvm/onvm_nflib/onvm_includes.h,34
+#define _ONVM_INCLUDES_H_54,2345
+
+onvm/onvm_nflib/onvm_config_common.h,212
+#define _ONVM_CONFIG_COMMON_H_42,2016
+#define MAX_SERVICE_ID_SIZE 46,2068
+#define PROC_TYPE_SECONDARY 50,2172
+#define FLAG_N 51,2224
+#define FLAG_R 52,2244
+#define FLAG_L 53,2264
+#define FLAG_DASH 54,2284
+
+onvm/onvm_nflib/onvm_flow_dir.c,725
+#define NO_FLAGS 53,2332
+struct onvm_ft *sdn_ft;sdn_ft56,2353
+struct onvm_ft **sdn_ft_p;sdn_ft_p57,2377
+onvm_flow_dir_set_index(60,2410
+int onvm_flow_dir_reset_entry(73,2827
+onvm_flow_dir_init(85,3176
+onvm_flow_dir_nf_init(107,3871
+onvm_flow_dir_get_pkt(122,4185
+onvm_flow_dir_add_pkt(130,4360
+onvm_flow_dir_del_pkt(138,4537
+onvm_flow_dir_del_and_free_pkt(155,4851
+onvm_flow_dir_get_key(170,5244
+onvm_flow_dir_add_key(178,5443
+onvm_flow_dir_del_key(186,5645
+onvm_flow_dir_del_and_free_key(203,6075
+onvm_flow_dir_print_stats__old(220,6823
+static inline uint32_t get_index_of_sc(265,9250
+extract_active_service_chains(282,9812
+onvm_flow_dir_print_stats(330,12810
+onvm_flow_dir_clear_all_entries(363,14625
+
+onvm/onvm_nflib/onvm_flow_dir.h,395
+#define _ONVM_FLOW_DIR_H_42,2035
+struct onvm_flow_entry 50,2183
+        struct onvm_ft_ipv4_5tuple *key;key51,2208
+        struct onvm_service_chain *sc;sc52,2249
+        uint64_t ref_cnt;53,2288
+        uint16_t idle_timeout;54,2314
+        uint16_t hard_timeout;55,2345
+        uint64_t packet_count;56,2376
+        uint64_t byte_count;57,2407
+        uint64_t entry_index;58,2436
+
+onvm/onvm_nflib/onvm_pkt_common.c,302
+onvm_pkt_process_tx_batch(96,3262
+onvm_pkt_flush_all_nfs(140,5447
+onvm_pkt_flush_nf_queue(151,5708
+onvm_pkt_enqueue_nf(186,6823
+onvm_pkt_flush_port_queue(221,7994
+onvm_pkt_enqueue_tx_thread(250,8936
+onvm_pkt_enqueue_port(272,9620
+onvm_pkt_process_next_action(287,10069
+onvm_pkt_drop(332,11733
+
+onvm/onvm_nflib/onvm_sc_common.h,30
+#define _SC_COMMON_H_42,2056
+
+onvm/onvm_nflib/onvm_sc_mgr.c,210
+active_sc_entries_t active_sc_list;49,2175
+static inline int add_chain_to_active_sc_list(53,2374
+const active_sc_entries_t* onvm_sc_get_all_active_chains(60,2704
+onvm_sc_get(64,2830
+onvm_sc_create(69,2901
+
+onvm/onvm_nflib/onvm_pkt_common.h,36
+#define _ONVM_PKT_COMMON_H_54,2310
+
+onvm/onvm_nflib/onvm_common.h,20958
+#define _COMMON_H_43,2037
+#define ONVM_GPU 56,2251
+#define ONVM_GPU_SAME_SIZE_PKTS 57,2270
+#define ONVM_GPU_TEST 58,2304
+#define ONVM_CACHE_LINE_SIZE 61,2475
+#define ENABLE_HIGH_THROUGHPUT_MODE64,2630
+#define ENABLE_LOW_LATENCY_MODE66,2702
+#define MIN(70,2754
+#define MAX(74,2812
+#define ARBITER_PERIOD_IN_US 77,2858
+#define MAX_NFS 79,2987
+#define MAX_SERVICES 80,3054
+#define MAX_NFS_PER_SERVICE 81,3137
+#define RTE_MP_RX_DESC_DEFAULT 85,3296
+#define RTE_MP_TX_DESC_DEFAULT 86,3404
+#define NF_QUEUE_RINGSIZE 87,3588
+#define RTE_MP_RX_DESC_DEFAULT 89,3755
+#define RTE_MP_TX_DESC_DEFAULT 90,3868
+#define NF_QUEUE_RINGSIZE 91,3981
+#define RTE_MP_RX_DESC_DEFAULT 93,4112
+#define RTE_MP_TX_DESC_DEFAULT 94,4219
+#define NF_QUEUE_RINGSIZE 95,4326
+#define ONVM_PACKETS_BATCH_SIZE 98,4460
+#define PACKET_READ_SIZE 99,4548
+#define NF_MSG_QUEUE_SIZE 100,4599
+#define ONVM_NUM_RX_THREADS 103,4715
+#define ONVM_NUM_TX_THREADS 104,4752
+#define ONVM_NUM_MGR_AUX_THREADS 105,4789
+#define ONVM_MAX_CHAIN_LENGTH 107,4894
+#define SDN_FT_ENTRIES 108,4962
+#define ONVM_NF_ACTION_DROP 111,5057
+#define ONVM_NF_ACTION_NEXT 112,5104
+#define ONVM_NF_ACTION_TONF 113,5221
+#define ONVM_NF_ACTION_OUT 114,5335
+#define ONVM_NF_ACTION_TO_NF_INSTANCE 115,5429
+#define ONVM_ENABLE_SPEACILA_NF122,5963
+#define INTERRUPT_SEM125,6079
+#define ENABLE_NF_TX_STAT_LOGS134,6354
+#define ENABLE_PORT_TX_STATS_LOGS137,6434
+#define ENABLE_SYNC_MGR_TO_NF_MSG140,6541
+#define PROFILE_PACKET_PROCESSING_LATENCY172,7509
+#define ONVM_SPECIAL_NF_SERVICE_ID 181,7877
+#define ONVM_SPECIAL_NF_INSTANCE_ID 183,7953
+#define ENABLE_PCAP_CAPTURE_ON_OUTPUT193,8429
+#define USE_SEMAPHORE 206,8815
+#define NF_LOCAL_BACKPRESSURE 209,8976
+#define ENABLE_CGROUPS_FEATURE 215,9227
+#define ENABLE_NFV_RESL 218,9339
+#define ENABLE_FT_INDEX_IN_META 221,9467
+#define ENABLE_NF_WAKE_NOTIFICATION_COUNTER224,9591
+#define ENABLE_NF_YIELD_NOTIFICATION_COUNTER225,9635
+#define USE_POLL_MODE230,9719
+#define ENABLE_USE_RTE_TIMER_MODE_FOR_MAIN_THREAD 241,10103
+#define BOTTLENECK_NF_STATUS_RESET 258,10930
+#define BOTTLENECK_NF_STATUS_WAIT_ENQUEUED 259,10982
+#define BOTTLENECK_NF_STATUS_DROP_MARKED 260,11034
+#define NF_BACKPRESSURE_APPROACH_1 266,11334
+#define NF_BACKPRESSURE_APPROACH_2 270,11517
+#define ENABLE_RING_WATERMARK274,11739
+#define ENABLE_NF_BASED_BKPR_MARKING 278,11999
+#define USE_BKPR_V2_IN_TIMER_MODE 305,13758
+#define DROP_PKTS_ONLY_AT_RX_ENQUEUE 311,14112
+#define ENABLE_SAVE_BACKLOG_FT_PER_NF 315,14266
+#define BACKPRESSURE_USE_RING_BUFFER_MODE 317,14453
+#define USE_CGROUPS_PER_NF_INSTANCE344,16026
+#define ENABLE_DYNAMIC_CGROUP_WEIGHT_ADJUSTMENT347,16141
+#define USE_DYNAMIC_LOAD_FACTOR_FOR_CPU_SHARE350,16271
+#define STORE_HISTOGRAM_OF_NF_COMPUTATION_COST353,16435
+#define ETHER_TYPE_RSYNC_DATA 371,17288
+#define ETHER_TYPE_BFD 372,17328
+#define ENABLE_NF_MGR_IDENTIFIER 375,17392
+#define ENABLE_BFD 376,17466
+#define ENABLE_PER_SERVICE_MEMPOOL 378,17616
+#define ENABLE_REPLICA_STATE_UPDATE 379,17710
+#define ENABLE_REMOTE_SYNC_WITH_TX_LATCH 380,17847
+#define RESL_UPDATE_MODE_PER_BATCH 383,18140
+#define ENABLE_ND_MARKING_IN_NFS 384,18255
+#define ENABLE_PER_FLOW_TS_STORE 388,18387
+#define ENABLE_CHAIN_BYPASS_RSYNC_ISOLATION 389,18545
+#define ENABLE_NF_PAUSE_TILL_OUTSTANDING_NDSYNC_COMMIT 390,18688
+#define PRIMARY_NODE 392,18860
+#define SECONDARY_NODE 393,18889
+#define PREDECESSOR_NODE 394,18918
+#undef ENABLE_CHAIN_BYPASS_RSYNC_ISOLATION 412,19771
+#undef ENABLE_NF_PAUSE_TILL_OUTSTANDING_NDSYNC_COMMIT 413,19857
+#undef ENABLE_REPLICA_STATE_UPDATE438,21263
+#undef ENABLE_REMOTE_SYNC_WITH_TX_LATCH439,21298
+#undef ENABLE_PER_FLOW_TS_STORE440,21338
+#undef ENABLE_CHAIN_BYPASS_RSYNC_ISOLATION441,21370
+#undef ENABLE_NF_PAUSE_TILL_OUTSTANDING_NDSYNC_COMMIT442,21413
+#define SHADOW_RING_UPDATE_PER_PKT447,21537
+#define SHADOW_RING_UPDATE_PER_BATCH449,21578
+#define PER_FLOW_TS_UPDATE_PER_PKT459,21852
+#define PER_FLOW_TS_UPDATE_PER_BATCH461,21893
+#define REPLICA_STATE_UPDATE_MODE_PER_PACKET468,22022
+#define REPLICA_STATE_UPDATE_MODE_PER_BATCH470,22073
+#define ONVM_NUM_RSYNC_THREADS 475,22172
+#define ONVM_NUM_RSYNC_PORTS 476,22212
+#define USE_BATCHED_RSYNC_TRANSACTIONS 477,22295
+#define ENABLE_RSYNC_WITH_DOUBLE_BUFFERING_MODE 480,22688
+#define _TX_RSYNC_TX_PORT_RING_NAME 482,22896
+#define TX_RSYNC_TX_PORT_RING_SIZE 483,22982
+#define _TX_RSYNC_TX_LATCH_RING_NAME 484,23115
+#define TX_RSYNC_TX_LATCH_RING_SIZE 485,23202
+#define _TX_RSYNC_NF_LATCH_RING_NAME 486,23277
+#define TX_RSYNC_NF_LATCH_RING_SIZE 487,23364
+#define _TX_RSYNC_TX_LATCH_DB_RING_NAME 490,23485
+#define _TX_RSYNC_NF_LATCH_DB_RING_NAME 491,23578
+#define TX_RSYNC_TX_LATCH_DB_RING_SIZE 492,23671
+#define TX_RSYNC_NF_LATCH_DB_RING_SIZE 493,23741
+#define ENABLE_RSYNC_MULTI_BUFFERING 496,24003
+#define TX_RSYNC_AUTOCLEAR_ELAPSED_TRANSACTIONS_TIMERS 498,24240
+#define USE_BATCHED_RSYNC_TRANSACTIONS501,24426
+#define ONVM_NUM_RSYNC_THREADS 505,24485
+#define _NF_STATE_MEMPOOL_NAME 508,24533
+#define _NF_STATE_SIZE 509,24583
+#define _NF_STATE_CACHE 510,24621
+#define CLIENT_SHADOW_RING_SIZE 513,24681
+#define _SERVICE_STATE_MEMPOOL_NAME 517,24809
+#define _SERVICE_STATE_SIZE 518,24865
+#define _SERVICE_STATE_CACHE 519,24947
+#define _PER_FLOW_TS_MEMPOOL_NAME 523,25024
+#define _PER_FLOW_TS_SIZE 524,25074
+#define _PER_FLOW_TS_CACHE 525,25229
+#define _PER_FLOW_TS_CACHE_MAX_ENTRIES 526,25264
+#define MAX_ACTIVE_CLIENTS 530,25356
+#define MAX_STANDBY_CLIENTS 531,25397
+#define ACTIVE_NF_MASK 532,25457
+typedef struct onvm_per_flow_ts_info 534,25506
+        uint64_t ts;535,25545
+}  __attribute__((__packed__)) onvm_per_flow_ts_info_t;536,25566
+#define ONVM_NUM_RSYNC_THREADS 539,25659
+#define PIGGYBACK_BFD_ON_ACTIVE_PORT_TRAFFIC 545,25898
+#define BFD_TX_PORT_QUEUE_ID 546,26112
+#define BFD_TX_PORT_QUEUE_ID 548,26193
+#define RSYNC_TX_PORT_QUEUE_ID_0 553,26355
+#define RSYNC_TX_PORT_QUEUE_ID_1 555,26438
+#define RSYNC_TX_OUT_PORT 556,26503
+#define ONVM_NF_MGR_TX_QUEUES 557,26539
+#define ONVM_NF_MGR_TX_QUEUES 559,26606
+#define PRIMARY_OUT_PORT 563,26718
+#define SECONDARY_OUT_PORT 564,26750
+typedef struct dirty_mon_state_map_tbl 576,27466
+        uint64_t dirty_index;577,27507
+}dirty_mon_state_map_tbl_t;dirty_mon_state_map_tbl_t579,27591
+typedef struct dirty_mon_state_map_tbl_txts 581,27620
+        uint8_t dirty_index;582,27666
+}dirty_mon_state_map_tbl_txts_t;dirty_mon_state_map_tbl_txts_t584,27749
+#define DISTRIBUTED_NIC_PORT 595,28325
+#define SET_BIT(602,28745
+static inline void set_bit(603,28794
+#define CLEAR_BIT(607,28882
+static inline void clear_bit(608,28936
+#define TOGGLE_BIT(612,29029
+static inline void toggle_bit(613,29083
+#define TEST_BIT(616,29173
+static inline long test_bit(617,29224
+static inline long is_upstream_NF(621,29319
+static inline long is_immediate_upstream_NF(636,30186
+static inline long get_index_of_highest_set_bit(648,30852
+#define ONVM_CHECK_BIT(658,31250
+#define ONVM_SET_BIT(659,31308
+#define ONVM_CLEAR_BIT(660,31362
+struct onvm_pkt_meta 664,31552
+        uint8_t action;665,31575
+        uint8_t destination;666,31628
+        uint8_t src;667,31680
+        uint8_t chain_index;668,31737
+        uint16_t ft_index;670,31851
+	uint8_t flags;672,31955
+        uint8_t reserved_word;673,32061
+#define NF_NEED_ND_SYNC 676,32245
+#define NF_BYPASS_RSYNC 677,32276
+static inline struct onvm_pkt_meta* onvm_get_pkt_meta(679,32308
+static inline uint8_t onvm_get_pkt_chain_index(683,32442
+struct packet_buf 703,33311
+        struct rte_mbuf *buffer[buffer704,33331
+        uint16_t count;705,33382
+struct tx_thread_info 713,33548
+        unsigned first_nf;714,33572
+        unsigned last_nf;715,33599
+        struct packet_buf *port_tx_bufs;port_tx_bufs716,33625
+struct queue_mgr 723,33773
+        unsigned id;724,33792
+        enum {NF,NF725,33813
+        enum {NF, MGR}MGR725,33813
+        enum {NF, MGR} mgr_type_t;725,33813
+                struct tx_thread_info *tx_thread_info;tx_thread_info727,33864
+                struct packet_buf *to_tx_buf;to_tx_buf728,33919
+        struct packet_buf *nf_rx_bufs;nf_rx_bufs730,33976
+struct rx_stats{rx_stats733,34019
+        uint64_t rx[rx734,34036
+struct tx_stats{tx_stats738,34080
+        uint64_t tx[tx739,34097
+        uint64_t tx_drop[tx_drop740,34136
+struct port_info 744,34185
+        uint8_t num_ports;745,34204
+        uint8_t id[id746,34231
+        struct ether_addr mac[mac747,34269
+        uint8_t down_status[down_status748,34318
+        volatile struct rx_stats rx_stats;749,34401
+        volatile struct tx_stats tx_stats;750,34444
+struct thread_info 758,34709
+       unsigned queue_id;759,34730
+       unsigned first_cl;760,34756
+       unsigned last_cl;761,34798
+       struct packet_buf *nf_rx_buf;nf_rx_buf766,35091
+       struct packet_buf *port_tx_buf;port_tx_buf767,35128
+       struct packet_buf *port_tx_direct_buf;port_tx_direct_buf769,35210
+typedef int(*pkt_handler_func)pkt_handler_func775,35407
+typedef int(*callback_handler_func)callback_handler_func777,35594
+typedef void(*advanced_rings_func)advanced_rings_func779,35742
+typedef void(*setup_func)setup_func781,35892
+struct onvm_nf_scale_info 784,36011
+        struct onvm_nf_info *parent;parent785,36039
+        uint16_t instance_id;786,36076
+        uint16_t service_id;787,36106
+        const char *tag;tag788,36135
+        void *data;data789,36160
+        setup_func setup_func;790,36180
+        pkt_handler_func pkt_func;791,36211
+        callback_handler_func callback_func;792,36246
+        advanced_rings_func adv_rings_func;793,36291
+struct wakeup_info 799,36438
+        unsigned first_client;800,36459
+        unsigned last_client;801,36490
+        uint64_t num_wakeups;802,36520
+typedef struct bottleneck_ft_data 808,36612
+        uint16_t chain_index;809,36648
+         struct onvm_flow_entry* bft;810,36728
+}bottleneck_ft_data_t;bottleneck_ft_data_t811,36787
+typedef struct bottleneck_ft_info 812,36810
+        uint16_t bft_count;813,36846
+        uint16_t r_h;814,36913
+        uint16_t w_h;815,36975
+        uint16_t max_len;816,37038
+        bottleneck_ft_data_t bft[bft818,37159
+}bottlenect_ft_info_t;bottlenect_ft_info_t819,37216
+struct onvm_nf 827,37372
+        struct rte_ring *rx_q;rx_q828,37389
+        struct rte_ring *tx_q;tx_q829,37420
+        struct rte_ring *msg_q;msg_q830,37451
+        struct onvm_nf_info *info;info831,37483
+        uint16_t instance_id;832,37518
+        uint8_t nf_mode;834,37604
+        uint16_t parent;836,37673
+        struct queue_mgr *nf_tx_mgr;nf_tx_mgr838,37754
+        pkt_handler_func nf_pkt_function;841,37827
+        callback_handler_func nf_callback_function;842,37869
+        advanced_rings_func nf_advanced_rings_function;843,37921
+        setup_func nf_setup_function;844,37977
+                volatile uint64_t rx;855,38413
+                volatile uint64_t rx_drop;856,38451
+                volatile uint64_t tx;857,38494
+                volatile uint64_t tx_drop;858,38532
+                volatile uint64_t tx_buffer;860,38605
+                volatile uint64_t tx_returned;861,38650
+                volatile uint64_t act_out;862,38697
+                volatile uint64_t act_tonf;863,38740
+                volatile uint64_t act_drop;864,38784
+                volatile uint64_t act_next;865,38828
+                volatile uint64_t act_buffer;866,38872
+                volatile uint64_t wakeup_count;870,39047
+                volatile uint64_t yield_count;873,39171
+                volatile uint64_t comp_cost;876,39266
+                volatile uint64_t bkpr_drop;880,39381
+                uint16_t max_rx_q_len;883,39506
+                uint16_t max_tx_q_len;884,39545
+                uint16_t bkpr_count;885,39584
+        } stats;887,39670
+        uint16_t is_bottleneck;891,39907
+        onvm_time_t s_time;894,40041
+        bottlenect_ft_info_t bft_list;898,40117
+        const char *sem_name;sem_name903,40282
+        key_t shm_key;904,40312
+        rte_atomic16_t *volatile shm_server;906,40432
+        sem_t *mutex;mutex909,40499
+        uint8_t throttle_this_upstream_nf;913,40563
+        uint64_t throttle_count;915,40704
+        void *nf_state_mempool;nf_state_mempool922,40986
+        void *service_state_pool;service_state_pool925,41175
+        void *per_flow_ts_info;per_flow_ts_info930,41312
+        struct rte_ring *rx_sq;rx_sq934,41379
+        struct rte_ring *tx_sq;tx_sq935,41411
+} __rte_cache_aligned;938,41482
+#define NUMBER_OF_MODELS 952,41748
+#define MAX_IMAGE 953,41775
+struct image_information{image_information955,41850
+  void *image_pending[image_pending957,41924
+  void *ready_images[ready_images958,42034
+  int num_of_ready_images;959,42115
+  int index_of_ready_image;960,42180
+struct get_alternate_NF_ready{get_alternate_NF_ready963,42269
+  int gpu_percentage;964,42300
+typedef struct models_attributes{models_attributes968,42401
+  int number_of_inputs;969,42435
+  int *input_dimensions;input_dimensions970,42459
+  int number_of_parameters;971,42484
+  void *cuda_handles;cuda_handles972,42512
+  int *gpu_percentages;gpu_percentages973,42534
+  float * run_times;974,42601
+  int num_of_runtimes;975,42674
+}models_attributes;models_attributes976,42740
+struct gpu_file_listing{gpu_file_listing979,42804
+  int file_index;980,42829
+  char model_name[model_name981,42847
+  int load_flag;982,42870
+  void *cpu_function;cpu_function983,42955
+  void *gpu_function;gpu_function984,42977
+  models_attributes attributes;985,42999
+typedef struct provide_gpu_model{provide_gpu_model990,43111
+  struct onvm_nf_info *nf;nf991,43145
+  char model_name[model_name992,43172
+  int model_index;993,43195
+}provide_gpu_model;provide_gpu_model994,43214
+static inline double time_difference_usec(998,43254
+struct onvm_nf_info 1014,43723
+        uint16_t instance_id;1015,43745
+        uint16_t service_id;1016,43775
+        uint8_t status;1018,43823
+        const char *tag;tag1019,43996
+        void *data;data1020,44021
+        pid_t pid;1021,44090
+        void *nf_state_mempool;nf_state_mempool1024,44133
+        void *service_state_pool;service_state_pool1026,44283
+        uint32_t comp_cost;1030,44443
+        uint32_t cpu_share;1034,44607
+        uint32_t core_id;1035,44676
+        uint32_t load;1036,44753
+        uint32_t avg_load;1037,44883
+        uint32_t svc_rate;1038,44954
+        uint64_t exec_period;1041,45123
+        uint32_t avg_svc;1044,45509
+        uint32_t comp_pkts;1045,45588
+        uint32_t drop_rate;1046,45797
+        histogram_v2_t ht2;1051,45948
+        histogram_v2_t ht2_q;1055,46047
+        volatile uint8_t bNDSycn;1059,46139
+        uint64_t bLastPktId;1060,46173
+        int64_t max_nd,1062,46232
+        int64_t max_nd, min_nd,1062,46232
+        int64_t max_nd, min_nd, avg_nd,1062,46232
+        int64_t max_nd, min_nd, avg_nd, delta_nd;1062,46232
+  int gpu_model;1067,46313
+  char ml_model_path[ml_model_path1068,46354
+  int gpu_percentage;1069,46445
+  int job_completion_rate;1070,46487
+  int gpu_execution_ready;1071,46541
+  int candidate_for_restart;1072,46605
+  void * function_ptr;1073,46700
+  void * cuda_memhandles;1074,46753
+  int num_of_model_parameters;1075,46815
+  unsigned int number_of_pkts_outstanding;1078,46910
+  unsigned int number_of_images_processed;1079,47003
+  struct image_information *image_info;image_info1081,47108
+  histogram_v2_t image_queueing_rate;1084,47205
+  histogram_v2_t image_processing_rate;1085,47285
+  histogram_v2_t end_to_end_image_processing_time;1087,47377
+  histogram_v2_t image_processing_gpu_time;1088,47480
+  int user_batch_size;1090,47562
+  int ring_flag;1093,47664
+struct onvm_service_chain_entry 1101,47807
+        uint16_t destination;1102,47841
+        uint8_t action;1104,47917
+        uint8_t service;1106,47983
+struct onvm_service_chain 1110,48104
+        struct onvm_service_chain_entry sc[sc1111,48132
+        uint8_t chain_length;1112,48201
+        uint8_t ref_cnt;1113,48231
+        volatile uint8_t highest_downstream_nf_index_id;1115,48286
+        uint8_t nf_instances_mapped;1117,48485
+        uint8_t nf_instance_id[nf_instance_id1118,48583
+#define MP_NF_RXQ_NAME 1125,48783
+#define MP_NF_TXQ_NAME 1126,48823
+#define _NF_MSG_QUEUE_NAME 1127,48863
+#define PKTMBUF_POOL_NAME 1128,48908
+#define MZ_PORT_INFO 1129,48955
+#define MZ_NF_INFO 1130,48994
+#define MZ_SERVICES_INFO 1131,49029
+#define MZ_NF_PER_SERVICE_INFO 1132,49076
+#define MZ_SCP_INFO 1133,49135
+#define MZ_FTP_INFO 1134,49172
+#define _MGR_MSG_QUEUE_NAME 1136,49210
+#define _NF_MSG_QUEUE_NAME 1137,49280
+#define _MGR_RSP_QUEUE_NAME 1138,49325
+#define _NF_MEMPOOL_NAME 1139,49416
+#define _NF_MSG_POOL_NAME 1140,49497
+#define _NF_IMAGE_POOL_NAME 1143,49609
+#define _IMAGE_STATE_POOL_NAME 1144,49694
+#define SHMSZ 1149,49862
+#define KEY_PREFIX 1150,49948
+#define MP_CLIENT_SEM_NAME 1153,50032
+#define MP_CLIENT_SEM_NAME 1156,50121
+#define SAMPLING_RATE 1162,50357
+#define ONVM_SPECIAL_NF 1163,50447
+#define ONVM_NUM_WAKEUP_THREADS 1168,50569
+#define ONVM_NUM_WAKEUP_THREADS 1170,50654
+#define NF_WAITING_FOR_ID 1174,50774
+#define NF_STARTING 1175,50897
+#define NF_WAITING_FOR_RUN 1176,51006
+#define NF_RUNNING 1177,51176
+#define NF_PAUSED_BIT 1178,51244
+#define NF_WT_ND_SYNC_BIT 1179,51341
+#define NF_PAUSED 1180,51541
+#define NF_WT_ND_SYNC 1181,51643
+#define NF_STOPPED 1182,51759
+#define NF_ID_CONFLICT 1183,51853
+#define NF_NO_IDS 1184,51949
+#define NF_NO_ID 1185,52039
+#define ONVM_NF_HANDLE_TX 1186,52059
+get_rx_queue_name(1192,52254
+get_tx_queue_name(1209,52796
+get_msg_queue_name(1224,53341
+#define MP_NF_RXSQ_NAME 1235,53721
+#define MP_NF_TXSQ_NAME 1236,53764
+get_rx_squeue_name(1238,53834
+get_tx_squeue_name(1245,54068
+get_rsync_tx_port_ring_name(1254,54372
+get_rsync_tx_tx_state_latch_ring_name(1260,54615
+get_rsync_tx_nf_state_latch_ring_name(1266,54870
+get_rsync_tx_tx_state_latch_db_ring_name(1273,55172
+get_rsync_tx_nf_state_latch_db_ring_name(1279,55436
+get_associated_active_or_standby_nf_id(1288,55711
+is_primary_active_nf_id(1295,55934
+is_secondary_active_nf_id(1299,56152
+get_associated_active_nf_id(1303,56268
+get_associated_standby_nf_id(1307,56380
+   get_nf_image_state_name(1314,56557
+get_rx_shmkey(1326,56875
+get_sem_name(1335,57033
+#define MP_CLIENT_CGROUP_NAME 1346,57398
+get_cgroup_name(1348,57463
+#define MP_CLIENT_CGROUP_PATH 1354,57655
+get_cgroup_path(1356,57740
+#define MP_CLIENT_CGROUP_CREAT 1362,57932
+get_cgroup_create_cgroup_cmd(1364,58023
+#define MP_CLIENT_CGROUP_ADD_TASK 1370,58230
+get_cgroup_add_task_cmd(1372,58334
+#define MP_CLIENT_CGROUP_SET_CPU_SHARE 1378,58559
+get_cgroup_set_cpu_share_cmd(1380,58673
+#define MP_CLIENT_CGROUP_SET_CPU_SHARE_ONVM_MGR 1386,58920
+get_cgroup_set_cpu_share_cmd_onvm_mgr(1388,59033
+set_cgroup_nf_cpu_share(1396,59313
+set_cgroup_nf_cpu_share_from_onvm_mgr(1411,59947
+#define RTE_LOGTYPE_APP 1429,60607
+typedef struct per_core_nf_pool 1432,60680
+        uint16_t nf_count;1433,60714
+        uint32_t nf_ids[nf_ids1434,60741
+}per_core_nf_pool_t;per_core_nf_pool_t1435,60775
+typedef struct sc_entries 1439,60830
+        struct onvm_service_chain *sc;sc1440,60858
+        uint16_t sc_count;1441,60897
+        uint16_t bneck_flag;1442,60924
+}sc_entries_list;sc_entries_list1443,60953
+typedef struct bottleneck_nf_entries 1449,61358
+        onvm_time_t s_time;1450,61397
+        uint16_t enqueue_status;1451,61425
+        uint16_t nf_id;1452,61564
+        uint16_t enqueued_ctr;1453,61588
+        uint16_t marked_ctr;1454,61619
+}bottleneck_nf_entries_t;bottleneck_nf_entries_t1455,61648
+typedef struct bottlenec_nf_info 1456,61674
+        uint16_t entires;1457,61709
+        bottleneck_nf_entries_t nf[nf1459,61878
+}bottlenec_nf_info_t;bottlenec_nf_info_t1460,61923
+bottlenec_nf_info_t bottleneck_nf_list;1461,61945
+#define WAIT_TIME_BEFORE_MARKING_OVERFLOW_IN_US 1465,62053
+typedef struct fipo_buf_node 1476,62827
+        void *pkt;pkt1477,62858
+        struct fipo_buf_node *next;next1478,62877
+        struct fipo_buf_node *prev;prev1479,62913
+}fipo_buf_node_t;fipo_buf_node_t1480,62949
+typedef struct fipo_list 1482,62968
+        uint32_t buf_count;1483,62995
+        fipo_buf_node_t *head;head1484,63023
+        fipo_buf_node_t *tail;tail1485,63054
+}fipo_list_t;fipo_list_t1486,63085
+typedef fipo_list_t fipo_per_flow_list;1487,63099
+#define MAX_NUM_FIPO_FLOWS 1490,63371
+#define MAX_BUF_PER_FLOW 1491,63404
+typedef struct nf_flow_list 1492,63503
+        uint32_t flow_count;1493,63533
+        fipo_per_flow_list *head;head1494,63562
+        fipo_per_flow_list *tail;tail1495,63596
+}nf_flow_list_t;nf_flow_list_t1496,63630
+#define TEST_INLINE_FUNCTION_CALL1499,63680
+typedef int(*nf_pkt_handler)nf_pkt_handler1501,63747
+
+onvm/onvm_nflib/onvm_sc_common.c,93
+int onvm_sc_append_entry(45,2099
+int onvm_sc_set_entry(66,2795
+void onvm_sc_print(84,3394
+
+onvm/onvm_nflib/onvm_ringbuf.c,144
+int onvm_su_ring_init(7,106
+int onvm_su_ring_enqueu(16,417
+int onvm_su_ring_dequeue(29,870
+int onvm_su_ring_dinit(42,1349
+int main(49,1566
+
+onvm/onvm_nflib/onvm_config_common.c,483
+#define IS_NULL_OR_EMPTY_STRING(49,2141
+onvm_config_parse_file(52,2232
+onvm_config_extract_corelist(90,3121
+onvm_config_extract_memory_channels(122,3920
+onvm_config_extract_portmask(141,4375
+onvm_config_extract_output_location(160,4792
+onvm_config_extract_service_id(183,5533
+onvm_config_extract_instance_id(198,5910
+onvm_config_get_item_count(213,6293
+onvm_config_create_nf_arg_list(234,6694
+onvm_config_create_onvm_args(373,11645
+onvm_config_create_dpdk_args(441,14117
+
+onvm/onvm_nflib/onvm_msg_common.h,1043
+#define _MSG_COMMON_H_44,2109
+#define MSG_FROM_MGR 48,2154
+#define MSG_NOOP 49,2181
+#define MSG_STOP 50,2226
+#define MSG_PAUSE 51,2271
+#define MSG_RESUME 52,2316
+#define MSG_RUN 53,2361
+#define MAX_MSG_FROM_MGR 54,2402
+#define MSG_GPU_MODEL_PRI 56,2438
+#define MSG_GPU_MODEL_SEC 57,2544
+#define MSG_RESTART 58,2627
+#define MSG_GET_GPU_READY 59,2706
+#define MSG_FROM_NF 61,2807
+#define MSG_NF_STARTING 62,2834
+#define MSG_NF_STOPPING 63,2878
+#define MSG_NF_READY 64,2922
+#define MSG_NF_UNBLOCK_SELF 65,2966
+#define MSG_NF_REGISTER_ECB 66,3010
+#define MSG_NF_TRIGGER_ECB 67,3054
+#define MSG_NF_SYNC_RESP 68,3098
+#define MSG_GIVE_GPU_MODEL 70,3143
+#define MSG_NF_GPU_READY 71,3217
+#define MSG_NF_RESTART_OK 72,3303
+#define MSG_NF_VOLUNTARY_RE 73,3385
+#define MSG_MODE_ASYNCHRONOUS 75,3490
+#define MSG_MODE_SYNCHRONOUS 76,3526
+struct onvm_nf_msg 78,3563
+        uint8_t msg_type;79,3584
+        uint8_t is_sync;81,3778
+        void *msg_data;msg_data83,3906
+#define ENABLE_MSG_CONSTRUCT_NF_INFO_NOTIFICATION87,4141
+
+onvm/onvm_nflib/onvm_flow_table.c,294
+uint8_t rss_symmetric_key[rss_symmetric_key49,2160
+onvm_ft_create(63,2929
+onvm_ft_add_pkt(109,4485
+onvm_ft_lookup_pkt(132,5177
+onvm_ft_remove_pkt(155,6004
+onvm_ft_add_key(168,6330
+onvm_ft_lookup_key(183,6732
+onvm_ft_remove_key(198,7112
+onvm_ft_iterate(214,7798
+onvm_ft_free(221,8011
+
+onvm/onvm_nflib/onvm_sort.c,495
+#define MIN(6,83
+#define MAX(7,121
+#define MIN0(8,159
+#define RUN_AVG(9,199
+int onvm_cmp_int_a(11,244
+int onvm_cmp_int_d(21,510
+void onvm_sort_int(32,777
+int onvm_cmp_uint32_a(40,1233
+int onvm_cmp_uint32_d(50,1522
+void onvm_sort_uint32(60,1811
+int onvm_cmp_uint64_a(68,2286
+int onvm_cmp_uint64_d(78,2575
+void onvm_sort_uint64(88,2864
+int onvm_cmp_uint32_r(97,3340
+int onvm_cmp_func_r 119,4035
+void onvm_sort_generic_r(131,4325
+void onvm_sort_generic(159,5524
+int main(185,6467
+
+onvm/onvm_nflib/onvm_nflib.h,2006
+#define _ONVM_NFLIB_H_54,2277
+typedef int (*gpu_message_processing_func)gpu_message_processing_func289,9482
+float throughputs[throughputs303,10278
+struct timespec batch_fed[batch_fed304,10303
+struct timespec batch_fed[1000], batch_processed[batch_processed304,10303
+int num_throughput_stored;305,10359
+struct rte_timer image_stats_timer;312,10572
+struct rte_timer image_inference_timer;315,10650
+int  gpu_queue_image_id[gpu_queue_image_id326,11207
+struct gpu_callback gpu_callbacks[gpu_callbacks328,11361
+int num_elements_in_gpu_queue;329,11407
+int gpu_queue_current_index;330,11438
+typedef int (*nf_explicit_callback_function)nf_explicit_callback_function341,11565
+#define MAX_FILE_PATH_SIZE 348,11818
+#define AIO_OPTION_SYNC_MODE_RW 349,11863
+#define AIO_OPTION_BATCH_PROCESS 350,11941
+#define AIO_OPTION_PER_FLOW_QUEUE 351,12011
+typedef struct nflib_aio_info 352,12087
+        uint8_t file_path[file_path353,12119
+        int mode;354,12166
+        uint32_t num_of_buffers;355,12226
+        uint32_t max_buffer_size;356,12313
+        uint32_t aio_options;357,12391
+        uint32_t wait_pkt_queue_len;358,12463
+}nflib_aio_info_t;nflib_aio_info_t359,12565
+typedef struct onvm_nflib_aio_init_info 360,12584
+        nflib_aio_info_t aio_read;361,12626
+        nflib_aio_info_t aio_write;362,12685
+        uint32_t max_worker_threads;363,12745
+        uint8_t aio_service_type;364,12820
+}onvm_nflib_aio_init_info_t;onvm_nflib_aio_init_info_t365,12911
+typedef struct nflib_aio_status 366,12940
+        int32_t rw_status;367,12974
+        void *rw_buffer;rw_buffer368,13059
+        uint8_t rw_buf_len;369,13162
+        off_t rw_offset;370,13210
+}nflib_aio_status_t;nflib_aio_status_t371,13281
+typedef int (*aio_notify_handler_cb)aio_notify_handler_cb376,13449
+typedef struct dirty_mon_state_map_tbl 393,14378
+        uint64_t dirty_index;394,14419
+}dirty_mon_state_map_tbl_t;dirty_mon_state_map_tbl_t396,14503
+#define DIRTY_MAP_PER_CHUNK_SIZE 400,14562
+
+onvm/onvm_nflib/histogram.c,623
+#define MIN(6,83
+#define MAX(7,121
+#define MIN0(8,159
+#define RUN_AVG(9,199
+#define EWMA_ALPHA 10,243
+#define EWMA_AVG(11,270
+void hist_init(13,351
+void hist_clear(38,994
+void hist_store(42,1071
+void hist_print(64,1788
+uint32_t hist_mean(82,2549
+uint32_t hist_median(99,2991
+uint32_t hist_mode(145,4262
+uint32_t hist_percentile(162,4790
+uint32_t get_histogram(203,6179
+uint32_t get_modes(227,6953
+void hist_init_v2(265,8228
+void hist_store_v2(283,8617
+void hist_compute_v2(307,9526
+void hist_extract_all_v2(329,10571
+uint32_t hist_extract_v2(338,10857
+void hist_print_v2(385,12409
+int main(393,12717
+
+onvm/onvm_nflib/onvm_ringbuf.h,316
+#define _ONVM_SURING_H_3,25
+#define MAX_RINGBUF_SIZE 6,130
+typedef struct onvm_single_user_ring 7,164
+        uint16_t r_count;8,203
+        uint16_t r_h;9,271
+        uint16_t w_h;10,334
+        uint16_t max_len;11,398
+        void* ring[ring12,462
+}onvm_single_user_ring_t;onvm_single_user_ring_t13,500
+
+onvm/onvm_nflib/onvm_sc_mgr.h,375
+#define _SC_MGR_H_42,2043
+typedef struct active_sc_entries 48,2112
+        uint32_t sc_count;49,2147
+        struct onvm_service_chain *sc[sc50,2174
+} __rte_cache_aligned active_sc_entries_t;51,2229
+onvm_next_action(55,2338
+onvm_sc_next_action(63,2550
+onvm_next_destination(68,2718
+onvm_sc_next_destination(76,2923
+onvm_sc_get_next_action_and_destionation(81,3096
+
+onvm/onvm_mgr/onvm_mgr.h,81
+#define _ONVM_MGR_H_54,2290
+#define TO_PORT 90,3076
+#define TO_CLIENT 91,3094
+
+onvm/onvm_mgr/onvm_nf.c,2185
+uint16_t next_instance_id 60,2455
+uint8_t  global_bkpr_mode=64,2665
+uint16_t downstream_nf_overflow 65,2694
+uint16_t highest_downstream_nf_service_id=66,2731
+uint16_t lowest_upstream_to_throttle 67,2776
+uint64_t throttle_count 68,2818
+#define EWMA_LOAD_ADECAY 71,2891
+nf_schedule_info_t nf_sched_param;75,3069
+#define DEFAULT_NF_CPU_SHARE 86,3686
+typedef struct nf_core_and_cc_info 89,3806
+        uint32_t total_comp_cost;90,3843
+        uint32_t total_nf_count;91,3954
+        uint32_t total_pkts_served;92,4048
+        uint32_t total_load;93,4158
+        uint64_t total_load_cost_fct;94,4259
+}nf_core_and_cc_info_t;nf_core_and_cc_info_t95,4395
+static inline void assign_nf_cgroup_weight(102,4754
+static inline void assign_all_nf_cgroup_weight(113,5252
+void compute_nf_exec_period_and_cgroup_weight(119,5445
+void compute_and_assign_nf_cgroup_weight(199,11771
+void extract_nf_load_and_svc_rate_info(289,18673
+void compute_and_order_nf_wake_priority(331,21103
+int nf_sort_func(343,21699
+void setup_nfs_priority_per_core_list(361,22204
+inline void monitor_nf_node_liveliness_via_pid_monitoring(395,23945
+onvm_nf_is_valid(412,25028
+onvm_nf_is_paused(417,25231
+onvm_nf_is_processing(421,25330
+onvm_nf_is_waiting_on_NDSYNC(425,25520
+onvm_nf_is_NDSYNC_set(434,25896
+onvm_nf_is_instance_id_free(444,26178
+onvm_nf_next_instance_id(449,26281
+int onvm_nf_recv_resp_msg(468,26865
+void onvm_nf_recv_and_process_msgs(502,27979
+onvm_nf_check_status(595,31478
+onvm_nf_stats_update(611,32045
+onvm_nf_service_to_nf_map_V2(631,32779
+onvm_nf_service_to_nf_map(659,33692
+onvm_nf_send_msg(693,35387
+#define MAX_SYNC_RETRY_COUNT 714,36075
+onvm_nf_send_msg_sync(717,36122
+int onvm_nf_register_run(743,37470
+onvm_nf_start(844,43216
+onvm_nf_stop(905,45370
+static sc_entries_list sc_list[sc_list989,48745
+onvm_mark_all_entries_for_bottleneck(993,48805
+onvm_clear_all_entries_for_bottleneck(1062,52537
+int enqueu_nf_to_bottleneck_watch_list(1131,56900
+int dequeue_nf_from_bottleneck_watch_list(1158,58266
+static inline void mark_nf_backpressure_from_bottleneck_watch_list(1185,59620
+int check_and_enqueue_or_dequeue_nfs_from_bottleneck_watch_list(1198,60132
+
+onvm/onvm_mgr/zoo_queue.h,371
+#define ZOOKEEPER_QUEUE_H_20,835
+struct zkr_queue 36,1030
+    zhandle_t *zh;zh37,1049
+    char *path;path38,1068
+    struct ACL_vector *acl;acl39,1084
+    pthread_mutex_t pmutex;40,1112
+    char *node_name;node_name41,1140
+    int node_name_length;42,1161
+    char *cached_create_path;cached_create_path43,1187
+typedef struct zkr_queue zkr_queue_t;46,1221
+
+onvm/onvm_mgr/onvm_pkt.h,29
+#define _ONVM_PKT_H_54,2296
+
+onvm/onvm_mgr/onvm_zookeeper.c,914
+#define EXPIRATION_CACHE_LEN 66,2624
+#define MAC_STR_LEN 67,2657
+static zhandle_t *zh zh70,2719
+static const clientid_t *myid myid71,2748
+static char *nf_stat_paths[nf_stat_paths72,2786
+struct remote_service_result 75,2857
+        char mac_address[mac_address76,2888
+        struct ether_addr mac_address_struct;77,2927
+        time_t expiration;78,2973
+static struct remote_service_result service_lookup_cache[service_lookup_cache80,3003
+onvm_zk_connect(92,3558
+onvm_zk_client_id(112,4014
+onvm_zk_init(118,4115
+onvm_zk_nf_start(159,5460
+onvm_zk_nf_stop(214,7574
+onvm_zk_disconnect(246,8576
+onvm_zk_lookup_service(253,8689
+onvm_zk_update_nf_stats(308,10830
+update_service_last_modified(372,13274
+get_service_last_modified(390,13862
+can_scale_locally(415,14684
+enqueue_remote_scale_msg(433,15261
+can_scale_remotely(448,15701
+mac_string_to_struct(494,17267
+free_String_vector(517,17872
+
+onvm/onvm_mgr/onvm_init.c,3276
+struct onvm_nf *nfs nfs58,2377
+struct port_info *ports ports59,2405
+struct rte_mempool *pktmbuf_pool;pktmbuf_pool61,2438
+struct rte_mempool *nf_info_pool;nf_info_pool62,2472
+struct rte_mempool *nf_msg_pool;nf_msg_pool63,2506
+struct rte_ring *mgr_msg_queue;mgr_msg_queue64,2539
+struct rte_mempool *nf_image_pool;nf_image_pool67,2588
+struct rte_mempool *image_states_pool;image_states_pool68,2623
+struct rte_ring *mgr_rsp_queue;mgr_rsp_queue72,2703
+struct rte_mempool *nf_state_pool;nf_state_pool76,2766
+struct rte_mempool *service_state_pool;service_state_pool80,2868
+void **services_state_pool;services_state_pool81,2908
+struct rte_mempool *per_flow_ts_pool;per_flow_ts_pool86,3051
+void *onvm_mgr_tx_per_flow_ts_info;onvm_mgr_tx_per_flow_ts_info88,3158
+void *onvm_mgr_tx_per_flow_ts_info_db[onvm_mgr_tx_per_flow_ts_info_db91,3277
+void *onvm_mgr_tx_per_flow_ts_info_db;onvm_mgr_tx_per_flow_ts_info_db93,3352
+struct rte_ring *tx_port_ring[tx_port_ring99,3453
+struct rte_ring *tx_tx_state_latch_ring[tx_tx_state_latch_ring100,3581
+struct rte_ring *tx_nf_state_latch_ring[tx_nf_state_latch_ring101,3719
+struct rte_ring *tx_tx_state_latch_db_ring[tx_tx_state_latch_db_ring104,3972
+struct rte_ring *tx_nf_state_latch_db_ring[tx_nf_state_latch_db_ring105,4168
+struct rte_ring *tx_tx_state_latch_db_ring[tx_tx_state_latch_db_ring107,4402
+struct rte_ring *tx_nf_state_latch_db_ring[tx_nf_state_latch_db_ring108,4543
+uint16_t **services;services113,4738
+uint16_t *nf_per_service_count;nf_per_service_count114,4759
+struct onvm_service_chain *default_chain;default_chain116,4792
+struct onvm_service_chain **default_sc_p;default_sc_p117,4834
+int onvm_socket_id;120,4929
+void *zmq_ctx;zmq_ctx124,5006
+void *onvm_socket_id;onvm_socket_id125,5021
+void *onvm_socket_ctx;onvm_socket_ctx126,5043
+uint8_t remote_eth_addr[remote_eth_addr130,5094
+struct ether_addr remote_eth_addr_struct;131,5156
+uint32_t nf_mgr_id;155,5816
+#define RX_PTHRESH 178,6510
+#define RX_HTHRESH 179,6582
+#define RX_WTHRESH 180,6650
+#define TX_PTHRESH 187,6932
+#define TX_HTHRESH 188,7005
+#define TX_WTHRESH 189,7074
+static const struct rte_eth_conf port_conf 191,7150
+static const struct rte_eth_rxconf rx_conf 212,7905
+static const struct rte_eth_txconf tx_conf 221,8137
+init(237,8515
+init_mbuf_pools(363,13240
+static int init_nf_state_pool(380,14015
+static int init_service_state_pool(400,15167
+static int init_per_flow_ts_pool(418,16108
+                        #define PER_FLOW_TS_POOL_COUNT 422,16294
+                        #define PER_FLOW_TS_POOL_COUNT 424,16415
+                        #define PER_FLOW_TS_POOL_COUNT 428,16685
+                        #define PER_FLOW_TS_POOL_COUNT 430,16776
+                #define PER_FLOW_TS_POOL_COUNT 435,16941
+                #define PER_FLOW_TS_POOL_COUNT 437,17016
+static int init_rsync_tx_rings(458,18073
+init_nf_msg_pool(527,23261
+static int init_image_pool(543,23829
+static int init_images_state(559,24383
+init_client_info_pool(607,26135
+init_port(651,27981
+init_shm_rings(745,32040
+init_mgr_queues(976,43044
+check_all_ports_link_status(1006,43970
+#define CHECK_INTERVAL 1007,44038
+#define MAX_CHECK_TIME 1008,44077
+static uint32_t read_onvm_mgr_id_from_system(1069,46716
+
+onvm/onvm_mgr/onvm_wakemgr.c,1309
+unsigned nfs_wakethr[nfs_wakethr61,2542
+struct wakeup_info *wakeup_infos;wakeup_infos64,2607
+#define WAKE_INTERVAL_IN_US 76,3093
+#define USLEEP_INTERVAL 77,3173
+struct rte_timer wake_timer[wake_timer82,3473
+typedef struct core_nf_timers 88,3685
+        struct rte_timer    timer;89,3717
+        uint16_t            timer_status;90,3752
+        uint16_t            index;91,3815
+        uint16_t            nf_id;92,3887
+        uint16_t            core_id;93,3922
+        uint16_t            next_nf_id;94,3959
+        uint64_t            exec_period;95,3999
+}core_nf_timers_t;core_nf_timers_t96,4040
+core_nf_timers_t    core_timers[core_timers97,4059
+static void wake_timer_cb(107,4544
+initialize_wake_timers(119,5189
+initialize_per_core_timers 140,5728
+static void per_core_timer_cb(153,6222
+int launch_core_nf_timer(168,6937
+static void  arbiter_wakeup_client(194,8090
+whether_wakeup_client(224,9395
+notify_client(293,11976
+wakeup_client_internal(301,12124
+wakeup_client(315,12526
+static inline void handle_wakeup_old(325,12764
+static inline void handle_wakeup_ordered(332,12999
+inline void handle_wakeup(362,14463
+#define WAKE_THREAD_SLEEP_INTERVAL_NS 366,14609
+wakemgr_main(368,14659
+inline void check_and_wakeup_nf(389,15328
+inline void check_and_block_nf(399,15679
+
+onvm/onvm_mgr/onvm_gpu.h,1018
+#define ONVM_GPU_H2,19
+char ml_file_name[ml_file_name16,236
+const char * ml_model_name[ml_model_name17,278
+#define NUM_OF_RUNTIME_DATAPOINTS 19,325
+struct gpu_file_listing * file_listing;22,443
+const char *model_dir;model_dir25,522
+static inline void set_filename(29,627
+typedef enum nf_state{nf_state103,3196
+typedef enum nf_state{zstart,zstart103,3196
+typedef enum nf_state{zstart, zrestart,103,3196
+typedef enum nf_state{zstart, zrestart, zstop}zstop103,3196
+typedef enum nf_state{zstart, zrestart, zstop} nf_state;103,3196
+typedef struct zinformation_format{zinformation_format105,3254
+  int num_of_elements;106,3290
+  int pid_array[pid_array107,3313
+}zinfo_format;zinfo_format108,3333
+typedef struct zmgr_msg_struct{zmgr_msg_struct111,3416
+  nf_state state;112,3448
+  size_t msg_size;113,3466
+  struct timespec timestamp;114,3485
+  zinfo_format information;115,3514
+} zmgr_msg;116,3651
+void * zmqContext;121,3719
+void * zmqRequester;122,3738
+const char * ipc_file_path;123,3759
+
+onvm/onvm_mgr/onvm_pkt.c,787
+static inline int get_flow_entry(62,2775
+onvm_pkt_process_rx_batch(78,3293
+onvm_pkt_process_tx_batch(137,5743
+onvm_pkt_flush_all_ports(227,9586
+onvm_pkt_flush_all_nfs(241,9838
+onvm_pkt_drop_batch(254,10076
+onvm_pkt_flush_port_queue(269,10378
+onvm_pkt_flush_nf_queue(359,14075
+onvm_pkt_enqueue_port(423,16400
+onvm_pkt_enqueue_port_v2(439,16940
+onvm_pkt_enqueue_nf(467,18006
+onvm_pkt_process_next_action(609,25943
+onvm_pkt_drop(664,28128
+onvm_detect_and_set_ecn_ce(674,28287
+#define CE_BITS 676,28421
+static inline void write_ft_to_cl_bft(692,29174
+static inline void read_all_ft_frm_cl_bft(729,31519
+void onvm_set_back_pressure_v2(771,34011
+onvm_set_back_pressure(790,34523
+onvm_check_and_reset_back_pressure_v2(873,38901
+onvm_check_and_reset_back_pressure(903,40146
+
+onvm/onvm_mgr/main.c,1977
+onvm_bfd_init_config_t bfd_config;68,2625
+int node_role 73,2770
+#define MAX_SHUTDOWN_ITERS 79,2999
+static uint8_t main_keep_running 82,3090
+static uint8_t worker_keep_running 86,3275
+int process_nf_function_inline(91,3511
+nf_pkt_handler nf_process_packet 94,3662
+uint8_t remote_eth_addr[remote_eth_addr101,3819
+struct ether_addr remote_eth_addr_struct;102,3847
+typedef struct thread_core_map_t 105,3897
+        unsigned rx_th_core[rx_th_core106,3932
+        unsigned tx_t_core[tx_t_core107,3982
+        unsigned wk_th_core[wk_th_core109,4034
+        unsigned mn_th_core;111,4095
+}thread_core_map_t;thread_core_map_t112,4124
+static thread_core_map_t thread_core_map;113,4144
+#define NF_STATUS_CHECK_PERIOD_IN_MS 117,4237
+#define NF_STATUS_CHECK_PERIOD_IN_US 118,4318
+#define DISPLAY_STATS_PERIOD_IN_MS 119,4448
+#define NF_LOAD_EVAL_PERIOD_IN_MS 120,4526
+#define USLEEP_INTERVAL_IN_US 121,4585
+struct rte_timer display_stats_timer;128,5211
+struct rte_timer nf_status_check_timer;129,5310
+struct rte_timer nf_load_eval_timer;130,5438
+struct rte_timer main_arbiter_timer;131,5548
+display_stats_timer_cb(147,6360
+nf_status_check_timer_cb(156,6681
+nf_load_stats_timer_cb(164,6873
+arbiter_timer_cb(185,7671
+initialize_master_timers(198,8154
+#define MAIN_THREAD_POLL249,10124
+#define MAIN_THREAD_SLEEP_INTERVAL_NS 251,10174
+master_thread_main(257,10309
+rx_thread_main(344,13437
+#define PACKET_READ_SIZE_TX 396,15804
+tx_thread_main(398,15876
+static inline int create_rx_threads(468,19113
+static inline int create_tx_threads(487,20093
+static inline int create_wakeup_threads(517,21791
+static inline int create_rsync_threads(544,23399
+main(558,23979
+#define ENABLE_REPLAY_LATENCY_PROFILER694,28990
+static onvm_interval_timer_t ts;696,29067
+void replay_and_terminate_failover(698,29107
+void initiate_node_failover(710,29511
+static int bfd_handle_callback(728,30183
+static void signal_handler(748,30996
+register_signal_handler(765,31615
+
+onvm/onvm_mgr/onvm_zk_watch.h,33
+#define ONVM_ZK_WATCH_H_52,2338
+
+onvm/onvm_mgr/onvm_bfd.h,2650
+#define _ONVM_BFD_H_52,2352
+#define BasePacketSize 94,4313
+#define MaxAuthDataSize 97,4423
+#define AuthHeaderSize 100,4516
+#define MaxPacketSize 103,4635
+#define ListenPort 106,4746
+#define TTLValue 109,4805
+#define MinSourcePort 112,4910
+#define MaxSourcePort 115,5023
+#define Version 118,5134
+#define BaseMinTxInterval 121,5235
+#define BFD_CHECKPOINT_PERIOD_IN_US 123,5273
+#define BFDEchoInterval_us 126,5555
+#define BFDMinRxInterval_us 127,5617
+#define BFDMinTxInterval_us 128,5655
+#define BFDEchoMissMultiplier 129,5693
+#define BFDTimeoutValue_us 130,5778
+#define BFDTimeoutErr_oft_us 131,5853
+#define BFD_TIMEOUT_INTERVAL 132,5906
+#define BFD_SLOW_SEND_RATE_RATIO_COUNTER 133,5982
+#define BFD_MAX_PER_INTV_PER_PORT 134,6128
+typedef enum BFD_StateValue136,6242
+  AdminDown 138,6272
+  Down 139,6289
+  Init 140,6306
+  Up 141,6323
+}BFD_StateValue;BFD_StateValue142,6340
+typedef enum BFD_DiagStateValue148,6410
+  None 150,6444
+  ControlDetectExpired 151,6456
+  EchoFailed 152,6484
+  NeighborSessionDown 153,6502
+  ForwardingReset 154,6529
+  PathDown 155,6552
+  ConcatPathDown 156,6568
+  AdmDown 157,6590
+  ReverseConcatPathDown 158,6605
+  MaxDiagnostic 159,6634
+}BFD_DiagStateValue;BFD_DiagStateValue160,6655
+typedef enum BFD_AuthTypeValue168,6811
+  none 170,6844
+  Password 171,6856
+  MD5 172,6872
+  MeticulousMD5 173,6883
+  SHA1 174,6904
+  MeticulousSHA1 175,6916
+}BFD_AuthTypeValue;BFD_AuthTypeValue176,6938
+typedef struct BfdPacketHeader183,7026
+  uint8_t versAndDiag;185,7059
+  uint8_t flags;186,7132
+  uint8_t detectMult;187,7149
+  uint8_t length;188,7171
+  uint32_t myDisc;189,7222
+  uint32_t yourDisc;190,7270
+  uint32_t txDesiredMinInt;191,7320
+  uint32_t rxRequiredMinInt;192,7348
+  uint32_t rxRequiredMinEchoInt;193,7377
+} __attribute__((__packed__)) BfdPacketHeader;216,8889
+typedef struct BFDAuthData223,9020
+  uint8_t type;225,9049
+  uint8_t len;226,9065
+  uint8_t data[data227,9080
+}BFDAuthData;BFDAuthData233,9295
+typedef struct BfdPacket238,9351
+  BfdPacketHeader header;240,9378
+}BfdPacket;BfdPacket242,9426
+#define BFD_STATUS_REMOTE_DOWN 252,9543
+#define BFD_STATUS_LOCAL_DOWN 253,9579
+typedef int(*bfd_status_notifier_cb)bfd_status_notifier_cb254,9615
+#define MAX_BFD_SESSIONS 255,9690
+typedef struct onvm_bfd_init_config 256,9720
+        uint32_t bfd_identifier;257,9758
+        uint8_t num_ports;258,9791
+        uint8_t session_mode[session_mode259,9818
+        bfd_status_notifier_cb cb_func;260,9866
+}onvm_bfd_init_config_t;onvm_bfd_init_config_t261,9906
+#define BFD_SESSION_MODE_PASSIVE 263,9932
+#define BFD_SESSION_MODE_ACTIVE 264,9972
+
+onvm/onvm_mgr/onvm_args.h,66
+#define _ONVM_ARGS_H_53,2302
+#define DEFAULT_SERVICE_ID 60,2406
+
+onvm/onvm_mgr/onvm_stats.c,935
+#define onvm_stats_display_nfs(68,2676
+static FILE *stats_out;stats_out93,3215
+static FILE *json_stats_out;json_stats_out94,3239
+char buffer[buffer100,3423
+onvm_stats_init(105,3527
+onvm_stats_set_output(113,3932
+onvm_stats_cleanup(142,5190
+void onvm_stats_display_rsync_tx_thread_stats(151,5449
+onvm_stats_display_all(170,6503
+onvm_stats_clear_all_clients(200,7501
+onvm_stats_clear_client(213,7847
+#define USE_EXTENDED_PORT_STATS223,8182
+get_port_stats_rate(226,8257
+void onvm_stats_display_mode(268,10788
+onvm_stats_display_ports(316,12045
+onvm_stats_display_clients(396,15803
+void onvm_stats_display_chains(604,27034
+onvm_stats_clear_terminal(614,27324
+onvm_stats_print_MAC(623,27552
+onvm_print_ethaddr(644,28344
+onvm_stats_flush(652,28579
+onvm_stats_truncate(663,28772
+onvm_json_reset_objects(679,29227
+static onvm_stats_snapshot_t sn_local[sn_local699,29923
+int get_onvm_nf_stats_snapshot_v2(700,29981
+
+onvm/onvm_mgr/onvm_bfd.c,1936
+#define BFD_TX_PORT_QUEUE_ID 54,2401
+#define BFD_PKT_OFFSET 59,2547
+typedef struct bfd_session_status 61,2649
+        uint8_t mode;63,2740
+        BFD_StateValue local_state;66,2837
+        BFD_StateValue remote_state;67,2873
+        BFD_DiagStateValue local_diags;68,2910
+        BFD_DiagStateValue remote_diags;69,2950
+        uint64_t local_descr;72,3053
+        uint64_t remote_descr;73,3083
+        uint64_t tx_rx_interval;76,3211
+        uint64_t last_sent_pkt_ts;78,3293
+        uint64_t last_rcvd_pkt_ts;80,3382
+        uint64_t pkt_missed_counter;82,3531
+        uint64_t bfd_status_change_counter;84,3606
+        uint64_t last_rx_pkts;88,3754
+        uint8_t last_rx_set;89,3785
+        uint8_t  skip_bfd_query;90,3814
+}bfd_session_status_t;bfd_session_status_t93,3855
+typedef struct bfd_pkt_stat_t 95,3879
+        uint64_t rx_count;96,3911
+        uint64_t tx_count;97,3938
+}bfd_pkt_stat_t;bfd_pkt_stat_t98,3965
+bfd_pkt_stat_t bfd_stat;100,3983
+struct rte_timer bfd_status_checkpoint_timer;103,4050
+bfd_session_status_t bfd_sess_info[bfd_sess_info104,4096
+bfd_status_notifier_cb notifier_cb;105,4150
+BfdPacket bfd_template;106,4186
+static void init_bfd_session_status(120,4816
+onvm_bfd_start(146,5859
+onvm_bfd_stop(151,5907
+bfd_status_checkpoint_timer_cb(155,5961
+static inline int initialize_bfd_timers(169,6700
+static inline int bfd_send_packet_out(176,7101
+static void set_bfd_packet_template(184,7469
+int print_bfd_packet(194,8026
+static void parse_and_set_bfd_session_info(205,8802
+struct rte_mbuf* create_bfd_packet(238,10917
+int parse_bfd_packet(292,13017
+static void send_bfd_echo_packets(310,13796
+static void check_bdf_remote_status(340,15377
+onvm_bfd_process_incoming_packets(395,18500
+onvm_bfd_init(405,18867
+onvm_bfd_deinit(427,19631
+int onvm_print_bfd_status(432,19677
+struct rte_mbuf* create_bfd_packet_spcl(458,21563
+void send_bfd_echo_packets_spcl(503,23351
+
+onvm/onvm_mgr/onvm_ft_install.c,1068
+typedef struct onvm_ft_args 71,2775
+        const char* servicechain_file;72,2805
+        const char* ipv4rules_file;73,2883
+        const char* base_ip_addr;74,2968
+        uint32_t max_ip_addrs;75,3050
+        uint32_t max_ft_rules;76,3136
+        uint32_t rev_order;77,3220
+}onvm_ft_args_t;onvm_ft_args_t78,3310
+#define MAX_FLOW_TABLE_ENTRIES 81,3375
+static onvm_ft_args_t globals 82,3421
+#define MAX_SERVICE_CHAINS 92,3799
+int schains[schains93,3829
+int alt_port[alt_port94,3885
+int max_service_chains=95,4025
+struct onvm_ft_ipv4_5tuple ipv4_5tRules[ipv4_5tRules96,4051
+uint32_t max_ft_entries=97,4116
+static uint32_t get_ipv4_value(101,4243
+parse_service_chains(133,5432
+parse_ipv4_5t_rules(212,8124
+setup_service_chain_for_flow_entry(277,10964
+setup_schain_and_flow_entry_for_flip_key(343,13626
+add_flow_key_to_sc_flow_table(429,16509
+populate_random_flow_rules(517,19459
+setup_flow_rule_and_sc_entries(582,22827
+static int setup_flowrule_for_packet(599,23426
+int init_onvm_ft_install(678,26853
+int onvm_ft_handle_packet(694,27321
+
+onvm/onvm_mgr/onvm_nf.h,477
+#define _ONVM_NF_H_53,2354
+#define MAX_CORES_ON_NODE 57,2410
+typedef struct nfs_per_core 59,2498
+        uint16_t sorted;60,2528
+        uint16_t count;61,2622
+        uint32_t nf_ids[nf_ids62,2703
+        uint64_t run_time[run_time63,2817
+}nfs_per_core_t;nfs_per_core_t64,2924
+typedef struct nf_schedule_info 66,2942
+        uint16_t sorted;67,2976
+        nfs_per_core_t nf_list_per_core[nf_list_per_core68,3001
+}nf_schedule_info_t;nf_schedule_info_t69,3061
+
+onvm/onvm_mgr/onvm_vxlan.c,115
+onvm_encapsulate_pkt(71,2893
+onvm_decapsulate_pkt(158,6319
+process_inner_cksums(201,7780
+get_psd_sum(260,10054
+
+onvm/onvm_mgr/onvm_special_nf0.h,37
+#define _ONVM_SPECIAL_NF0_H_53,2420
+
+onvm/onvm_mgr/onvm_vxlan.h,852
+#define ONVM_VXLAN_H_51,2343
+#define RTE_LOGTYPE_VXLAN 57,2432
+#define IPV4_HEADER_LEN 59,2477
+#define UDP_HEADER_LEN 60,2504
+#define VXLAN_HEADER_LEN 61,2530
+#define IP_VERSION 63,2558
+#define IP_HDRLEN 64,2582
+#define IP_DEFTTL 65,2660
+#define IP_VHL_DEF 66,2705
+#define IP_DN_FRAGMENT_FLAG 67,2749
+#define VXLAN_HF_VNI 68,2784
+#define DEFAULT_VXLAN_PORT 69,2816
+#define VXLAN_SRC_IP 73,2961
+#define VXLAN_DST_IP 74,2996
+union tunnel_offload_info 77,3096
+        uint64_t data;78,3124
+                uint64_t l2_len:l2_len80,3164
+                uint64_t l3_len:l3_len81,3231
+                uint64_t l4_len:l4_len82,3297
+                uint64_t tso_segsz:tso_segsz83,3358
+                uint64_t outer_l2_len:outer_l2_len84,3426
+                uint64_t outer_l3_len:outer_l3_len85,3498
+} __rte_cache_aligned;87,3582
+
+onvm/onvm_mgr/onvm_init.h,953
+#define _ONVM_INIT_H_54,2317
+#define MBUFS_PER_NF 97,3416
+#define MBUFS_PER_PORT 98,3514
+#define MBUF_CACHE_SIZE 99,3617
+#define MBUF_OVERHEAD 100,3645
+#define RX_MBUF_DATA_SIZE 101,3716
+#define MBUF_SIZE 102,3747
+#define NF_INFO_SIZE 104,3802
+#define NF_INFO_CACHE 105,3851
+#define NF_MSG_SIZE 107,3971
+#define NF_MSG_CACHE_SIZE 108,4018
+#define IMAGE_CACHE_SIZE 112,4115
+#define IMAGE_STATE_CACHE_SIZE 113,4142
+#define CLIENT_QUEUE_RING_THRESHOLD 120,4470
+#define CLIENT_QUEUE_RING_THRESHOLD_GAP 121,4511
+#define CLIENT_QUEUE_RING_THRESHOLD 123,4617
+#define CLIENT_QUEUE_RING_THRESHOLD_GAP 124,4658
+#define CLIENT_QUEUE_RING_WATER_MARK_SIZE 127,4740
+#define CLIENT_QUEUE_RING_LOW_THRESHOLD 128,4848
+#define CLIENT_QUEUE_RING_LOW_WATER_MARK_SIZE 129,5048
+#define ECN_EWMA_ALPHA 130,5164
+#define CLIENT_QUEUE_RING_ECN_MARK_SIZE 131,5195
+#define NO_FLAGS 132,5368
+#define DYNAMIC_CLIENTS 134,5388
+#define STATIC_CLIENTS 135,5414
+
+onvm/onvm_mgr/onvm_special_nf0.c,4237
+#define ONVM_MGR_ACT_AS_2PORT_FWD_BRIDGE 74,2939
+static uint8_t keep_running 80,3157
+static struct onvm_nf *nf0_cl nf0_cl81,3190
+inline int set_packet_forwarind_actions(86,3484
+int send_direct_on_assigned_port(104,4276
+int send_direct_on_alt_port(155,6822
+static int onv_pkt_send_on_alt_port(208,8838
+struct state_info 313,13182
+        struct rte_mempool *pktmbuf_pool;pktmbuf_pool314,13202
+        uint16_t nf_destination;315,13244
+        uint32_t *source_ips;source_ips316,13277
+        int print_flag;317,13307
+struct state_info *state_info;state_info321,13394
+typedef struct onvm_arp_resp_args 323,13426
+        const char* ipmap_file;324,13462
+        const char* ipmap_csv;325,13533
+        uint32_t max_ports;326,13608
+}onvm_arp_resp_args_t;onvm_arp_resp_args_t327,13687
+static onvm_arp_resp_args_t arp_resp_info 328,13710
+parse_port_ip_map(334,13874
+send_arp_reply_v2(358,15042
+int send_arp_reply(418,17308
+static int try_check_and_send_arp_response(475,19512
+static int onvm_special_nf_arp_responder_init(501,21278
+const uint16_t MAX_SNAPLEN 526,22424
+#define USE_PCAP_ROTATION_BUFFERS528,22469
+#define PCAP_FILE_NAME 530,22537
+#define PACP_PER_PORT_FILE_NAME 531,22581
+get_pcap_file_name(533,22663
+typedef struct pcap_session_meta 538,22872
+        uint64_t max_capture_size;539,22907
+        uint64_t max_packet_count;540,22942
+        uint32_t reset_log_period_in_ms;541,22977
+        const char* capture_file;544,23052
+        uint8_t capture_port;545,23086
+        pcap_t *pd;pd546,23116
+        pcap_dumper_t *pcap_dumper;pcap_dumper547,23136
+        uint8_t is_active;548,23172
+        uint64_t captured_size;549,23199
+        uint32_t captured_packet_count;550,23231
+        onvm_time_t capture_start_time;551,23271
+        onvm_time_t capture_end_time;552,23311
+}pcap_session_meta_t;pcap_session_meta_t554,23350
+#define MAX_PCAP_ROT_FILES 557,23379
+#define PCAP_FILE_NAME 558,23411
+#define PACP_PER_PORT_FILE_NAME 559,23455
+get_pcap_file_name(561,23540
+typedef struct pcap_log_meta{pcap_log_meta566,23771
+        const char* capture_file;568,23834
+        pcap_t *pd;pd569,23868
+        pcap_dumper_t *pcap_dumper;pcap_dumper570,23888
+        uint8_t is_active;571,23924
+        uint64_t captured_size;572,23951
+        uint32_t captured_packet_count;573,23983
+        onvm_time_t capture_start_time;574,24023
+        onvm_time_t capture_end_time;575,24063
+}pcap_log_meta_t;pcap_log_meta_t577,24102
+typedef struct pcap_session_meta 578,24120
+        uint64_t max_capture_size;579,24155
+        uint64_t max_packet_count;580,24190
+        uint32_t reset_log_period_in_ms;581,24225
+        uint8_t capture_port;582,24266
+        uint8_t log_active_status;583,24296
+        uint8_t ring_index;584,24331
+        pcap_log_meta_t log[log585,24359
+}pcap_session_meta_t;pcap_session_meta_t587,24409
+#define PCAP_MAX_PACKET_COUNT 592,24604
+#define PCAP_MAX_CAPTURE_SIZE 593,24698
+#define USE_PCAP_PER_OUT_PORT594,24818
+pcap_session_meta_t pcap_info 596,24878
+pcap_session_meta_t pcap_infos[pcap_infos608,25388
+typedef enum pcap_log_status_type 610,25445
+        pcap_log_status_unused=611,25481
+        pcap_log_status_active_logging=612,25515
+        pcap_log_status_active_logging_stopped=613,25557
+        pcap_log_status_replay_on=614,25607
+        pcap_log_status_replay_finished=615,25644
+}pcap_log_status_type_e;pcap_log_status_type_e616,25687
+inline int onvm_util_init_pacp_logger(619,25747
+inline int onvm_util_clear_pcap_log(654,27488
+inline int onvm_util_log_packets(678,28433
+inline const char* onvm_util_close_and_get_pdump_file(731,31390
+inline int onvm_util_init_pacp_logger(757,32477
+inline int onvm_util_clear_pcap_log(780,33833
+inline int onvm_util_log_packets(804,35119
+inline const char* onvm_util_close_and_get_pdump_file(836,36928
+inline int onvm_util_replay_all_packets(852,37844
+static inline int onvm_util_plain_pcap_replay(863,38180
+static inline int onvm_util_plain_pcap_replay(965,43086
+#define ENABLE_LOCAL_LATENCY_PROFILER977,43536
+int onv_pkt_send_to_special_nf0(1037,46434
+int process_special_nf0_rx_packets(1086,49108
+int start_special_nf0(1204,54756
+int stop_special_nf0(1255,56680
+
+onvm/onvm_mgr/onvm_ft_install.h,36
+#define _ONVM_FT_INSTALL_H_53,2425
+
+onvm/onvm_mgr/onvm_gpu.c,532
+static inline struct onvm_nf_info *shadow_nf(shadow_nf16,292
+void load_all_models(27,543
+void * provide_nf_with_model(112,3840
+void restart_nf(134,4631
+void nf_is_gpu_ready(143,5046
+void compute_GPU_allocation(176,6448
+float find_max_throughput(208,7848
+int suggest_gpu_percentage(221,8355
+void inform_NF_of_pending_restart(235,9018
+void get_shadow_NF_ready(241,9189
+void voluntary_restart_the_nf(259,9857
+void init_zmq(276,10306
+int send_message_to_orchestrator(287,10622
+zmgr_msg *create_zmsg(create_zmsg298,10991
+
+onvm/onvm_mgr/onvm_wakemgr.h,33
+#define _ONVM_WAKEMGR_H_54,2360
+
+onvm/onvm_mgr/onvm_args.c,592
+volatile uint16_t num_nfs 60,2498
+uint16_t num_services 63,2596
+uint16_t default_service 66,2698
+uint8_t is_static_clients;69,2799
+ONVM_STATS_OUTPUT stats_destination 72,2887
+uint16_t global_stats_sleep_time 75,3026
+uint8_t global_verbosity_level 78,3148
+static const char *progname;progname81,3219
+#define USE_STATIC_IDS102,3541
+parse_app_args(121,3908
+usage(209,7437
+parse_portmask(226,8301
+parse_default_service(261,9359
+parse_num_services(275,9661
+parse_stats_sleep_time(288,9956
+parse_stats_output(301,10266
+parse_verbosity_level(317,10813
+parse_num_clients(331,11155
+
+onvm/onvm_mgr/onvm_zk_common.c,164
+onvm_zk_create_if_not_exists(54,2347
+onvm_zk_create_or_update(72,3009
+zk_state_to_string(85,3443
+zk_event_type_to_string(103,4029
+zk_status_to_string(121,4599
+
+onvm/onvm_mgr/onvm_zookeeper.h,764
+#define ONVM_ZOOKEEPER_H_52,2339
+#define ZK_SERVER 62,2539
+#define ZK_CONNECT_ASYNC 64,2576
+#define ZK_CONNECT_BLOCKING 65,2603
+#define MGR_NODE_BASE 67,2634
+#define MGR_NODE_FMT 68,2667
+#define MGR_NODE_STR_FMT 69,2708
+#define SERVICE_NODE_BASE 71,2748
+#define SERVICE_NODE_FMT 72,2785
+#define SERVICE_INSTANCE_FMT 73,2866
+#define SERVICE_COUNT_FMT 74,2963
+#define NF_NODE_BASE 76,3001
+#define NF_SERVICE_BASE 77,3028
+#define NF_STAT_CHILD_FMT 78,3103
+#define NF_INSTANCE_FMT 79,3191
+#define NF_STAT_FMT 80,3294
+#define ZK_STAT_UPDATE_FREQ 81,3366
+#define SCALE_QUEUE_BASE 82,3445
+#define SCALE_QUEUE_FMT 83,3479
+#define SCALE_DATA_FMT 84,3559
+#define MAC_ADDR_FMT 86,3593
+#define SCALE_RX_USE_MAX 87,3634
+#define SCALE_TIMEOUT_SEC 88,3664
+
+onvm/onvm_mgr/onvm_rsync.h,1821
+#define _ONVM_RSYNC_H_53,2414
+typedef struct rsync_stats 57,2569
+        uint64_t tx_state_sync_pkt_counter;60,2700
+        uint64_t nf_state_sync_pkt_counter[nf_state_sync_pkt_counter61,2744
+        uint64_t tx_state_sync_in_pkt_counter;62,2797
+        uint64_t nf_state_sync_in_pkt_counter[nf_state_sync_in_pkt_counter63,2844
+        uint64_t transactions_out_counter;64,2900
+        uint64_t transactions_in_counter;65,2943
+        uint64_t enq_coun_tx_tx_state_latch_ring[enq_coun_tx_tx_state_latch_ring68,3093
+        uint64_t drop_count_tx_tx_state_latch_ring[drop_count_tx_tx_state_latch_ring69,3161
+        uint64_t enq_count_tx_nf_state_latch_ring[enq_count_tx_nf_state_latch_ring71,3232
+        uint64_t drop_count_tx_nf_state_latch_ring[drop_count_tx_nf_state_latch_ring72,3301
+        uint64_t enq_coun_tx_tx_state_latch_db_ring[enq_coun_tx_tx_state_latch_db_ring77,3525
+        uint64_t drop_count_tx_tx_state_latch_db_ring[drop_count_tx_tx_state_latch_db_ring78,3626
+        uint64_t enq_count_tx_nf_state_latch_db_ring[enq_count_tx_nf_state_latch_db_ring80,3730
+        uint64_t drop_count_tx_nf_state_latch_db_ring[drop_count_tx_nf_state_latch_db_ring81,3832
+        uint64_t enq_coun_tx_tx_state_latch_db_ring[enq_coun_tx_tx_state_latch_db_ring83,3941
+        uint64_t drop_count_tx_tx_state_latch_db_ring[drop_count_tx_tx_state_latch_db_ring84,4012
+        uint64_t enq_count_tx_nf_state_latch_db_ring[enq_count_tx_nf_state_latch_db_ring86,4086
+        uint64_t drop_count_tx_nf_state_latch_db_ring[drop_count_tx_nf_state_latch_db_ring87,4158
+        uint64_t enq_count_tx_port_ring[enq_count_tx_port_ring91,4246
+        uint64_t drop_count_tx_port_ring[drop_count_tx_port_ring92,4305
+}rsync_stats_t;rsync_stats_t94,4366
+#define CHECK_IF_ANY_ONE_BIT_SET(98,4523
+
+onvm/onvm_mgr/onvm_rsync.c,6259
+#define NF_CHECKPOINT_PERIOD_IN_US 64,2776
+#define TX_TS_CHECKPOINT_PERIOD_IN_US 65,2966
+#define RSYNC_OUT_PORT 69,3425
+#define RSYNC_USE_DPDK_TIMER72,3498
+volatile uint8_t rx_halt 73,3527
+#undef TX_TS_CHECKPOINT_PERIOD_IN_US76,3593
+#define TX_TS_CHECKPOINT_PERIOD_IN_US 77,3630
+#undef NF_CHECKPOINT_PERIOD_IN_US79,3684
+#define NF_CHECKPOINT_PERIOD_IN_US 80,3718
+#define MAX_PACKETS_IN_AVG_RTT_AT_HIGH_ARRV_RATE 89,4161
+#define MAX_PACKETS_IN_A_ROUND 91,4356
+#define MAX_PACKETS_IN_A_ROUND 93,4598
+#define PACKET_READ_SIZE_LARGE 96,4860
+#define CHECK_FOR_COMMIT_WITH_WAIT 99,5093
+#define CHECK_FOR_COMMIT_WITH_NO_WAIT 100,5132
+#define MAX_RSYNC_TRANSACTIONS 101,5174
+#define REMOTE_SYNC_WAIT_INTERVAL 102,5247
+#define MAX_TRANS_COMMIT_WAIT_COUNTER 103,5368
+#define MAX_WAIT_TIME_FOR_TRANSACTION_COMMIT 104,5498
+#define ENABLE_EXTRA_RSYNC_PRINT_MSGS108,5700
+struct rte_timer tx_ts_checkpoint_timer;111,5746
+struct rte_timer nf_status_checkpoint_timer;112,5787
+#define NEED_REMOTE_TS_TABLE_SYNC 115,5899
+#define NEED_REMOTE_NF_STATE_SYNC 116,5942
+#define TX_TS_LATCH_BUFFER_FULL 117,5985
+#define NF_STATE_LATCH_BUFFER_FULL 118,6028
+static dirty_mon_state_map_tbl_txts_t *dirty_state_map_tx_ts dirty_state_map_tx_ts122,6142
+static dirty_mon_state_map_tbl_t *dirty_state_map_tx_ts dirty_state_map_tx_ts124,6217
+static onvm_per_flow_ts_info_t   *tx_ts_table tx_ts_table126,6328
+static dirty_mon_state_map_tbl_txts_t *dirty_state_map_tx_ts_db[dirty_state_map_tx_ts_db131,6504
+static dirty_mon_state_map_tbl_t *dirty_state_map_tx_ts_db[dirty_state_map_tx_ts_db133,6605
+static onvm_per_flow_ts_info_t   *tx_ts_table_db[tx_ts_table_db135,6742
+static dirty_mon_state_map_tbl_txts_t *dirty_state_map_tx_ts_db dirty_state_map_tx_ts_db138,6866
+static dirty_mon_state_map_tbl_t *dirty_state_map_tx_ts_db dirty_state_map_tx_ts_db140,6944
+static onvm_per_flow_ts_info_t   *tx_ts_table_db tx_ts_table_db142,7058
+#define DIRTY_MAP_PER_CHUNK_SIZE 149,7175
+#define TXTS_DIRTY_MAP_CHUNK_SIZE 152,7319
+#define MAX_TX_TS_ENTRIES 154,7440
+#define TXTS_ENTRIES_PER_CHUNK 155,7554
+#define MAX_TX_TS_ENTRIES 157,7688
+#define TXTS_ENTRIES_PER_CHUNK 158,7797
+typedef struct remote_node_config 161,7886
+        uint8_t mac_addr_bytes[mac_addr_bytes162,7922
+        uint32_t ip_addr;163,7970
+}remote_node_config_t;remote_node_config_t164,7996
+static remote_node_config_t rsync_node_info 165,8019
+#define STATE_TYPE_TX_TS_TABLE 170,8182
+#define STATE_TYPE_NF_MEMPOOL 171,8221
+#define STATE_TYPE_SVC_MEMPOOL 172,8260
+#define MSG_START_OF_REPLAY 173,8299
+#define MSG_END_OF_REPLAY 174,8338
+#define STATE_REQ_TO_RSP_LSH 175,8377
+#define STATE_TYPE_TX_TS_ACK 176,8413
+#define STATE_TYPE_NF_MEM_ACK 177,8506
+#define STATE_TYPE_SVC_MEM_ACK 178,8599
+#define STATE_TYPE_REQ_MASK 179,8693
+#define STATE_TYPE_RSP_MASK 180,8732
+#define MAX_STATE_SIZE_PER_PACKET 182,8772
+typedef struct state_tx_meta 183,8815
+        uint8_t state_type;184,8846
+        uint8_t trans_id;185,8914
+        uint8_t flags;186,8977
+        uint8_t nf_or_svc_id;187,9075
+        uint32_t start_offset;188,9155
+} __attribute__((__packed__)) state_tx_meta_t;190,9299
+#define STATE_FLAG_LAST_PACKET_MARKER 191,9346
+typedef struct state_transfer_packet_hdr 193,9394
+        state_tx_meta_t meta;194,9437
+        uint8_t data[data195,9467
+} __attribute__((__packed__)) state_transfer_packet_hdr_t;196,9516
+typedef struct transfer_ack_packet_hdr 198,9576
+        state_tx_meta_t meta;199,9617
+} __attribute__((__packed__)) transfer_ack_packet_hdr_t;200,9647
+rsync_stats_t rsync_stat;205,9821
+uint8_t replay_mode;208,9922
+static volatile uint8_t trans_queue[trans_queue211,9995
+static onvm_time_t trans_ts[trans_ts212,10056
+static uint8_t trans_notify[trans_notify214,10163
+static inline void notify_ndsync_commit_to_blocked_NFs(243,11830
+static int print_trans_status(269,13271
+static int get_transaction_id(280,13531
+static uint8_t log_transaction_id(296,14054
+static uint8_t clear_transaction_id 313,14647
+static uint8_t check_and_clear_elapsed_transactions(330,15193
+static int rsync_wait_for_commit_ack(357,16809
+static int rsync_wait_for_commit_acks(385,17814
+tx_ts_checkpoint_timer_cb(441,19978
+nf_status_checkpoint_timer_cb(447,20176
+static inline int initialize_rsync_timers(475,21084
+static void bswap_rsync_hdr_data(494,22078
+inline int rsync_print_rsp_packet(509,22662
+static struct rte_mbuf* craft_state_update_packet(520,23289
+static int rsync_tx_ts_state_to_remote(564,25203
+static int rsync_nf_state_to_remote(637,28913
+static int rsync_tx_ts_state_from_remote(803,40148
+static int rsync_nf_state_from_remote(823,41189
+#define ENABLE_REPLAY_LATENCY_PROFILER837,42103
+static onvm_interval_timer_t ts;839,42180
+static int rsycn_handle_start_of_replay(841,42220
+static int rsycn_handle_end_of_replay(850,42714
+static inline uint64_t tx_ts_map_tag_index_to_dirty_chunk_bit_index(862,43366
+static inline void tx_ts_update_dirty_state_index(871,43956
+static inline int update_flow_tx_ts_table(903,45186
+static inline int initialize_tx_ts_table(941,47259
+static inline int send_packets_out(986,49361
+static inline int log_transaction_and_send_packets_out(1023,50690
+int transmit_tx_port_packets(1028,51059
+static int transmit_tx_tx_state_latch_rings(1075,53251
+static int transmit_tx_nf_state_latch_rings(1120,55329
+static inline int get_flow_entry_index(1162,57124
+static int extract_and_parse_tx_port_packets(1186,58283
+static inline int rsync_process_req_packet(1338,66652
+static inline int rsync_process_rsp_packet(1392,69292
+int rsync_process_rsync_in_pkts(1411,70351
+#define MAX_EXTRACT_AND_PARSE_LOOP_COUNTER 1446,72409
+#define MAX_EXTRACT_AND_PARSE_LOOP_COUNTER 1448,72462
+static int rsync_start_simple_pico_nf(1454,72654
+static int rsync_start_simple_pico(1499,74721
+static int rsync_start_simple(1538,76167
+int rsync_start_only_db(1600,79015
+static int rsync_start_simple_multi_db(1659,81667
+static inline int rsync_start_simple_multi_db(1765,87144
+static int rsync_start_simple_db(1916,94323
+static int rsync_start_optimal_db(1999,98780
+inline int rsync_start(2090,103971
+int onvm_print_rsync_stats(2121,104763
+int notify_replay_mode(2176,110478
+rsync_main(2186,110931
+
+onvm/onvm_mgr/onvm_zk_common.h,66
+#define ONVM_ZK_COMMON_H_52,2340
+#define RTE_LOGTYPE_ZK 56,2401
+
+onvm/onvm_mgr/onvm_stats.h,1430
+#define _ONVM_STATS_H_52,2320
+#define ONVM_STR_STATS_STDOUT 60,2426
+#define ONVM_STR_STATS_STDERR 61,2465
+#define ONVM_STR_STATS_WEB 62,2504
+#define ONVM_STATS_FOPEN_ARGS 64,2538
+#define ONVM_STATS_PATH_BASE 65,2573
+#define ONVM_JSON_STATS_FILE 66,2617
+#define ONVM_STATS_FILE 67,2690
+#define ONVM_JSON_PORT_STATS_KEY 69,2753
+#define ONVM_JSON_NF_STATS_KEY 70,2804
+#define ONVM_JSON_TIMESTAMP_KEY 71,2851
+#define ONVM_SNPRINTF(73,2899
+#define ONVM_RAW_STATS_DUMP 82,3494
+        ONVM_STATS_NONE 85,3540
+        ONVM_STATS_STDOUT,86,3569
+        ONVM_STATS_STDERR,87,3596
+        ONVM_STATS_WEB88,3623
+} ONVM_STATS_OUTPUT;89,3646
+cJSON* onvm_json_root;91,3668
+cJSON* onvm_json_port_stats_arr;92,3691
+cJSON* onvm_json_nf_stats_arr;93,3724
+cJSON* onvm_json_port_stats[onvm_json_port_stats94,3755
+cJSON* onvm_json_nf_stats[onvm_json_nf_stats95,3802
+typedef struct onvm_stats_snapshot 98,3919
+        uint64_t rx_delta;99,3956
+        uint64_t tx_delta;100,4026
+        uint64_t rx_drop_delta;101,4096
+        uint64_t tx_drop_delta;102,4164
+        uint32_t arrival_rate;103,4232
+        uint32_t rx_rate;104,4306
+        uint32_t serv_rate;105,4365
+        uint32_t tx_rate;106,4424
+        uint32_t rx_drop_rate;107,4498
+        uint32_t tx_drop_rate;108,4564
+}onvm_stats_snapshot_t;onvm_stats_snapshot_t109,4630
+#define onvm_stats_clear_all_nfs 171,6443
+#define onvm_stats_clear_nf(181,6662
+
+onvm/onvm_mgr/onvm_zk_watch.c,25
+onvm_zk_watcher(59,2461
+
+scripts/pidstat_tracker.c,396
+typedef struct peformance_data_inputs 5,60
+        unsigned long int interval;6,100
+        unsigned long int repetition;7,136
+        char *core_list;core_list8,174
+        char *outfile_path;outfile_path9,199
+        char *nf_tags;nf_tags10,227
+}pd_inputs_t;pd_inputs_t11,250
+const char *cmd cmd13,265
+const char *cmd2 cmd215,352
+int do_performance_log(19,724
+int main(46,1791
+
+examples/speed_tester/speed_tester.c,465
+#define NF_TAG 62,2418
+#define NUM_PKTS 64,2442
+#define PKTMBUF_POOL_NAME 65,2463
+struct onvm_nf_info *nf_info;nf_info68,2564
+static uint32_t print_delay 71,2638
+static uint16_t destination;72,2678
+usage(78,2752
+parse_app_args(86,2947
+do_stats_display(131,4628
+packet_handler(157,5460
+struct rte_mempool *pktmbuf_pool_g;pktmbuf_pool_g178,6162
+static struct rte_mbuf* create_ipv4_udp_packet(179,6198
+static int callback_fp(220,7896
+int main(240,8646
+
+examples/basic_monitor/monitor.c,967
+#define NF_TAG 62,2401
+struct onvm_nf_info *nf_info;nf_info65,2486
+static uint32_t print_delay 68,2560
+typedef struct monitor_state_info_table 70,2600
+        uint16_t ft_index;71,2642
+        uint16_t tag_counter;72,2669
+        uint32_t pkt_counter;73,2699
+}monitor_state_info_table_t;monitor_state_info_table_t74,2729
+monitor_state_info_table_t *mon_state_tbl mon_state_tbl75,2758
+typedef struct dirty_mon_state_map_tbl 78,2815
+        uint64_t dirty_index;79,2856
+}dirty_mon_state_map_tbl_t;dirty_mon_state_map_tbl_t80,2933
+dirty_mon_state_map_tbl_t *dirty_state_map dirty_state_map81,2961
+#define MAX_STATE_ELEMENTS 85,3043
+usage(95,3272
+parse_app_args(103,3450
+do_stats_display(136,4722
+static inline uint64_t map_tag_index_to_dirty_chunk_bit_index(173,5962
+static inline int update_dirty_state_index(182,6556
+static int save_packet_state(192,6985
+static int save_packet_state_new(233,8891
+packet_handler(257,9774
+int main(281,10393
+
+examples/vlan_untag/vlan_untag.c,292
+#define NF_TAG 60,2395
+struct onvm_nf_info *nf_info;nf_info63,2481
+static uint32_t print_delay 66,2555
+static uint32_t destination;69,2596
+usage(75,2670
+parse_app_args(83,2865
+do_stats_display(127,4532
+do_check_and_strip_vlan_tag(153,5292
+packet_handler(187,6878
+int main(203,7301
+
+examples/load_balancer/load_balancer.c,2486
+#define NF_TAG 74,2652
+#define TABLE_SIZE 75,2683
+typedef struct backend_server 79,2762
+        uint8_t d_addr_bytes[d_addr_bytes80,2794
+        uint32_t d_ip;81,2840
+}backend_server_t;backend_server_t82,2863
+typedef struct flow_info 85,2910
+        uint8_t dest;86,2937
+        uint8_t s_addr_bytes[s_addr_bytes87,2959
+        uint64_t last_pkt_cycles;88,3005
+        int is_active;89,3039
+}flow_info_t;flow_info_t90,3062
+#define MAX_BACKEND_SERVERS 93,3100
+#define MAX_FILE_NAME_LEN 94,3133
+#define MAX_IFACE_NAME_LEN 95,3165
+flow_info_t ft[ft96,3199
+struct loadbalance 98,3270
+        flow_info_t *ft;ft100,3329
+        uint8_t server_count;103,3396
+        struct backend_server server[server104,3426
+        uint16_t num_stored;107,3528
+        uint64_t elapsed_cycles;108,3557
+        uint64_t last_cycles;109,3590
+        uint32_t expire_time;110,3620
+        uint32_t ip_lb_server;113,3684
+        uint32_t ip_lb_client;114,3715
+        uint8_t server_port;115,3746
+        uint8_t client_port;116,3775
+        char cfg_filename[cfg_filename119,3848
+        char client_iface_name[client_iface_name120,3894
+        char server_iface_name[server_iface_name121,3946
+struct loadbalance 125,4050
+        struct onvm_ft *ft;ft126,4071
+        uint8_t server_count;129,4141
+        struct backend_server *server;server130,4171
+        uint16_t num_stored;133,4253
+        uint64_t elapsed_cycles;134,4282
+        uint64_t last_cycles;135,4315
+        uint32_t expire_time;136,4345
+        uint32_t ip_lb_server;139,4409
+        uint32_t ip_lb_client;140,4440
+        uint8_t server_port;141,4471
+        uint8_t client_port;142,4500
+        char * cfg_filename;145,4574
+        char * client_iface_name;146,4603
+        char * server_iface_name;147,4637
+struct onvm_nf_info *nf_info;nf_info156,4797
+struct loadbalance *lb;lb158,4828
+static uint32_t print_delay 160,4895
+usage(169,5052
+parse_app_args(177,5270
+parse_backend_config(251,7951
+do_stats_display(313,10468
+print_flow_info(343,11274
+get_iface_inf(356,11720
+#define DIRTY_MAP_PER_CHUNK_SIZE 419,14759
+static inline uint64_t map_tag_index_to_dirty_chunk_bit_index(421,14929
+static inline int update_dirty_state_index(430,15510
+update_status(440,15806
+clear_entries(457,16229
+static void set_lb_flow_info(501,17777
+table_add_entry(513,18163
+table_lookup_entry(548,19093
+int lb_callback_handler(616,21728
+packet_handler(628,22108
+int main(746,27842
+
+examples/aes_encrypt/aes.h,125
+#define AES_H50,2465
+#define AES_BLOCK_SIZE 56,2645
+typedef unsigned char BYTE;59,2796
+typedef unsigned int WORD;60,2849
+
+examples/aes_encrypt/aes.c,1053
+#define KE_ROTWORD(67,3379
+#define TRUE 69,3430
+#define FALSE 70,3446
+#define AES_128_ROUNDS 73,3535
+#define AES_192_ROUNDS 74,3561
+#define AES_256_ROUNDS 75,3587
+static const BYTE aes_sbox[aes_sbox95,4722
+static const BYTE aes_invsbox[aes_invsbox114,6157
+static const BYTE gf_mul[gf_mul139,8090
+void xor_buf(272,17113
+int aes_encrypt_cbc(283,17310
+int aes_encrypt_cbc_mac(306,18031
+int aes_decrypt_cbc(331,18811
+void increment_iv(357,19586
+void aes_encrypt_ctr(371,20068
+void aes_decrypt_ctr(394,20851
+int aes_encrypt_ccm(404,21168
+int aes_decrypt_ccm(467,23741
+void ccm_prepare_first_ctr_blk(535,26737
+void ccm_prepare_first_format_blk(542,26990
+void ccm_format_assoc_data(555,27631
+void ccm_format_payload_data(569,28072
+WORD SubWord(590,28578
+void aes_key_setup(604,29231
+void AddRoundKey(641,30560
+void SubBytes(690,31852
+void InvSubBytes(710,32945
+void ShiftRows(735,34225
+void InvShiftRows(761,34813
+void MixColumns(794,35697
+void InvMixColumns(884,38299
+void aes_encrypt(978,41310
+void aes_decrypt(1051,44372
+
+examples/aes_encrypt/aesencrypt.c,336
+#define NF_TAG 63,2465
+struct onvm_nf_info *nf_info;nf_info66,2548
+static uint32_t print_delay 69,2622
+static uint32_t destination;72,2663
+BYTE key[key75,2725
+BYTE iv[iv78,2912
+WORD key_schedule[key_schedule81,3018
+usage(87,3102
+parse_app_args(95,3297
+do_stats_display(139,4961
+packet_handler(175,5968
+int main(215,7075
+
+examples/basic_monitor_chain/monitor.c,967
+#define NF_TAG 62,2401
+struct onvm_nf_info *nf_info;nf_info65,2486
+static uint32_t print_delay 68,2560
+typedef struct monitor_state_info_table 70,2600
+        uint16_t ft_index;71,2642
+        uint16_t tag_counter;72,2669
+        uint32_t pkt_counter;73,2699
+}monitor_state_info_table_t;monitor_state_info_table_t74,2729
+monitor_state_info_table_t *mon_state_tbl mon_state_tbl75,2758
+typedef struct dirty_mon_state_map_tbl 78,2815
+        uint64_t dirty_index;79,2856
+}dirty_mon_state_map_tbl_t;dirty_mon_state_map_tbl_t80,2933
+dirty_mon_state_map_tbl_t *dirty_state_map dirty_state_map81,2961
+#define MAX_STATE_ELEMENTS 85,3043
+usage(95,3272
+parse_app_args(103,3450
+do_stats_display(136,4722
+static inline uint64_t map_tag_index_to_dirty_chunk_bit_index(173,5962
+static inline int update_dirty_state_index(182,6556
+static int save_packet_state(192,6981
+static int save_packet_state_new(233,8887
+packet_handler(257,9770
+int main(279,10350
+
+examples/test_ml_batches/bridge.c,799
+#define MSG_RING_NAME1 70,2553
+#define MSG_RING_SIZE 71,2588
+#define NF_TAG 73,2615
+struct onvm_nf_info *nf_info;nf_info77,2694
+static char *input_file_name input_file_name80,2752
+static const char *ml_model ml_model81,2789
+static char *batchsize batchsize82,2825
+void * cpu_func_ptr 84,2889
+void * gpu_func_ptr 85,2917
+cudaIpcMemHandle_t * cuda_handles;94,3228
+models_attributes loaded_models;95,3263
+static uint32_t print_delay 98,3340
+usage(104,3424
+parse_app_args(112,3633
+do_stats_display(153,5002
+packet_handler(185,5857
+int function_to_process_gpu_message(210,6733
+void store_the_gpu_pointers(236,7353
+void load_gpu_ptrs(256,8114
+void ask_for_gpu_pointers(294,9943
+void voluntary_restart_the_nf(306,10534
+void cuda_register_memseg_info(313,10676
+int main(411,14929
+
+examples/test_ml_models/bridge.c,667
+#define MSG_RING_NAME1 63,2412
+#define MSG_RING_SIZE 64,2447
+#define NF_TAG 66,2474
+struct onvm_nf_info *nf_info;nf_info70,2553
+static char *input_file_name input_file_name73,2600
+static const char *ml_model ml_model74,2637
+static char * number_of_loops 75,2673
+static char * gpu_cmd_percentage 76,2712
+static uint32_t print_delay 80,2830
+usage(86,2914
+parse_app_args(94,3123
+do_stats_display(139,4593
+packet_handler(170,5432
+void * cpu_func_ptr 188,5951
+void * gpu_func_ptr 189,5979
+void * all_cuda_handels;190,6007
+int function_to_process_gpu_message(193,6155
+int move_the_model_to_gpu(207,6487
+void load_gpu_file(260,8738
+int main(329,11874
+
+examples/nondet_nf/nondet_nf.c,1282
+#define NF_TAG 62,2446
+struct onvm_nf_info *nf_info;nf_info65,2529
+static uint32_t print_delay 68,2603
+static uint32_t nondet_freq 71,2713
+static uint32_t destination 84,3132
+#define BASE_VLAN_TAG 86,3166
+#define MAX_VLAN_TAG 87,3228
+static uint16_t vlan_tag_value 88,3308
+static int get_new_vlan_tag_value(89,3358
+typedef struct vlan_tag_info_table 94,3685
+        uint16_t ft_index;95,3722
+        uint16_t vlan_tag;96,3749
+        uint32_t tag_counter;97,3776
+        uint64_t pkt_counter;98,3806
+}vlan_tag_info_table_t;vlan_tag_info_table_t99,3836
+vlan_tag_info_table_t *vtag_tbl vtag_tbl100,3860
+#define MAX_STATE_ELEMENTS 105,4005
+#define VLAN_NF_STATE_SIZE 107,4122
+#define DIRTY_MAP_PER_CHUNK_SIZE 108,4159
+#define MAX_STATE_ELEMENTS 109,4241
+void *vlan_state_mp vlan_state_mp110,4356
+#define MAP_SDN_FT_INDEX_TO_VLAN_STATE_TBL_INDEX(114,4531
+usage(120,4677
+parse_app_args(128,4872
+do_stats_display(174,6646
+int get_vtag_tbl_index(208,7788
+static inline uint64_t map_tag_index_to_dirty_chunk_bit_index(225,8452
+static inline int update_dirty_state_index(234,9036
+static inline int save_packet_state(242,9406
+#define ENABLE_LOCAL_LATENCY_PROFILER243,9479
+do_check_and_insert_vlan_tag(271,10550
+packet_handler(335,13988
+int main(362,14836
+
+examples/vlan_tagger/vlan_tagger.c,1388
+#define NF_TAG 62,2446
+struct onvm_nf_info *nf_info;nf_info65,2529
+static uint32_t print_delay 68,2603
+static uint32_t destination 71,2698
+#define BASE_VLAN_TAG 73,2732
+#define MAX_VLAN_TAG 74,2794
+static uint16_t vlan_tag_value 75,2874
+static int get_new_vlan_tag_value(76,2924
+typedef struct vlan_tag_info_table 81,3251
+        uint16_t ft_index;82,3288
+        uint16_t vlan_tag;83,3315
+        uint32_t tag_counter;84,3342
+        uint64_t pkt_counter;85,3372
+}vlan_tag_info_table_t;vlan_tag_info_table_t86,3402
+vlan_tag_info_table_t *vtag_tbl vtag_tbl87,3426
+#define MAX_STATE_ELEMENTS 92,3571
+#define VLAN_NF_STATE_SIZE 94,3688
+#define DIRTY_MAP_PER_CHUNK_SIZE 95,3725
+#define MAX_STATE_ELEMENTS 96,3807
+void *vlan_state_mp vlan_state_mp97,3922
+#define MAP_SDN_FT_INDEX_TO_VLAN_STATE_TBL_INDEX(101,4097
+usage(110,4304
+parse_app_args(118,4499
+do_stats_display(162,6166
+int get_vtag_tbl_index(196,7308
+static inline uint64_t map_tag_index_to_dirty_chunk_bit_index(213,7972
+static inline int update_dirty_state_index(222,8556
+static inline int save_packet_state(230,8926
+do_check_and_insert_vlan_tag(259,10146
+static uint64_t cycles_per_nd_mark 323,13685
+static volatile uint32_t nd_counter 325,13823
+static uint64_t last_cycle;326,13864
+static uint64_t cur_cycle;327,13892
+packet_handler(331,13938
+callback_handler(360,14867
+int main(376,15437
+
+examples/aes_decrypt/aes.h,125
+#define AES_H50,2466
+#define AES_BLOCK_SIZE 56,2646
+typedef unsigned char BYTE;59,2797
+typedef unsigned int WORD;60,2850
+
+examples/aes_decrypt/aes.c,1053
+#define KE_ROTWORD(67,3379
+#define TRUE 69,3430
+#define FALSE 70,3446
+#define AES_128_ROUNDS 73,3535
+#define AES_192_ROUNDS 74,3561
+#define AES_256_ROUNDS 75,3587
+static const BYTE aes_sbox[aes_sbox95,4722
+static const BYTE aes_invsbox[aes_invsbox114,6157
+static const BYTE gf_mul[gf_mul139,8090
+void xor_buf(272,17113
+int aes_encrypt_cbc(283,17310
+int aes_encrypt_cbc_mac(306,18031
+int aes_decrypt_cbc(331,18811
+void increment_iv(357,19586
+void aes_encrypt_ctr(371,20068
+void aes_decrypt_ctr(394,20851
+int aes_encrypt_ccm(404,21168
+int aes_decrypt_ccm(467,23741
+void ccm_prepare_first_ctr_blk(535,26737
+void ccm_prepare_first_format_blk(542,26990
+void ccm_format_assoc_data(555,27631
+void ccm_format_payload_data(569,28072
+WORD SubWord(590,28578
+void aes_key_setup(604,29231
+void AddRoundKey(641,30560
+void SubBytes(690,31852
+void InvSubBytes(710,32945
+void ShiftRows(735,34225
+void InvShiftRows(761,34813
+void MixColumns(794,35697
+void InvMixColumns(884,38299
+void aes_encrypt(978,41310
+void aes_decrypt(1051,44372
+
+examples/aes_decrypt/aesdecrypt.c,336
+#define NF_TAG 63,2475
+struct onvm_nf_info *nf_info;nf_info66,2558
+static uint32_t print_delay 69,2632
+static uint32_t destination;72,2673
+BYTE key[key75,2735
+BYTE iv[iv78,2922
+WORD key_schedule[key_schedule81,3028
+usage(87,3112
+parse_app_args(95,3307
+do_stats_display(139,4971
+packet_handler(175,5978
+int main(215,7085
+
+examples/ndpi_stats/ndpi_util.h,4209
+#define __NDPI_UTIL_H__30,1009
+#define ENABLE_NFV_RESL33,1052
+#define MAX_NUM_READER_THREADS 35,1077
+#define IDLE_SCAN_PERIOD 36,1115
+#define MAX_IDLE_TIME 37,1193
+#define IDLE_SCAN_BUDGET 38,1231
+#define NUM_ROOTS 39,1269
+#define MAX_EXTRA_PACKETS_TO_CHECK 40,1307
+#define MAX_NDPI_FLOWS 41,1345
+#define TICK_RESOLUTION 42,1383
+#define MAX_NUM_IP_ADDRESS 43,1421
+#define UPDATED_TREE 44,1490
+#define AGGRESSIVE_PERCENT 45,1528
+#define DIR_SRC 46,1566
+#define DIR_DST 47,1604
+#define PORT_ARRAY_SIZE 48,1642
+#define HOST_ARRAY_SIZE 49,1680
+#define FLOWS_PACKETS_THRESHOLD 50,1718
+#define FLOWS_PERCENT_THRESHOLD 51,1756
+#define FLOWS_PERCENT_THRESHOLD_2 52,1794
+#define FLOWS_THRESHOLD 53,1832
+#define PKTS_PERCENT_THRESHOLD 54,1870
+#define MAX_TABLE_SIZE_1 55,1908
+#define MAX_TABLE_SIZE_2 56,1946
+#define INIT_VAL 57,1984
+typedef struct ndpi_flow_info 60,2040
+  u_int32_t hashval;61,2072
+  u_int32_t src_ip;62,2093
+  u_int32_t dst_ip;63,2113
+  u_int16_t src_port;64,2133
+  u_int16_t dst_port;65,2155
+  u_int8_t detection_completed,66,2177
+  u_int8_t detection_completed, protocol,66,2177
+  u_int8_t detection_completed, protocol, bidirectional,66,2177
+  u_int8_t detection_completed, protocol, bidirectional, check_extra_packets;66,2177
+  u_int16_t vlan_id;67,2255
+  struct ndpi_flow_struct *ndpi_flow;ndpi_flow68,2276
+  struct ndpi_flow_struct res_ndpi_flow;70,2337
+  char src_name[src_name72,2385
+  char src_name[48], dst_name[dst_name72,2385
+  u_int8_t ip_version;73,2420
+  u_int64_t last_seen;74,2443
+  u_int64_t src2dst_bytes,75,2466
+  u_int64_t src2dst_bytes, dst2src_bytes;75,2466
+  u_int32_t src2dst_packets,76,2508
+  u_int32_t src2dst_packets, dst2src_packets;76,2508
+  ndpi_protocol detected_protocol;79,2606
+  char info[info81,2642
+  char host_server_name[host_server_name82,2659
+  char bittorent_hash[bittorent_hash83,2689
+    char client_info[client_info86,2728
+    char client_info[48], server_info[server_info86,2728
+  } ssh_ssl;87,2771
+  void *src_id,src_id89,2785
+  void *src_id, *dst_id;dst_id89,2785
+  struct ndpi_id_struct res_src_id,91,2833
+  struct ndpi_id_struct res_src_id, res_dst_id;91,2833
+  u_int32_t flow_idx;92,2881
+} ndpi_flow_info_t;94,2910
+typedef struct ndpi_stats 98,2956
+  u_int32_t guessed_flow_protocols;99,2984
+  u_int64_t raw_packet_count;100,3020
+  u_int64_t ip_packet_count;101,3050
+  u_int64_t total_wire_bytes,102,3079
+  u_int64_t total_wire_bytes, total_ip_bytes,102,3079
+  u_int64_t total_wire_bytes, total_ip_bytes, total_discarded_bytes;102,3079
+  u_int64_t protocol_counter[protocol_counter103,3148
+  u_int64_t protocol_counter_bytes[protocol_counter_bytes104,3244
+  u_int32_t protocol_flows[protocol_flows105,3346
+  u_int32_t ndpi_flow_count;106,3440
+  u_int64_t tcp_count,107,3469
+  u_int64_t tcp_count, udp_count;107,3469
+  u_int64_t mpls_count,108,3503
+  u_int64_t mpls_count, pppoe_count,108,3503
+  u_int64_t mpls_count, pppoe_count, vlan_count,108,3503
+  u_int64_t mpls_count, pppoe_count, vlan_count, fragmented_count;108,3503
+  u_int64_t packet_len[packet_len109,3570
+  u_int16_t max_packet_len;110,3597
+} ndpi_stats_t;111,3625
+typedef struct ndpi_workflow_prefs 115,3663
+  u_int8_t decode_tunnels;116,3700
+  u_int8_t quiet_mode;117,3727
+  u_int32_t num_roots;118,3750
+  u_int32_t max_ndpi_flows;119,3773
+} ndpi_workflow_prefs_t;120,3801
+typedef void (*ndpi_workflow_callback_ptr)ndpi_workflow_callback_ptr125,3883
+typedef struct ndpi_workflow 129,4014
+  u_int64_t last_time;130,4045
+  struct ndpi_workflow_prefs prefs;132,4069
+  struct ndpi_stats stats;133,4105
+  ndpi_workflow_callback_ptr __flow_detected_callback;135,4133
+  void * __flow_detected_udata;136,4188
+  ndpi_workflow_callback_ptr __flow_giveup_callback;137,4220
+  void * __flow_giveup_udata;138,4273
+  pcap_t *pcap_handle;pcap_handle142,4356
+  void **ndpi_flows_root;ndpi_flows_root145,4413
+  struct ndpi_detection_module_struct *ndpi_struct;ndpi_struct146,4439
+  u_int32_t num_allocated_flows;147,4491
+} ndpi_workflow_t;148,4524
+static inline void ndpi_workflow_set_flow_detected_callback(174,5343
+static inline void ndpi_workflow_set_flow_giveup_callback(181,5680
+
+examples/ndpi_stats/ndpi_util.c,1861
+#define ETH_P_IP 36,1059
+#define ETH_P_IPV6	40,1136
+#define SLARP 43,1188
+#define CISCO_D_PROTO 44,1246
+#define VLAN 46,1316
+#define MPLS_UNI 47,1354
+#define MPLS_MULTI 48,1392
+#define PPPoE 49,1430
+#define SNAP 50,1468
+#define BSTP 51,1504
+#define	WIFI_DATA 54,1600
+#define FCF_TYPE(55,1664
+#define FCF_SUBTYPE(56,1734
+#define FCF_TO_DS(57,1804
+#define FCF_FROM_DS(58,1849
+#define BAD_FCS 61,1927
+#define GTP_U_V1_PORT 63,1992
+#define TZSP_PORT 64,2037
+#define DLT_LINUX_SLL 67,2105
+uint64_t detection_module_size;77,2307
+void *module_mem_snapshot;module_mem_snapshot82,2394
+void *service_mem_snapshot;service_mem_snapshot83,2421
+void ndpi_free_flow_info_half(87,2517
+static int total_memory=100,2967
+static void *malloc_wrapper(malloc_wrapper101,2994
+static void free_wrapper(116,3351
+static uint16_t ndpi_get_proto_id(122,3476
+static NDPI_PROTOCOL_BITMASK debug_bitmask;138,4131
+static char _proto_delim[_proto_delim139,4175
+static int parse_debug_proto(140,4214
+static int _debug_protocols_ok 175,5013
+struct ndpi_workflow * ndpi_workflow_init(177,5050
+void ndpi_flow_info_freer(233,7104
+void ndpi_workflow_free(242,7324
+int ndpi_workflow_node_cmp(255,7680
+static void patchIPv6Address(293,9064
+static struct ndpi_flow_info *get_ndpi_flow_info(get_ndpi_flow_info311,9435
+static struct ndpi_flow_info *get_ndpi_flow_info6(get_ndpi_flow_info6527,17101
+void process_ndpi_collected_info(563,18403
+static struct ndpi_proto packet_processing(628,21020
+  flow->detected_protocol detected_protocol705,23961
+int state_memcmp(728,24931
+int state_memcmp_chunk(748,25555
+struct ndpi_proto ndpi_workflow_process_packet 770,26334
+static uint32_t crc32_for_byte(1133,37344
+typedef unsigned long accum_t;1143,37700
+static void init_tables(1145,37732
+static void __crc32(1157,38107
+u_int32_t ethernet_crc32(1172,38652
+
+examples/ndpi_stats/ndpi_stats.c,1311
+#define NF_TAG 64,2417
+#define TICK_RESOLUTION 65,2444
+struct onvm_nf_info *nf_info;nf_info72,2589
+static uint32_t destination 78,2737
+const uint16_t MAX_SNAPLEN 81,2801
+pcap_t *pd;pd82,2845
+struct ndpi_detection_module_struct * module;85,2877
+struct ndpi_workflow * workflow;86,2923
+uint32_t current_ndpi_memory 87,2956
+static u_int8_t quiet_mode 88,3011
+static u_int16_t decode_tunnels 89,3043
+static FILE *results_file results_file90,3080
+static struct timeval begin,91,3114
+static struct timeval begin, end;91,3114
+int nDPI_LogLevel 92,3148
+char *_debug_protocols _debug_protocols93,3171
+dirty_mon_state_map_tbl_t *service_dirty_state_map service_dirty_state_map104,3533
+dirty_mon_state_map_tbl_t *nf_dirty_state_map nf_dirty_state_map105,3592
+ndpi_workflow_t *service_state service_state106,3646
+ndpi_flow_info_t *nf_flow_tbl nf_flow_tbl107,3685
+int nf_flow_tbl_idx 108,3723
+void *current_service_memory current_service_memory109,3748
+static int total_memory=111,3786
+void *state_malloc(state_malloc112,3813
+void *state_free(state_free128,4428
+char* formatTraffic(137,4573
+char* formatPackets(174,5360
+usage(192,5704
+parse_app_args(200,5902
+setup_ndpi(235,7457
+node_proto_guess_walker(264,8417
+print_results(284,9409
+packet_handler(364,14582
+int main(397,15745
+
+examples/ndpi_stats/ndpi_state.h,335
+#define __NDPI_STATE_H__2,25
+#define MAX_NF_STATE_ELEMENTS 14,349
+#define MAX_SERVICE_STATE_SIZE 15,457
+#define MAX_SERVICE_STATE_ELEMENTS 16,544
+static inline uint64_t map_tag_index_to_dirty_chunk_bit_index(25,883
+static inline int update_dirty_nf_state_index(34,1379
+static inline int update_dirty_service_state_index(41,1624
+
+examples/ndpi_stats_chain/ndpi_util.h,4209
+#define __NDPI_UTIL_H__30,1009
+#define ENABLE_NFV_RESL33,1052
+#define MAX_NUM_READER_THREADS 35,1077
+#define IDLE_SCAN_PERIOD 36,1115
+#define MAX_IDLE_TIME 37,1193
+#define IDLE_SCAN_BUDGET 38,1231
+#define NUM_ROOTS 39,1269
+#define MAX_EXTRA_PACKETS_TO_CHECK 40,1307
+#define MAX_NDPI_FLOWS 41,1345
+#define TICK_RESOLUTION 42,1383
+#define MAX_NUM_IP_ADDRESS 43,1421
+#define UPDATED_TREE 44,1490
+#define AGGRESSIVE_PERCENT 45,1528
+#define DIR_SRC 46,1566
+#define DIR_DST 47,1604
+#define PORT_ARRAY_SIZE 48,1642
+#define HOST_ARRAY_SIZE 49,1680
+#define FLOWS_PACKETS_THRESHOLD 50,1718
+#define FLOWS_PERCENT_THRESHOLD 51,1756
+#define FLOWS_PERCENT_THRESHOLD_2 52,1794
+#define FLOWS_THRESHOLD 53,1832
+#define PKTS_PERCENT_THRESHOLD 54,1870
+#define MAX_TABLE_SIZE_1 55,1908
+#define MAX_TABLE_SIZE_2 56,1946
+#define INIT_VAL 57,1984
+typedef struct ndpi_flow_info 60,2040
+  u_int32_t hashval;61,2072
+  u_int32_t src_ip;62,2093
+  u_int32_t dst_ip;63,2113
+  u_int16_t src_port;64,2133
+  u_int16_t dst_port;65,2155
+  u_int8_t detection_completed,66,2177
+  u_int8_t detection_completed, protocol,66,2177
+  u_int8_t detection_completed, protocol, bidirectional,66,2177
+  u_int8_t detection_completed, protocol, bidirectional, check_extra_packets;66,2177
+  u_int16_t vlan_id;67,2255
+  struct ndpi_flow_struct *ndpi_flow;ndpi_flow68,2276
+  struct ndpi_flow_struct res_ndpi_flow;70,2337
+  char src_name[src_name72,2385
+  char src_name[48], dst_name[dst_name72,2385
+  u_int8_t ip_version;73,2420
+  u_int64_t last_seen;74,2443
+  u_int64_t src2dst_bytes,75,2466
+  u_int64_t src2dst_bytes, dst2src_bytes;75,2466
+  u_int32_t src2dst_packets,76,2508
+  u_int32_t src2dst_packets, dst2src_packets;76,2508
+  ndpi_protocol detected_protocol;79,2606
+  char info[info81,2642
+  char host_server_name[host_server_name82,2659
+  char bittorent_hash[bittorent_hash83,2689
+    char client_info[client_info86,2728
+    char client_info[48], server_info[server_info86,2728
+  } ssh_ssl;87,2771
+  void *src_id,src_id89,2785
+  void *src_id, *dst_id;dst_id89,2785
+  struct ndpi_id_struct res_src_id,91,2833
+  struct ndpi_id_struct res_src_id, res_dst_id;91,2833
+  u_int32_t flow_idx;92,2881
+} ndpi_flow_info_t;94,2910
+typedef struct ndpi_stats 98,2956
+  u_int32_t guessed_flow_protocols;99,2984
+  u_int64_t raw_packet_count;100,3020
+  u_int64_t ip_packet_count;101,3050
+  u_int64_t total_wire_bytes,102,3079
+  u_int64_t total_wire_bytes, total_ip_bytes,102,3079
+  u_int64_t total_wire_bytes, total_ip_bytes, total_discarded_bytes;102,3079
+  u_int64_t protocol_counter[protocol_counter103,3148
+  u_int64_t protocol_counter_bytes[protocol_counter_bytes104,3244
+  u_int32_t protocol_flows[protocol_flows105,3346
+  u_int32_t ndpi_flow_count;106,3440
+  u_int64_t tcp_count,107,3469
+  u_int64_t tcp_count, udp_count;107,3469
+  u_int64_t mpls_count,108,3503
+  u_int64_t mpls_count, pppoe_count,108,3503
+  u_int64_t mpls_count, pppoe_count, vlan_count,108,3503
+  u_int64_t mpls_count, pppoe_count, vlan_count, fragmented_count;108,3503
+  u_int64_t packet_len[packet_len109,3570
+  u_int16_t max_packet_len;110,3597
+} ndpi_stats_t;111,3625
+typedef struct ndpi_workflow_prefs 115,3663
+  u_int8_t decode_tunnels;116,3700
+  u_int8_t quiet_mode;117,3727
+  u_int32_t num_roots;118,3750
+  u_int32_t max_ndpi_flows;119,3773
+} ndpi_workflow_prefs_t;120,3801
+typedef void (*ndpi_workflow_callback_ptr)ndpi_workflow_callback_ptr125,3883
+typedef struct ndpi_workflow 129,4014
+  u_int64_t last_time;130,4045
+  struct ndpi_workflow_prefs prefs;132,4069
+  struct ndpi_stats stats;133,4105
+  ndpi_workflow_callback_ptr __flow_detected_callback;135,4133
+  void * __flow_detected_udata;136,4188
+  ndpi_workflow_callback_ptr __flow_giveup_callback;137,4220
+  void * __flow_giveup_udata;138,4273
+  pcap_t *pcap_handle;pcap_handle142,4356
+  void **ndpi_flows_root;ndpi_flows_root145,4413
+  struct ndpi_detection_module_struct *ndpi_struct;ndpi_struct146,4439
+  u_int32_t num_allocated_flows;147,4491
+} ndpi_workflow_t;148,4524
+static inline void ndpi_workflow_set_flow_detected_callback(174,5343
+static inline void ndpi_workflow_set_flow_giveup_callback(181,5680
+
+examples/ndpi_stats_chain/ndpi_util.c,1861
+#define ETH_P_IP 36,1059
+#define ETH_P_IPV6	40,1136
+#define SLARP 43,1188
+#define CISCO_D_PROTO 44,1246
+#define VLAN 46,1316
+#define MPLS_UNI 47,1354
+#define MPLS_MULTI 48,1392
+#define PPPoE 49,1430
+#define SNAP 50,1468
+#define BSTP 51,1504
+#define	WIFI_DATA 54,1600
+#define FCF_TYPE(55,1664
+#define FCF_SUBTYPE(56,1734
+#define FCF_TO_DS(57,1804
+#define FCF_FROM_DS(58,1849
+#define BAD_FCS 61,1927
+#define GTP_U_V1_PORT 63,1992
+#define TZSP_PORT 64,2037
+#define DLT_LINUX_SLL 67,2105
+uint64_t detection_module_size;77,2307
+void *module_mem_snapshot;module_mem_snapshot82,2394
+void *service_mem_snapshot;service_mem_snapshot83,2421
+void ndpi_free_flow_info_half(87,2517
+static int total_memory=100,2967
+static void *malloc_wrapper(malloc_wrapper101,2994
+static void free_wrapper(116,3351
+static uint16_t ndpi_get_proto_id(122,3476
+static NDPI_PROTOCOL_BITMASK debug_bitmask;138,4131
+static char _proto_delim[_proto_delim139,4175
+static int parse_debug_proto(140,4214
+static int _debug_protocols_ok 175,5013
+struct ndpi_workflow * ndpi_workflow_init(177,5050
+void ndpi_flow_info_freer(233,7104
+void ndpi_workflow_free(242,7324
+int ndpi_workflow_node_cmp(255,7680
+static void patchIPv6Address(293,9064
+static struct ndpi_flow_info *get_ndpi_flow_info(get_ndpi_flow_info311,9435
+static struct ndpi_flow_info *get_ndpi_flow_info6(get_ndpi_flow_info6527,17101
+void process_ndpi_collected_info(563,18403
+static struct ndpi_proto packet_processing(628,21020
+  flow->detected_protocol detected_protocol705,23961
+int state_memcmp(728,24931
+int state_memcmp_chunk(748,25555
+struct ndpi_proto ndpi_workflow_process_packet 770,26334
+static uint32_t crc32_for_byte(1133,37344
+typedef unsigned long accum_t;1143,37700
+static void init_tables(1145,37732
+static void __crc32(1157,38107
+u_int32_t ethernet_crc32(1172,38652
+
+examples/ndpi_stats_chain/ndpi_stats.c,1311
+#define NF_TAG 64,2417
+#define TICK_RESOLUTION 65,2444
+struct onvm_nf_info *nf_info;nf_info71,2588
+static uint32_t destination 77,2736
+const uint16_t MAX_SNAPLEN 80,2800
+pcap_t *pd;pd81,2844
+struct ndpi_detection_module_struct * module;84,2876
+struct ndpi_workflow * workflow;85,2922
+uint32_t current_ndpi_memory 86,2955
+static u_int8_t quiet_mode 87,3010
+static u_int16_t decode_tunnels 88,3042
+static FILE *results_file results_file89,3079
+static struct timeval begin,90,3113
+static struct timeval begin, end;90,3113
+int nDPI_LogLevel 91,3147
+char *_debug_protocols _debug_protocols92,3170
+dirty_mon_state_map_tbl_t *service_dirty_state_map service_dirty_state_map103,3532
+dirty_mon_state_map_tbl_t *nf_dirty_state_map nf_dirty_state_map104,3591
+ndpi_workflow_t *service_state service_state105,3645
+ndpi_flow_info_t *nf_flow_tbl nf_flow_tbl106,3684
+int nf_flow_tbl_idx 107,3722
+void *current_service_memory current_service_memory108,3747
+static int total_memory=110,3785
+void *state_malloc(state_malloc111,3812
+void *state_free(state_free127,4427
+char* formatTraffic(136,4572
+char* formatPackets(173,5359
+usage(191,5703
+parse_app_args(199,5901
+setup_ndpi(234,7456
+node_proto_guess_walker(263,8416
+print_results(283,9408
+packet_handler(363,14581
+int main(385,15308
+
+examples/ndpi_stats_chain/ndpi_state.h,335
+#define __NDPI_STATE_H__2,25
+#define MAX_NF_STATE_ELEMENTS 14,349
+#define MAX_SERVICE_STATE_SIZE 15,457
+#define MAX_SERVICE_STATE_ELEMENTS 16,544
+static inline uint64_t map_tag_index_to_dirty_chunk_bit_index(25,883
+static inline int update_dirty_nf_state_index(34,1379
+static inline int update_dirty_service_state_index(41,1624
+
+examples/speed_tester_pcap/speed_tester.c,1341
+#define NF_TAG 62,2398
+#define NUM_PKTS 64,2422
+#define PKTMBUF_POOL_NAME 65,2443
+struct onvm_nf_info *nf_info;nf_info68,2544
+static uint32_t print_delay 71,2618
+static uint16_t destination;72,2658
+const uint16_t MAX_SNAPLEN 75,2711
+#define PCAP_FILE_NAME 76,2755
+typedef struct pcap_session_meta 77,2799
+        char capture_file[capture_file78,2834
+        size_t max_capture_size;79,2865
+        uint32_t max_packet_count;80,2898
+        uint32_t reset_log_period_in_ms;81,2933
+        pcap_t *pd;pd83,2975
+        pcap_dumper_t *pcap_dumper;pcap_dumper84,2995
+        uint8_t is_active;85,3031
+        size_t captured_size;86,3058
+        uint32_t captured_packet_count;87,3088
+        onvm_time_t capture_start_time;88,3128
+        onvm_time_t capture_end_time;89,3168
+}pcap_session_meta_t;pcap_session_meta_t91,3207
+pcap_session_meta_t pcap_info 93,3311
+typedef enum pcap_log_status_type 103,3731
+        pcap_log_status_unused=104,3767
+        pcap_log_status_active_logging=105,3801
+        pcap_log_status_active_logging_stopped=106,3843
+        pcap_log_status_replay_on=107,3893
+        pcap_log_status_replay_finished=108,3930
+}pcap_log_status_type_e;pcap_log_status_type_e109,3973
+usage(115,4043
+parse_app_args(123,4238
+do_stats_display(168,5919
+packet_handler(201,7133
+int main(221,7698
+
+examples/simple_forward/forward.c,525
+#define NF_TAG 60,2395
+struct onvm_nf_info *nf_info;nf_info63,2481
+static uint32_t print_delay 66,2555
+static uint32_t destination;69,2596
+usage(76,2702
+parse_app_args(84,2897
+do_stats_display(128,4564
+do_check_and_insert_vlan_tag(157,5375
+#undef ENABLE_ND_MARKING_IN_NFS190,6956
+static uint64_t cycles_per_nd_mark 194,7142
+static volatile uint32_t nd_counter 196,7290
+static uint64_t last_cycle;197,7331
+static uint64_t cur_cycle;198,7359
+callback_handler(200,7397
+packet_handler(217,7978
+int main(252,9225
+
+examples/nondet_nf_v2/nondet_nf.c,1431
+#define NF_TAG 62,2446
+struct onvm_nf_info *nf_info;nf_info65,2529
+static uint32_t print_delay 68,2603
+static uint32_t nondet_freq 71,2726
+static uint32_t destination 84,3145
+#define BASE_VLAN_TAG 86,3179
+#define MAX_VLAN_TAG 87,3241
+static uint16_t vlan_tag_value 88,3321
+static int get_new_vlan_tag_value(89,3371
+typedef struct vlan_tag_info_table 94,3698
+        uint16_t ft_index;95,3735
+        uint16_t vlan_tag;96,3762
+        uint32_t tag_counter;97,3789
+        uint64_t pkt_counter;98,3819
+}vlan_tag_info_table_t;vlan_tag_info_table_t99,3849
+vlan_tag_info_table_t *vtag_tbl vtag_tbl100,3873
+#define MAX_STATE_ELEMENTS 105,4018
+#define VLAN_NF_STATE_SIZE 107,4135
+#define DIRTY_MAP_PER_CHUNK_SIZE 108,4172
+#define MAX_STATE_ELEMENTS 109,4254
+void *vlan_state_mp vlan_state_mp110,4369
+#define MAP_SDN_FT_INDEX_TO_VLAN_STATE_TBL_INDEX(114,4544
+usage(120,4690
+parse_app_args(128,4885
+do_stats_display(174,6659
+int get_vtag_tbl_index(208,7801
+static inline uint64_t map_tag_index_to_dirty_chunk_bit_index(225,8465
+static inline int update_dirty_state_index(234,9049
+static inline int save_packet_state(242,9419
+do_check_and_insert_vlan_tag(271,10566
+static uint64_t last_cycle;335,13972
+static uint64_t cur_cycle;336,14000
+static uint64_t cycles_per_nd_mark;337,14027
+static volatile uint32_t nd_counter 338,14063
+packet_handler(341,14116
+callback_handler(371,14972
+int main(385,15515
+
+examples/performance_monitor/performance_monitor.c,1107
+#define RTE_LOG72,2331
+#define NF_TAG 75,2355
+#define MIN(77,2382
+#define MAX(78,2420
+struct onvm_nf_info *nf_info;nf_info81,2512
+typedef struct globalArgs 84,2587
+        uint32_t core_id;85,2615
+        uint32_t service_id;86,2693
+        const char* log_file_path;87,2759
+        uint32_t start_delay;88,2846
+        uint32_t interval_in_ms;89,2935
+        uint32_t total_iterations;90,3010
+        uint32_t core_monitor_mask;91,3092
+}globalArgs_t;globalArgs_t92,3192
+static const char *optString optString94,3208
+static globalArgs_t globals 96,3257
+typedef struct peformance_data_inputs 105,3477
+        unsigned long int interval;106,3517
+        unsigned long int repetition;107,3553
+        char *core_list;core_list108,3591
+        char *outfile_path;outfile_path109,3616
+        char *nf_tags;nf_tags110,3644
+}pd_inputs_t;pd_inputs_t111,3667
+const char *cmd cmd113,3682
+const char *cmd2 cmd2114,3789
+usage(122,4348
+parse_app_args(129,4614
+int pin_this_thread_to_core(167,5983
+int do_performance_log(182,6476
+int do_performance_log(211,7548
+int main(229,8019
+
+examples/bridge/bridge.c,217
+#define NF_TAG 59,2309
+struct onvm_nf_info *nf_info;nf_info62,2387
+static uint32_t print_delay 65,2461
+usage(72,2578
+parse_app_args(80,2756
+do_stats_display(112,3949
+packet_handler(143,4788
+int main(175,6063
+
+examples/my_speed_tester/speed_tester.c,315
+#define NF_TAG 62,2398
+#define NUM_PKTS 64,2422
+#define PKTMBUF_POOL_NAME 65,2443
+struct onvm_nf_info *nf_info;nf_info68,2544
+static uint32_t print_delay 71,2618
+static uint16_t destination;72,2658
+usage(78,2732
+parse_app_args(86,2927
+do_stats_display(131,4608
+packet_handler(164,5822
+int main(184,6387
+
+examples/ml_nf/bridge.c,1000
+#define MSG_RING_NAME1 70,2553
+#define MSG_RING_SIZE 71,2588
+#define NF_TAG 73,2615
+struct onvm_nf_info *nf_info;nf_info77,2694
+static char *input_file_name input_file_name80,2752
+static const char *ml_model ml_model81,2789
+static char *batchsize batchsize82,2825
+static char *gpu_percent gpu_percent83,2856
+void * cpu_func_ptr 85,2922
+void * gpu_func_ptr 86,2950
+float *dummy_image;dummy_image88,2979
+float *dummy_output;dummy_output89,2999
+cudaIpcMemHandle_t * cuda_handles;100,3372
+models_attributes loaded_models;101,3407
+static uint32_t print_delay 104,3484
+usage(110,3568
+parse_app_args(118,3777
+do_stats_display(162,5197
+packet_handler(193,6036
+int function_to_process_gpu_message(218,6910
+void store_the_gpu_pointers(244,7530
+void load_gpu_ptrs(264,8291
+void ask_for_gpu_pointers(321,11197
+void voluntary_restart_the_nf(333,11788
+void check_number_of_sm(341,11931
+void create_dummy_data(347,12135
+void cuda_register_memseg_info(352,12314
+int main(450,16567
+
+examples/arp_response/arp_response.c,499
+#define NF_TAG 63,2432
+#define PKTMBUF_POOL_NAME 65,2463
+struct state_info 67,2511
+        struct rte_mempool *pktmbuf_pool;pktmbuf_pool68,2531
+        uint16_t nf_destination;69,2573
+        uint32_t *source_ips;source_ips70,2606
+        int print_flag;71,2636
+struct onvm_nf_info *nf_info;nf_info75,2717
+struct state_info *state_info;state_info76,2747
+usage(83,2906
+get_ip_count(89,3129
+parse_app_args(119,4019
+send_arp_reply(205,7412
+packet_handler(257,9205
+int main(280,10338
+
+examples/test_flow_dir/test_flow_dir.c,254
+#define NF_TAG 67,2557
+struct onvm_nf_info *nf_info;nf_info70,2642
+static uint32_t print_delay 73,2716
+static uint32_t destination;75,2756
+usage(81,2830
+parse_app_args(89,3025
+do_stats_display(126,4431
+packet_handler(153,5191
+int main(186,6070
+
+examples/flow_rule_deleter/flow_rule_deleter.c,890
+#define NF_TAG 65,2210
+#define MIN(67,2241
+#define MAX(68,2279
+struct onvm_nf_info *nf_info;nf_info71,2371
+#define MAX_SERVICE_CHAINS 74,2438
+int services[services75,2468
+int max_service_chains=76,2525
+#define MAX_FLOW_TABLE_ENTRIES 79,2599
+struct onvm_ft_ipv4_5tuple ipv4_5tRules[ipv4_5tRules80,2635
+uint32_t max_ft_entries=81,2700
+typedef struct globalArgs 85,2820
+        uint32_t destination;86,2848
+        uint32_t print_delay;87,2926
+        const char* servicechain_file;88,3007
+        const char* ipv4rules_file;89,3085
+        const char* base_ip_addr;90,3170
+        uint32_t max_ip_addrs;91,3252
+        uint32_t max_ft_rules;92,3338
+}globalArgs_t;globalArgs_t93,3422
+static const char *optString optString94,3437
+static globalArgs_t globals 96,3486
+usage(108,3804
+parse_app_args(115,4090
+clear_flow_rule_and_sc_entries(161,5943
+int main(169,6077
+
+examples/basic_nf_v2/basic_nf.c,528
+#define NF_TAG 41,1298
+#define FACT_VALUE 44,1348
+long factorial(46,1393
+struct onvm_nf_info *nf_info;nf_info60,1658
+static uint32_t print_delay 63,1732
+static uint32_t destination 64,1771
+static uint16_t dst_flag 65,1804
+static uint32_t comp_cost_level 66,1834
+static uint64_t comp_cost_cycles 67,1909
+static uint64_t avg_comp_cost=68,1946
+usage(73,2023
+parse_app_args(81,2201
+do_additional_stat_display(119,3833
+do_stats_display(151,5161
+do_compute_at_cost(180,6013
+packet_handler(248,8697
+int main(285,9658
+
+examples/chain_nf/basic_nf.c,528
+#define NF_TAG 41,1298
+#define FACT_VALUE 44,1348
+long factorial(46,1393
+struct onvm_nf_info *nf_info;nf_info60,1658
+static uint32_t print_delay 63,1732
+static uint32_t destination 64,1771
+static uint16_t dst_flag 65,1804
+static uint32_t comp_cost_level 66,1834
+static uint64_t comp_cost_cycles 67,1909
+static uint64_t avg_comp_cost=68,1946
+usage(73,2023
+parse_app_args(81,2201
+do_additional_stat_display(119,3833
+do_stats_display(150,5160
+do_compute_at_cost(179,6012
+packet_handler(245,8694
+int main(279,9682
+
+examples/flow_rule_installer/flow_rule_installer.c,1482
+#define NF_TAG 65,2210
+#define MIN(67,2243
+#define MAX(68,2281
+struct onvm_nf_info *nf_info;nf_info71,2373
+#define MAX_SERVICE_CHAINS 74,2440
+int services[services75,2470
+int max_service_chains=76,2527
+#define MAX_FLOW_TABLE_ENTRIES 79,2601
+struct onvm_ft_ipv4_5tuple ipv4_5tRules[ipv4_5tRules80,2637
+uint32_t max_ft_entries=81,2702
+typedef struct globalArgs 85,2822
+        uint32_t destination;86,2850
+        uint32_t print_delay;87,2928
+        const char* servicechain_file;88,3009
+        const char* ipv4rules_file;89,3087
+        const char* base_ip_addr;90,3172
+        uint32_t max_ip_addrs;91,3254
+        uint32_t max_ft_rules;92,3340
+}globalArgs_t;globalArgs_t93,3424
+static const char *optString optString94,3439
+static globalArgs_t globals 96,3488
+usage(108,3806
+parse_app_args(115,4092
+parse_services(161,5946
+#define DEBUG215,8141
+static uint32_t get_ipv4_value(232,8582
+parse_ipv4_5t_rules(264,9691
+#define DEBUG311,11939
+setup_service_chain_for_flow_entry(326,12397
+setup_schain_and_flow_entry_for_flip_key(395,15536
+add_flow_key_to_sc_flow_table(482,18652
+static int populate_random_flow_rules_with_pkts(571,21801
+#define NUM_PKTS 589,22487
+#define PKTMBUF_POOL_NAME 590,22507
+populate_random_flow_rules(625,23719
+setup_flow_rule_and_sc_entries(688,27117
+static int setup_rule_for_packet(703,27691
+packet_handler(781,31140
+clear_flow_rule_and_sc_entries(792,31480
+int clear_thread_start(800,31650
+int main(815,32217
+
+examples/load_balancer_chain/load_balancer.c,2486
+#define NF_TAG 74,2652
+#define TABLE_SIZE 75,2683
+typedef struct backend_server 79,2762
+        uint8_t d_addr_bytes[d_addr_bytes80,2794
+        uint32_t d_ip;81,2840
+}backend_server_t;backend_server_t82,2863
+typedef struct flow_info 85,2910
+        uint8_t dest;86,2937
+        uint8_t s_addr_bytes[s_addr_bytes87,2959
+        uint64_t last_pkt_cycles;88,3005
+        int is_active;89,3039
+}flow_info_t;flow_info_t90,3062
+#define MAX_BACKEND_SERVERS 93,3100
+#define MAX_FILE_NAME_LEN 94,3133
+#define MAX_IFACE_NAME_LEN 95,3165
+flow_info_t ft[ft96,3199
+struct loadbalance 98,3270
+        flow_info_t *ft;ft100,3329
+        uint8_t server_count;103,3396
+        struct backend_server server[server104,3426
+        uint16_t num_stored;107,3528
+        uint64_t elapsed_cycles;108,3557
+        uint64_t last_cycles;109,3590
+        uint32_t expire_time;110,3620
+        uint32_t ip_lb_server;113,3684
+        uint32_t ip_lb_client;114,3715
+        uint8_t server_port;115,3746
+        uint8_t client_port;116,3775
+        char cfg_filename[cfg_filename119,3848
+        char client_iface_name[client_iface_name120,3894
+        char server_iface_name[server_iface_name121,3946
+struct loadbalance 125,4050
+        struct onvm_ft *ft;ft126,4071
+        uint8_t server_count;129,4141
+        struct backend_server *server;server130,4171
+        uint16_t num_stored;133,4253
+        uint64_t elapsed_cycles;134,4282
+        uint64_t last_cycles;135,4315
+        uint32_t expire_time;136,4345
+        uint32_t ip_lb_server;139,4409
+        uint32_t ip_lb_client;140,4440
+        uint8_t server_port;141,4471
+        uint8_t client_port;142,4500
+        char * cfg_filename;145,4574
+        char * client_iface_name;146,4603
+        char * server_iface_name;147,4637
+struct onvm_nf_info *nf_info;nf_info156,4797
+struct loadbalance *lb;lb158,4828
+static uint32_t print_delay 160,4895
+usage(169,5052
+parse_app_args(177,5270
+parse_backend_config(251,7951
+do_stats_display(313,10468
+print_flow_info(343,11274
+get_iface_inf(356,11720
+#define DIRTY_MAP_PER_CHUNK_SIZE 419,14759
+static inline uint64_t map_tag_index_to_dirty_chunk_bit_index(421,14929
+static inline int update_dirty_state_index(430,15510
+update_status(440,15806
+clear_entries(457,16229
+static void set_lb_flow_info(501,17777
+table_add_entry(513,18163
+table_lookup_entry(548,19093
+int lb_callback_handler(616,21728
+packet_handler(628,22108
+int main(744,27774
+
+examples/vlan_tagger_chain/vlan_tagger.c,1388
+#define NF_TAG 62,2446
+struct onvm_nf_info *nf_info;nf_info65,2529
+static uint32_t print_delay 68,2603
+static uint32_t destination 71,2698
+#define BASE_VLAN_TAG 73,2732
+#define MAX_VLAN_TAG 74,2794
+static uint16_t vlan_tag_value 75,2874
+static int get_new_vlan_tag_value(76,2924
+typedef struct vlan_tag_info_table 81,3251
+        uint16_t ft_index;82,3288
+        uint16_t vlan_tag;83,3315
+        uint32_t tag_counter;84,3342
+        uint64_t pkt_counter;85,3372
+}vlan_tag_info_table_t;vlan_tag_info_table_t86,3402
+vlan_tag_info_table_t *vtag_tbl vtag_tbl87,3426
+#define MAX_STATE_ELEMENTS 92,3571
+#define VLAN_NF_STATE_SIZE 94,3688
+#define DIRTY_MAP_PER_CHUNK_SIZE 95,3725
+#define MAX_STATE_ELEMENTS 96,3807
+void *vlan_state_mp vlan_state_mp97,3922
+#define MAP_SDN_FT_INDEX_TO_VLAN_STATE_TBL_INDEX(101,4097
+usage(110,4304
+parse_app_args(118,4499
+do_stats_display(162,6166
+int get_vtag_tbl_index(196,7308
+static inline uint64_t map_tag_index_to_dirty_chunk_bit_index(213,7972
+static inline int update_dirty_state_index(222,8556
+static inline int save_packet_state(230,8926
+do_check_and_insert_vlan_tag(259,10146
+static uint64_t cycles_per_nd_mark 324,13686
+static volatile uint32_t nd_counter 326,13824
+static uint64_t last_cycle;327,13865
+static uint64_t cur_cycle;328,13893
+packet_handler(332,13939
+callback_handler(357,14738
+int main(373,15306
+
+examples/latency_profiler/latency_profiler.c,3255
+#define _GNU_SOURCE 8,119
+#define _GNU_SOURCE 55,1099
+#define rte_calloc(84,1682
+#define rte_free(85,1722
+#define SEM_NAME 87,1751
+sem_t *wait_mutex wait_mutex88,1783
+int initialize_sync_variable(95,1986
+int deinitialize_sync_variable(104,2280
+int wait_on_sync_variable(113,2524
+int post_on_sync_variable(120,2648
+#define USE_THIS_CLOCK 127,2776
+#define HAS_CLOCK_GETTIME_MONOTONIC135,3027
+  struct timespec start,139,3106
+  struct timespec start, stop;139,3106
+  struct timeval start,141,3143
+  struct timeval start, stop;141,3143
+int64_t delta 143,3180
+unsigned long int min_lat 145,3200
+unsigned long int max_lat 146,3231
+unsigned long int avg_lat 147,3262
+int get_cur_time(149,3294
+int get_start_time(164,3589
+int get_stop_time(179,3867
+int64_t get_ttl_time(194,4176
+int64_t get_elapsed_time(209,4614
+void test_sched_yield(221,4936
+void test_nanosleep(241,5857
+void test_clk_overhead(263,6931
+void test_mq(291,7952
+void test_mq_2(342,10047
+void test_sem(396,12452
+void test_sem_2(443,14189
+#define MP_CLIENT_CGROUP_SET_CPU_SHARE_ONVM_MGR 493,16227
+void cgroup_update1(494,16313
+void test_cgroup_update1(509,16862
+#define MP_CLIENT_CGROUP_SET_CPU_SHARE 526,17543
+void cgroup_update2(527,17630
+void test_cgroup_update2(537,18031
+void test_group_prio(553,18711
+#define AIO_REQUEST_PRIO 560,19009
+#define OFFSET_LIST_SIZE 561,19038
+static int offset_desc[offset_desc562,19066
+#define OFFSET_MULTIPLIER 563,19181
+int get_read_file_offset(565,19278
+#define FD_RD_OPEN_MODE 575,19715
+#define IO_BUF_SIZE 576,19773
+#define USE_SYNC_PREAD578,19799
+#define MAX_READ_FLAG_OPTIONS 581,19847
+int read_flag_options_list[read_flag_options_list582,19881
+int get_next_read_flag(590,20119
+void test_sync_io_read(595,20255
+#define FD_WR_OPEN_MODE 642,22615
+#define MAX_WRITE_FLAG_OPTIONS 643,22673
+int write_flag_options_list[write_flag_options_list644,22708
+int get_next_write_flag(652,22949
+#define IO_BUF_SIZE 658,23089
+void test_sync_io_write(659,23114
+#define MAX_AIO_BUFFERS 699,25098
+typedef enum AIOBufState 700,25126
+        BUF_FREE 701,25153
+        BUF_IN_USE 702,25175
+        BUF_SUBMITTED=703,25198
+}AIOBufState_e;AIOBufState_e704,25223
+typedef struct aio_buf_t 705,25239
+        volatile AIOBufState_e state;706,25266
+        void* buf;707,25304
+        uint32_t buf_index;708,25323
+        uint32_t max_size;709,25419
+        uint32_t buf_len;710,25524
+        struct aiocb *aiocb;aiocb712,25694
+        int req_status;713,25791
+}aio_buf_t;aio_buf_t714,25888
+static aio_buf_t *aio_buf_pool aio_buf_pool716,25924
+static aio_buf_t aio_buf_pool[aio_buf_pool718,25969
+static int aio_fd 720,26028
+int refresh_aio_buffer(728,26359
+static void ioSigHandler(741,26774
+int notify_io_rw_done(754,27128
+initialize_aiocb(771,27630
+int initialize_aio_buffers 783,28132
+int deinitialize_aio_buffers(830,30172
+aio_buf_t* get_aio_buffer_from_aio_buf_pool(849,30890
+void test_async_io_read(863,31405
+void test_async_io_write(920,34167
+#define errExit(986,37454
+#define TESTSIG 987,37496
+handler(990,37533
+int test_signal_latency(1004,38052
+#define TOTAL_MEMBLOCK_SIZE 1067,39872
+#define	COPY_BLOCK_SIZE	1068,39910
+int test_memcpy_latency(1069,39947
+int main(1111,41639
+
+examples/basic_nf/basic_nf.c,377
+#define NF_TAG 41,1298
+#define FACT_VALUE 44,1348
+long factorial(46,1393
+struct onvm_nf_info *nf_info;nf_info60,1658
+static uint32_t print_delay 63,1732
+static uint32_t destination 64,1771
+static uint16_t dst_flag 65,1804
+usage(70,1878
+parse_app_args(78,2056
+do_additional_stat_display(110,3418
+do_stats_display(141,4573
+packet_handler(170,5417
+int main(198,6243
+
+examples/load_balancer_nf/load_balancer_nf.c,1518
+#define NF_TAG 75,2680
+#define TABLE_SIZE 76,2714
+typedef struct flow_info 80,2787
+        uint16_t svc_id;81,2814
+        uint16_t inst_id;82,2839
+        uint16_t flow_index;83,2865
+        uint16_t is_active;84,2894
+        uint64_t last_pkt_cycles;85,2922
+}flow_info_t;flow_info_t86,2956
+#define MAX_BACKEND_SERVERS 92,3008
+#define MAX_FILE_NAME_LEN 93,3041
+#define MAX_IFACE_NAME_LEN 94,3073
+flow_info_t ft[ft95,3107
+typedef struct nf_loadbalance 98,3179
+        struct onvm_ft *ft;ft101,3236
+        flow_info_t *ft;ft104,3308
+        uint16_t num_stored;108,3383
+        uint64_t elapsed_cycles;109,3412
+        uint64_t last_cycles;110,3445
+        uint32_t expire_time;111,3475
+        uint8_t last_sel_inst_id[last_sel_inst_id114,3548
+        uint16_t exclude_svc_list[exclude_svc_list117,3643
+}nf_loadbalance_t;nf_loadbalance_t119,3693
+struct onvm_nf_info *nf_info;nf_info124,3768
+nf_loadbalance_t *lb;lb126,3799
+static uint32_t print_delay 128,3864
+usage(139,4083
+parse_app_args(147,4276
+do_stats_display(182,5615
+#define DIRTY_MAP_PER_CHUNK_SIZE 211,6417
+static inline uint64_t map_tag_index_to_dirty_chunk_bit_index(213,6585
+static inline int update_dirty_state_index(222,7164
+update_status(232,7460
+clear_entries(249,7887
+setup_nf_instances_for_chain(271,8485
+table_add_entry(307,10482
+table_lookup_and_set_entry(330,11339
+int lb_callback_handler(363,12498
+static inline int forward_pkt_to_alt_port(372,12760
+packet_handler(393,13581
+int main(423,14477
+
+examples/nd_toy_nf/vlan_tagger.c,1520
+#define NF_TAG 62,2446
+struct onvm_nf_info *nf_info;nf_info65,2529
+static uint32_t print_delay 68,2603
+static uint32_t destination 71,2698
+#define BASE_VLAN_TAG 73,2732
+#define MAX_VLAN_TAG 74,2794
+static uint16_t vlan_tag_value 75,2874
+static int get_new_vlan_tag_value(76,2924
+typedef struct vlan_tag_info_table 81,3251
+        uint16_t ft_index;82,3288
+        uint16_t vlan_tag;83,3315
+        uint32_t tag_counter;84,3342
+        uint64_t pkt_counter;85,3372
+}vlan_tag_info_table_t;vlan_tag_info_table_t86,3402
+vlan_tag_info_table_t *vtag_tbl vtag_tbl87,3426
+#define MAX_STATE_ELEMENTS 92,3571
+#define VLAN_NF_STATE_SIZE 94,3688
+#define DIRTY_MAP_PER_CHUNK_SIZE 95,3725
+#define MAX_STATE_ELEMENTS 96,3807
+void *vlan_state_mp vlan_state_mp97,3922
+#define MAP_SDN_FT_INDEX_TO_VLAN_STATE_TBL_INDEX(101,4097
+usage(110,4304
+parse_app_args(118,4499
+do_stats_display(162,6166
+int get_vtag_tbl_index(196,7308
+static inline uint64_t map_tag_index_to_dirty_chunk_bit_index(213,7972
+static inline int update_dirty_state_index(222,8556
+static inline int save_packet_state(230,8926
+do_check_and_insert_vlan_tag(259,10146
+static uint64_t cycles_per_nd_mark 325,13709
+static volatile uint32_t nd_counter 327,13863
+static uint64_t last_cycle;328,13904
+static uint64_t cur_cycle;329,13932
+static uint32_t incr_rate[incr_rate330,13959
+static uint32_t decr_rate[decr_rate331,14049
+static void adjust_nd_rate(333,14140
+packet_handler(377,15830
+callback_handler(408,16784
+int main(425,17355
+
+examples/flow_table/setupconn.c,63
+int timeout_connect(60,2429
+int make_tcp_connection(132,4141
+
+examples/flow_table/flow_table.h,181
+#define _FLOW_TABLE_H_42,2033
+usage(48,2101
+struct flow_table_entry 53,2261
+        uint32_t count;54,2287
+        uint8_t action;55,2343
+        uint16_t destination;56,2396
+
+examples/flow_table/msgbuf.c,306
+#define MIN(52,2210
+struct msgbuf *  msgbuf_new(55,2261
+int msgbuf_read(68,2519
+int msgbuf_read_all(78,2797
+int msgbuf_write(95,3164
+int msgbuf_write_all(113,3573
+void msgbuf_clear(131,3943
+void msgbuf_grow(136,4021
+void * msgbuf_peek(147,4262
+int msgbuf_pull(154,4400
+void msgbuf_push(167,4750
+
+examples/flow_table/sdn.c,798
+struct onvm_ft *pkt_buf_ft;pkt_buf_ft76,2782
+static struct ofp_switch_config Switch_config 78,2811
+static inline uint64_t htonll(87,3007
+static inline uint64_t ntohll(92,3131
+void datapath_init(97,3255
+void datapath_set_pollfd(117,3791
+void datapath_handle_io(123,3920
+void datapath_handle_read(131,4114
+void datapath_handle_write(265,9039
+void datapath_change_status(314,10603
+int parse_set_config(320,10766
+int make_config_reply(330,11016
+int make_features_reply(341,11297
+int make_stats_desc_reply(374,12952
+int make_vendor_reply(399,13731
+int debug_msg(414,14193
+void get_header(430,14558
+int make_packet_in(437,14778
+struct onvm_ft_ipv4_5tuple* flow_key_extract(460,15460
+flow_action_extract(479,16021
+int setup_securechannel(513,17209
+void* run_securechannel(561,18724
+
+examples/flow_table/sdn_pkt_list.h,472
+#define _SDN_PKT_LIST_H_42,2030
+struct sdn_pkt_list 47,2103
+        struct sdn_pkt_entry *head;head48,2125
+        struct sdn_pkt_entry *tail;tail49,2161
+        int flag;50,2197
+	int counter;51,2215
+struct sdn_pkt_entry 54,2233
+        struct rte_mbuf *pkt;pkt55,2256
+        struct sdn_pkt_entry *next;next56,2286
+sdn_pkt_list_init(62,2417
+sdn_pkt_list_add(71,2629
+sdn_pkt_list_set_flag(89,3108
+sdn_pkt_list_get_flag(94,3201
+sdn_pkt_list_flush(99,3298
+
+examples/flow_table/setupconn.h,52
+#define SETUPCONN_H42,2047
+#define BUFLEN 45,2083
+
+examples/flow_table/flow_table.c,473
+#define NF_TAG 71,2620
+struct onvm_nf_info *nf_info;nf_info74,2702
+struct rte_ring* ring_to_sdn;76,2733
+struct rte_ring* ring_from_sdn;77,2763
+#define SDN_RING_SIZE 78,2795
+static uint32_t print_delay 81,2867
+uint16_t def_destination;83,2905
+static uint32_t total_flows;84,2931
+setup_rings(88,3044
+cleanup(100,3559
+parse_app_args(109,3803
+do_stats_display(136,4741
+flow_table_hit(172,6012
+flow_table_miss(182,6223
+packet_handler(199,6673
+int main(247,8058
+
+examples/flow_table/msgbuf.h,179
+#define MSGBUF_H42,2056
+struct msgbuf44,2074
+	char* buf;46,2090
+	int len,47,2102
+	int len, start,47,2102
+	int len, start, end;47,2102
+#define msgbuf_count_buffered(60,2637
+
+examples/flow_table/openflow.h,16466
+#define OPENFLOW_OPENFLOW_H 37,1803
+#define OFP_ASSERT(46,1923
+#define OFP_ASSERT(49,2080
+#define OFP_ASSERT(53,2328
+#define OFP_PACKED 57,2443
+#define OFP_PACKED 59,2492
+#define OFP_VERSION 69,2800
+#define OFP_MAX_TABLE_NAME_LEN 71,2828
+#define OFP_MAX_PORT_NAME_LEN 72,2862
+#define OFP_TCP_PORT 74,2897
+#define OFP_SSL_PORT 75,2924
+#define OFP_ETH_ALEN 77,2952
+enum ofp_port 80,3089
+    OFPP_MAX 82,3156
+    OFPP_MAX = 0xff00,xff0082,3156
+    OFPP_IN_PORT 85,3211
+    OFPP_IN_PORT    = 0xfff8,xfff885,3211
+    OFPP_TABLE 89,3474
+    OFPP_TABLE      = 0xfff9,xfff989,3474
+    OFPP_NORMAL 92,3677
+    OFPP_NORMAL     = 0xfffa,xfffa92,3677
+    OFPP_FLOOD 93,3751
+    OFPP_FLOOD      = 0xfffb,xfffb93,3751
+    OFPP_ALL 95,3886
+    OFPP_ALL        = 0xfffc,xfffc95,3886
+    OFPP_CONTROLLER 96,3961
+    OFPP_CONTROLLER = 0xfffd,xfffd96,3961
+    OFPP_LOCAL 97,4018
+    OFPP_LOCAL      = 0xfffe,xfffe97,4018
+    OFPP_NONE 98,4078
+    OFPP_NONE       = 0xffff xffff98,4078
+enum ofp_type 101,4156
+    OFPT_HELLO,103,4202
+    OFPT_ERROR,104,4256
+    OFPT_ECHO_REQUEST,105,4310
+    OFPT_ECHO_REPLY,106,4364
+    OFPT_VENDOR,107,4418
+    OFPT_FEATURES_REQUEST,110,4514
+    OFPT_FEATURES_REPLY,111,4576
+    OFPT_GET_CONFIG_REQUEST,112,4638
+    OFPT_GET_CONFIG_REPLY,113,4700
+    OFPT_SET_CONFIG,114,4762
+    OFPT_PACKET_IN,117,4858
+    OFPT_FLOW_REMOVED,118,4908
+    OFPT_PORT_STATUS,119,4958
+    OFPT_PACKET_OUT,122,5048
+    OFPT_FLOW_MOD,123,5110
+    OFPT_PORT_MOD,124,5172
+    OFPT_STATS_REQUEST,127,5266
+    OFPT_STATS_REPLY,128,5328
+    OFPT_BARRIER_REQUEST,131,5419
+    OFPT_BARRIER_REPLY,132,5481
+    OFPT_QUEUE_GET_CONFIG_REQUEST,135,5584
+    OFPT_QUEUE_GET_CONFIG_REPLY 136,5652
+struct ofp_header 141,5763
+    uint8_t version;142,5783
+    uint8_t type;143,5826
+    uint16_t length;144,5884
+    uint32_t xid;145,5948
+struct ofp_hello 153,6342
+    struct ofp_header header;154,6361
+#define OFP_DEFAULT_MISS_SEND_LEN 157,6395
+enum ofp_config_flags 159,6436
+    OFPC_FRAG_NORMAL 161,6496
+    OFPC_FRAG_DROP 162,6566
+    OFPC_FRAG_REASM 163,6617
+    OFPC_FRAG_MASK 164,6692
+struct ofp_switch_config 168,6751
+    struct ofp_header header;169,6778
+    uint16_t flags;170,6808
+    uint16_t miss_send_len;171,6860
+enum ofp_capabilities 177,7102
+    OFPC_FLOW_STATS 178,7126
+    OFPC_TABLE_STATS 179,7184
+    OFPC_PORT_STATS 180,7243
+    OFPC_STP 181,7301
+    OFPC_RESERVED 182,7364
+    OFPC_IP_REASM 183,7429
+    OFPC_QUEUE_STATS 184,7499
+    OFPC_ARP_MATCH_IP 185,7558
+enum ofp_port_config 192,7851
+    OFPPC_PORT_DOWN 193,7874
+    OFPPC_NO_STP 195,7946
+    OFPPC_NO_RECV 196,8024
+    OFPPC_NO_RECV_STP 198,8155
+    OFPPC_NO_FLOOD 199,8229
+    OFPPC_NO_FWD 200,8309
+    OFPPC_NO_PACKET_IN 201,8381
+enum ofp_port_state 207,8557
+    OFPPS_LINK_DOWN 208,8579
+    OFPPS_STP_LISTEN 214,8870
+    OFPPS_STP_LEARN 215,8941
+    OFPPS_STP_FORWARD 216,9013
+    OFPPS_STP_BLOCK 217,9081
+    OFPPS_STP_MASK 218,9146
+enum ofp_port_features 222,9279
+    OFPPF_10MB_HD 223,9304
+    OFPPF_10MB_FD 224,9374
+    OFPPF_100MB_HD 225,9444
+    OFPPF_100MB_FD 226,9515
+    OFPPF_1GB_HD 227,9586
+    OFPPF_1GB_FD 228,9655
+    OFPPF_10GB_FD 229,9724
+    OFPPF_COPPER 230,9794
+    OFPPF_FIBER 231,9847
+    OFPPF_AUTONEG 232,9899
+    OFPPF_PAUSE 233,9955
+    OFPPF_PAUSE_ASYM 234,10000
+struct ofp_phy_port 238,10097
+    uint16_t port_no;239,10119
+    uint8_t hw_addr[hw_addr240,10141
+    char name[name241,10176
+    uint32_t config;243,10237
+    uint32_t state;244,10296
+    uint32_t curr;248,10464
+    uint32_t advertised;249,10516
+    uint32_t supported;250,10589
+    uint32_t peer;251,10655
+struct ofp_switch_features 256,10792
+    struct ofp_header header;257,10821
+    uint64_t datapath_id;258,10851
+    uint32_t n_buffers;262,11059
+    uint8_t n_tables;264,11124
+    uint8_t pad[pad265,11198
+    uint32_t capabilities;268,11271
+    uint32_t actions;269,11343
+    struct ofp_phy_port ports[ports272,11438
+enum ofp_port_reason 279,11744
+    OFPPR_ADD,280,11767
+    OFPPR_DELETE,281,11821
+    OFPPR_MODIFY 282,11877
+struct ofp_port_status 286,12005
+    struct ofp_header header;287,12030
+    uint8_t reason;288,12060
+    uint8_t pad[pad289,12111
+    struct ofp_phy_port desc;290,12164
+struct ofp_port_mod 295,12291
+    struct ofp_header header;296,12313
+    uint16_t port_no;297,12343
+    uint8_t hw_addr[hw_addr298,12365
+    uint32_t config;304,12706
+    uint32_t mask;305,12765
+    uint32_t advertise;307,12839
+    uint8_t pad[pad309,12987
+enum ofp_packet_in_reason 314,13143
+    OFPR_NO_MATCH,315,13171
+    OFPR_ACTION 316,13223
+struct ofp_packet_in 320,13357
+    struct ofp_header header;321,13380
+    uint32_t buffer_id;322,13410
+    uint16_t total_len;323,13469
+    uint16_t in_port;324,13525
+    uint8_t reason;325,13593
+    uint8_t pad;326,13671
+    uint8_t data[data327,13688
+enum ofp_action_type 336,14174
+    OFPAT_OUTPUT,337,14197
+    OFPAT_SET_VLAN_VID,338,14254
+    OFPAT_SET_VLAN_PCP,339,14312
+    OFPAT_STRIP_VLAN,340,14371
+    OFPAT_SET_DL_SRC,341,14430
+    OFPAT_SET_DL_DST,342,14489
+    OFPAT_SET_NW_SRC,343,14553
+    OFPAT_SET_NW_DST,344,14606
+    OFPAT_SET_NW_TOS,345,14664
+    OFPAT_SET_TP_SRC,346,14727
+    OFPAT_SET_TP_DST,347,14782
+    OFPAT_ENQUEUE,348,14842
+    OFPAT_VENDOR 349,14894
+    OFPAT_VENDOR = 0xffffxffff349,14894
+struct ofp_action_output 356,15164
+    uint16_t type;357,15191
+    uint16_t len;358,15247
+    uint16_t port;359,15302
+    uint16_t max_len;360,15357
+#define OFP_VLAN_NONE 367,15641
+struct ofp_action_vlan_vid 370,15723
+    uint16_t type;371,15752
+    uint16_t len;372,15814
+    uint16_t vlan_vid;373,15869
+    uint8_t pad[pad374,15920
+struct ofp_action_vlan_pcp 379,16044
+    uint16_t type;380,16073
+    uint16_t len;381,16135
+    uint8_t vlan_pcp;382,16190
+    uint8_t pad[pad383,16247
+struct ofp_action_dl_addr 388,16373
+    uint16_t type;389,16401
+    uint16_t len;390,16465
+    uint8_t dl_addr[dl_addr391,16521
+    uint8_t pad[pad392,16581
+struct ofp_action_nw_addr 397,16707
+    uint16_t type;398,16735
+    uint16_t len;399,16799
+    uint32_t nw_addr;400,16854
+struct ofp_action_tp_port 405,17013
+    uint16_t type;406,17041
+    uint16_t len;407,17105
+    uint16_t tp_port;408,17160
+    uint8_t pad[pad409,17216
+struct ofp_action_nw_tos 414,17337
+    uint16_t type;415,17364
+    uint16_t len;416,17428
+    uint8_t nw_tos;417,17483
+    uint8_t pad[pad418,17554
+struct ofp_action_vendor_header 423,17707
+    uint16_t type;424,17741
+    uint16_t len;425,17797
+    uint32_t vendor;426,17866
+struct ofp_action_header 434,18291
+    uint16_t type;435,18318
+    uint16_t len;436,18376
+    uint8_t pad[pad440,18656
+struct ofp_packet_out 445,18775
+    struct ofp_header header;446,18799
+    uint32_t buffer_id;447,18829
+    uint16_t in_port;448,18907
+    uint16_t actions_len;449,18988
+    struct ofp_action_header actions[actions450,19059
+enum ofp_flow_mod_command 457,19394
+    OFPFC_ADD,458,19422
+    OFPFC_MODIFY,459,19466
+    OFPFC_MODIFY_STRICT,460,19527
+    OFPFC_DELETE,461,19602
+    OFPFC_DELETE_STRICT 462,19663
+enum ofp_flow_wildcards 466,19761
+    OFPFW_IN_PORT 467,19787
+    OFPFW_DL_VLAN 468,19842
+    OFPFW_DL_SRC 469,19887
+    OFPFW_DL_DST 470,19948
+    OFPFW_DL_TYPE 471,20014
+    OFPFW_NW_PROTO 472,20071
+    OFPFW_TP_SRC 473,20120
+    OFPFW_TP_DST 474,20177
+    OFPFW_NW_SRC_SHIFT 480,20548
+    OFPFW_NW_SRC_BITS 481,20576
+    OFPFW_NW_SRC_MASK 482,20603
+    OFPFW_NW_SRC_MASK = ((1 << OFPFW_NW_SRC_BITS)482,20603
+    OFPFW_NW_SRC_MASK = ((1 << OFPFW_NW_SRC_BITS) - 1) << OFPFW_NW_SRC_SHIFT,482,20603
+    OFPFW_NW_SRC_ALL 483,20681
+    OFPFW_NW_SRC_ALL = 32 << OFPFW_NW_SRC_SHIFT,483,20681
+    OFPFW_NW_DST_SHIFT 486,20808
+    OFPFW_NW_DST_BITS 487,20837
+    OFPFW_NW_DST_MASK 488,20864
+    OFPFW_NW_DST_MASK = ((1 << OFPFW_NW_DST_BITS)488,20864
+    OFPFW_NW_DST_MASK = ((1 << OFPFW_NW_DST_BITS) - 1) << OFPFW_NW_DST_SHIFT,488,20864
+    OFPFW_NW_DST_ALL 489,20942
+    OFPFW_NW_DST_ALL = 32 << OFPFW_NW_DST_SHIFT,489,20942
+    OFPFW_DL_VLAN_PCP 491,20992
+    OFPFW_NW_TOS 492,21047
+    OFPFW_ALL 495,21143
+#define OFPFW_ICMP_TYPE 500,21300
+#define OFPFW_ICMP_CODE 501,21337
+#define OFP_DL_TYPE_ETH2_CUTOFF 507,21558
+#define OFP_DL_TYPE_NOT_ETH_TYPE 512,21689
+#define OFP_VLAN_NONE 517,21875
+struct ofp_match 520,21946
+    uint32_t wildcards;521,21965
+    uint16_t in_port;522,22019
+    uint8_t dl_src[dl_src523,22075
+    uint8_t dl_dst[dl_dst524,22140
+    uint16_t dl_vlan;525,22210
+    uint8_t dl_vlan_pcp;526,22262
+    uint8_t pad1[pad1527,22320
+    uint16_t dl_type;528,22374
+    uint8_t nw_tos;529,22432
+    uint8_t nw_proto;530,22507
+    uint8_t pad2[pad2532,22621
+    uint32_t nw_src;533,22675
+    uint32_t nw_dst;534,22731
+    uint16_t tp_src;535,22792
+    uint16_t tp_dst;536,22850
+#define icmp_type 542,23078
+#define icmp_code 543,23103
+#define OFP_FLOW_PERMANENT 547,23227
+#define OFP_DEFAULT_PRIORITY 550,23308
+enum ofp_flow_mod_flags 552,23345
+    OFPFF_SEND_FLOW_REM 553,23371
+    OFPFF_CHECK_OVERLAP 555,23509
+    OFPFF_EMERG 556,23587
+struct ofp_flow_mod 560,23718
+    struct ofp_header header;561,23740
+    struct ofp_match match;562,23770
+    uint64_t cookie;563,23825
+    uint16_t command;566,23926
+    uint16_t idle_timeout;567,23982
+    uint16_t hard_timeout;568,24061
+    uint16_t priority;569,24139
+    uint32_t buffer_id;570,24209
+    uint16_t out_port;572,24357
+    uint16_t flags;576,24644
+    struct ofp_action_header actions[actions577,24700
+enum ofp_flow_removed_reason 584,24986
+    OFPRR_IDLE_TIMEOUT,585,25017
+    OFPRR_HARD_TIMEOUT,586,25093
+    OFPRR_DELETE 587,25159
+struct ofp_flow_removed 591,25276
+    struct ofp_header header;592,25302
+    struct ofp_match match;593,25332
+    uint64_t cookie;594,25391
+    uint16_t priority;596,25465
+    uint8_t reason;597,25531
+    uint8_t pad[pad598,25583
+    uint32_t duration_sec;600,25638
+    uint32_t duration_nsec;601,25706
+    uint16_t idle_timeout;603,25831
+    uint8_t pad2[pad2604,25904
+    uint64_t packet_count;605,25958
+    uint64_t byte_count;606,25985
+enum ofp_error_type 613,26238
+    OFPET_HELLO_FAILED,614,26260
+    OFPET_BAD_REQUEST,615,26321
+    OFPET_BAD_ACTION,616,26387
+    OFPET_FLOW_MOD_FAILED,617,26454
+    OFPET_PORT_MOD_FAILED,618,26522
+    OFPET_QUEUE_OP_FAILED 619,26585
+enum ofp_hello_failed_code 624,26781
+    OFPHFC_INCOMPATIBLE,625,26810
+    OFPHFC_EPERM 626,26871
+enum ofp_bad_request_code 631,27060
+    OFPBRC_BAD_VERSION,632,27088
+    OFPBRC_BAD_TYPE,633,27160
+    OFPBRC_BAD_STAT,634,27229
+    OFPBRC_BAD_VENDOR,635,27305
+    OFPBRC_BAD_SUBTYPE,637,27463
+    OFPBRC_EPERM,638,27531
+    OFPBRC_BAD_LEN,639,27588
+    OFPBRC_BUFFER_EMPTY,640,27657
+    OFPBRC_BUFFER_UNKNOWN 641,27735
+enum ofp_bad_action_code 646,27937
+    OFPBAC_BAD_TYPE,647,27964
+    OFPBAC_BAD_LEN,648,28022
+    OFPBAC_BAD_VENDOR,649,28086
+    OFPBAC_BAD_VENDOR_TYPE,650,28152
+    OFPBAC_BAD_OUT_PORT,651,28224
+    OFPBAC_BAD_ARGUMENT,652,28295
+    OFPBAC_EPERM,653,28353
+    OFPBAC_TOO_MANY,654,28409
+    OFPBAC_BAD_QUEUE 655,28478
+enum ofp_flow_mod_failed_code 660,28684
+    OFPFMFC_ALL_TABLES_FULL,661,28716
+    OFPFMFC_OVERLAP,662,28793
+    OFPFMFC_EPERM,664,28929
+    OFPFMFC_BAD_EMERG_TIMEOUT,665,28986
+    OFPFMFC_BAD_COMMAND,667,29113
+    OFPFMFC_UNSUPPORTED 668,29168
+enum ofp_port_mod_failed_code 674,29442
+    OFPPMFC_BAD_PORT,675,29474
+    OFPPMFC_BAD_HW_ADDR,676,29544
+enum ofp_queue_op_failed_code 681,29754
+    OFPQOFC_BAD_PORT,682,29786
+    OFPQOFC_BAD_QUEUE,683,29863
+    OFPQOFC_EPERM 684,29923
+struct ofp_error_msg 688,30042
+    struct ofp_header header;689,30065
+    uint16_t type;691,30096
+    uint16_t code;692,30115
+    uint8_t data[data693,30134
+enum ofp_stats_types 698,30318
+    OFPST_DESC,702,30470
+    OFPST_FLOW,707,30643
+    OFPST_AGGREGATE,712,30819
+    OFPST_TABLE,717,30969
+    OFPST_PORT,722,31141
+    OFPST_QUEUE,727,31297
+    OFPST_VENDOR 733,31544
+    OFPST_VENDOR = 0xffffxffff733,31544
+struct ofp_stats_request 736,31574
+    struct ofp_header header;737,31601
+    uint16_t type;738,31631
+    uint16_t flags;739,31699
+    uint8_t body[body740,31775
+enum ofp_stats_reply_flags 744,31890
+    OFPSF_REPLY_MORE 745,31919
+struct ofp_stats_reply 748,31985
+    struct ofp_header header;749,32010
+    uint16_t type;750,32040
+    uint16_t flags;751,32108
+    uint8_t body[body752,32167
+#define DESC_STR_LEN 756,32278
+#define SERIAL_NUM_LEN 757,32305
+struct ofp_desc_stats 760,32424
+    char mfr_desc[mfr_desc761,32448
+    char hw_desc[hw_desc762,32519
+    char sw_desc[sw_desc763,32586
+    char serial_num[serial_num764,32653
+    char dp_desc[dp_desc765,32713
+struct ofp_flow_stats_request 770,32906
+    struct ofp_match match;771,32938
+    uint8_t table_id;772,32991
+    uint8_t pad;774,33147
+    uint16_t out_port;775,33201
+struct ofp_flow_stats 782,33515
+    uint16_t length;783,33539
+    uint8_t table_id;784,33597
+    uint8_t pad;785,33661
+    struct ofp_match match;786,33678
+    uint32_t duration_sec;787,33737
+    uint32_t duration_nsec;788,33810
+    uint16_t priority;790,33940
+    uint16_t idle_timeout;792,34087
+    uint16_t hard_timeout;793,34165
+    uint8_t pad2[pad2794,34238
+    uint64_t cookie;795,34292
+    uint64_t packet_count;796,34365
+    uint64_t byte_count;797,34428
+    struct ofp_action_header actions[actions798,34489
+struct ofp_aggregate_stats_request 803,34656
+    struct ofp_match match;804,34693
+    uint8_t table_id;805,34746
+    uint8_t pad;807,34901
+    uint16_t out_port;808,34955
+struct ofp_aggregate_stats_reply 815,35279
+    uint64_t packet_count;816,35314
+    uint64_t byte_count;817,35378
+    uint32_t flow_count;818,35440
+    uint8_t pad[pad819,35493
+struct ofp_table_stats 824,35655
+    uint8_t table_id;825,35680
+    uint8_t pad[pad827,35812
+    char name[name828,35865
+    uint32_t wildcards;829,35904
+    uint32_t max_entries;831,36032
+    uint32_t active_count;832,36100
+    uint64_t lookup_count;833,36161
+    uint64_t matched_count;834,36234
+struct ofp_port_stats_request 839,36410
+    uint16_t port_no;840,36442
+    uint8_t pad[pad844,36708
+struct ofp_port_stats 850,36890
+    uint16_t port_no;851,36914
+    uint8_t pad[pad852,36936
+    uint64_t rx_packets;853,36989
+    uint64_t tx_packets;854,37052
+    uint64_t rx_bytes;855,37118
+    uint64_t tx_bytes;856,37179
+    uint64_t rx_dropped;857,37243
+    uint64_t tx_dropped;858,37311
+    uint64_t rx_errors;859,37379
+    uint64_t tx_errors;863,37660
+    uint64_t rx_frame_err;867,37968
+    uint64_t rx_over_err;868,38037
+    uint64_t rx_crc_err;869,38107
+    uint64_t collisions;870,38164
+struct ofp_vendor_header 875,38299
+    struct ofp_header header;876,38326
+    uint32_t vendor;877,38382
+#define OFPQ_ALL 886,38808
+#define OFPQ_MIN_RATE_UNCFG 889,38886
+enum ofp_queue_properties 891,38927
+    OFPQT_NONE 892,38955
+    OFPQT_MIN_RATE,893,39028
+struct ofp_queue_prop_header 899,39259
+    uint16_t property;900,39290
+    uint16_t len;901,39337
+    uint8_t pad[pad902,39412
+struct ofp_queue_prop_min_rate 907,39564
+    struct ofp_queue_prop_header prop_header;908,39597
+    uint16_t rate;909,39675
+    uint8_t pad[pad910,39748
+struct ofp_packet_queue 915,39895
+    uint32_t queue_id;916,39921
+    uint16_t len;917,39981
+    uint8_t pad[pad918,40050
+    struct ofp_queue_prop_header properties[properties919,40101
+struct ofp_queue_get_config_request 924,40271
+    struct ofp_header header;925,40309
+    uint16_t port;926,40339
+    uint8_t pad[pad928,40478
+struct ofp_queue_get_config_reply 933,40640
+    struct ofp_header header;934,40676
+    uint16_t port;935,40706
+    uint8_t pad[pad936,40725
+    struct ofp_packet_queue queues[queues937,40745
+struct ofp_action_enqueue 942,40954
+    uint16_t type;943,40982
+    uint16_t len;944,41033
+    uint16_t port;945,41080
+    uint8_t pad[pad948,41280
+    uint32_t queue_id;949,41342
+struct ofp_queue_stats_request 953,41465
+    uint16_t port_no;954,41498
+    uint8_t pad[pad955,41556
+    uint32_t queue_id;956,41609
+struct ofp_queue_stats 960,41729
+    uint16_t port_no;961,41754
+    uint8_t pad[pad962,41776
+    uint32_t queue_id;963,41829
+    uint64_t tx_bytes;964,41874
+    uint64_t tx_packets;965,41938
+    uint64_t tx_errors;966,42004
+
+examples/flow_table/sdn.h,385
+#define SDN_H43,2051
+#define NUM_BUFFER_IDS 51,2178
+#define ETH_ADDR_LEN 52,2208
+enum handshake_status 54,2232
+	START 55,2256
+	READY_TO_SEND 56,2268
+struct datapath60,2294
+	int id;62,2312
+	int sock;63,2341
+	struct msgbuf *inbuf,inbuf64,2399
+	struct msgbuf *inbuf, *outbuf;outbuf64,2399
+	int count;65,2454
+	int xid;66,2505
+	int switch_status;67,2537
+	int debug;68,2583

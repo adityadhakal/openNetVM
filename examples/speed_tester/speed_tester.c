@@ -54,7 +54,7 @@
 #include <rte_ip.h>
 #include <rte_mempool.h>
 #include <rte_cycles.h>
-
+#include <rte_udp.h>
 
 #include "onvm_nflib.h"
 #include "onvm_pkt_helper.h"
@@ -169,17 +169,80 @@ packet_handler(struct rte_mbuf* pkt, struct onvm_pkt_meta* meta) {
         else {
                 /* Drop real incoming packets */
                 meta->action = ONVM_NF_ACTION_DROP;
+                //Loob back to same node
+                meta->destination = pkt->port;
+                meta->action = ONVM_NF_ACTION_OUT;
         }
         return 0;
 }
+struct rte_mempool *pktmbuf_pool_g;
+static struct rte_mbuf* create_ipv4_udp_packet(void) {
+        //printf("\n Crafting BFD packet for buffer [%p]\n", pkt);
 
+        uint8_t c_addr[ETHER_ADDR_LEN] = {0x8C, 0xDC, 0xD4, 0xAC, 0x6C, 0x7D};
+        uint8_t s_addr[ETHER_ADDR_LEN] = {0x8C, 0xDC, 0xD4, 0xAC, 0x6B, 0x21};
+        struct rte_mbuf* pkt = rte_pktmbuf_alloc(pktmbuf_pool_g);
+        if(NULL == pktmbuf_pool_g) {
+                return NULL;
+        }
 
+        /* craft eth header */
+        struct ether_hdr *ehdr = rte_pktmbuf_mtod(pkt, struct ether_hdr *);
+        /* set ether_hdr fields here e.g. */
+        memset(ehdr,0, sizeof(struct ether_hdr));
+        memcpy(&ehdr->s_addr, c_addr, sizeof(c_addr));
+        memcpy(&ehdr->d_addr, s_addr, sizeof(s_addr));
+        ehdr->ether_type = rte_bswap16(ETHER_TYPE_IPv4);
+
+        /* craft ipv4 header */
+        struct ipv4_hdr *iphdr = (struct ipv4_hdr *)(&ehdr[1]);
+        memset(iphdr,0, sizeof(struct ipv4_hdr));
+        iphdr->src_addr = IPv4(10,0,0,3);
+        iphdr->dst_addr = IPv4(10,10,1,4);
+        iphdr->version_ihl     = (0x40|0x05);
+        iphdr->type_of_service = 0;
+        iphdr->fragment_offset = 0;
+        iphdr->time_to_live    = 64;
+
+        /* set ipv4 header fields here */
+        struct udp_hdr *uhdr = (struct udp_hdr *)(&iphdr[1]);
+        /* set udp header fields here, e.g. */
+        uhdr->src_port = rte_bswap16(3333);
+        uhdr->dst_port = rte_bswap16(2222);
+        uhdr->dgram_len = 10;
+
+        //set packet properties
+        size_t pkt_size = sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr) +sizeof(struct udp_hdr);
+        pkt->data_len = pkt_size+10;
+        pkt->pkt_len = MAX(pkt_size+10,pkt->pkt_len);
+        return pkt;
+}
+static int callback_fp(void) {
+        struct rte_mbuf* pkts[NUM_PKTS];
+        int i;
+        printf("Callback: creating %d packets to send to %d\n", NUM_PKTS, destination);
+        for (i=0; i < NUM_PKTS; i++) {
+                struct onvm_pkt_meta* pmeta;
+                pkts[i] = create_ipv4_udp_packet();//rte_pktmbuf_alloc(pktmbuf_pool_g);
+                pmeta = onvm_get_pkt_meta(pkts[i]);
+                pmeta->destination = destination;
+                pmeta->action = ONVM_NF_ACTION_TONF;
+                pkts[i]->port = 3;
+                pkts[i]->hash.rss = i+1;
+
+                pmeta->destination = 0;
+                pmeta->action = ONVM_NF_ACTION_OUT;
+
+                onvm_nflib_return_pkt(pkts[i]);
+        }
+        return 0;
+}
 int main(int argc, char *argv[]) {
         int arg_offset;
 
         const char *progname = argv[0];
 
-        if ((arg_offset = onvm_nf_init(argc, argv, NF_TAG)) < 0)
+        if ((arg_offset = onvm_nflib_init(argc, argv, NF_TAG)) < 0)
                 return -1;
         argc -= arg_offset;
         argv += arg_offset;
@@ -187,27 +250,32 @@ int main(int argc, char *argv[]) {
         if (parse_app_args(argc, argv, progname) < 0)
                 rte_exit(EXIT_FAILURE, "Invalid command-line arguments\n");
 
-        struct rte_mempool *pktmbuf_pool;
         struct rte_mbuf* pkts[NUM_PKTS];
         int i;
 
-        pktmbuf_pool = rte_mempool_lookup(PKTMBUF_POOL_NAME);
-        if(pktmbuf_pool == NULL) {
+        pktmbuf_pool_g = rte_mempool_lookup(PKTMBUF_POOL_NAME);
+        if(pktmbuf_pool_g == NULL) {
                 rte_exit(EXIT_FAILURE, "Cannot find mbuf pool!\n");
         }
         printf("Creating %d packets to send to %d\n", NUM_PKTS, destination);
         for (i=0; i < NUM_PKTS; i++) {
                 struct onvm_pkt_meta* pmeta;
-                pkts[i] = rte_pktmbuf_alloc(pktmbuf_pool);
+                //pkts[i] = rte_pktmbuf_alloc(pktmbuf_pool_g);
+                pkts[i] = create_ipv4_udp_packet();
                 pmeta = onvm_get_pkt_meta(pkts[i]);
-                pmeta->destination = destination;
+                pmeta->destination = 1;
                 pmeta->action = ONVM_NF_ACTION_TONF;
                 pkts[i]->port = 3;
-                pkts[i]->hash.rss = i;
-                onvm_nf_return_pkt(pkts[i]);
+                pkts[i]->hash.rss = i+1;
+
+                pmeta->destination = 0;
+                pmeta->action = ONVM_NF_ACTION_OUT;
+
+                onvm_nflib_return_pkt(pkts[i]);
         }
 
-        onvm_nf_run(nf_info, &packet_handler);
+        //onvm_nflib_run(nf_info, &packet_handler);
+        onvm_nflib_run_callback(nf_info, &packet_handler, callback_fp);
         printf("If we reach here, program is ending");
         return 0;
 }

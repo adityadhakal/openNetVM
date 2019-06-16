@@ -1,0 +1,14 @@
+#ifndef _TENSORRT_API_
+#define _TENSORRT_API_
+//this is api file that will list the functions the library has
+
+
+//intializes the necessary model attributes
+int tensorrt_init(const char *fil_path, int max_batchsize);
+
+/* evaluate a data set */
+void evaluate_in_gpu_input_from_host_tensorrt(float *input, size_t input_size, float *output, void *function_pointer, void *evaluation_time, int cuda_event_flag, cudaHostFn_t callback_function, void *callback_data);
+
+void evaluate_image_in_gpu_tensorrt(void *image, cudaHostFn_t callback_function, void *callback_data, int gpu_barrier_flag);
+
+#endif

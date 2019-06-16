@@ -4,8 +4,8 @@
 # BSD LICENSE
 #
 # Copyright(c)
-#          2015-2016 George Washington University
-#          2015-2016 University of California Riverside
+#          2015-2017 George Washington University
+#          2015-2017 University of California Riverside
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -18,9 +18,9 @@
 # notice, this list of conditions and the following disclaimer in
 # the documentation and/or other materials provided with the
 # distribution.
-# Neither the name of Intel Corporation nor the names of its
-# contributors may be used to endorse or promote products derived
-# from this software without specific prior written permission.
+# The name of the author may not be used to endorse or promote
+# products derived from this software without specific prior
+# written permission.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -53,11 +53,30 @@ ONVM= $(SRCDIR)/../../onvm
 
 CFLAGS += $(WERROR_FLAGS) -O3 $(USER_FLAGS)
 
-CFLAGS += -I$(ONVM)/onvm_nf
-CFLAGS += -I$(ONVM)/shared
-LDFLAGS += $(ONVM)/onvm_nf/onvm_nf/$(RTE_TARGET)/onvm_nflib.o
-LDFLAGS += $(ONVM)/shared/shared/$(RTE_TARGET)/onvm_pkt_helper.o
-LDFLAGS += $(ONVM)/shared/shared/$(RTE_TARGET)/onvm_sc_common.o
+CFLAGS += -I$(ONVM)/onvm_nflib
+CFLAGS += -I$(ONVM)/lib
+#CFLAGS += -I$(ONVM)/shared
+LDFLAGS += $(ONVM)/onvm_nflib/$(RTE_TARGET)/libonvm.a
+LDFLAGS += $(ONVM)/lib/$(RTE_TARGET)/lib/libonvmhelper.a -lm
+#LDFLAGS += $(ONVM)/onvm_nflib/onvm_nflib/$(RTE_TARGET)/onvm_nflib.a
+#LDFLAGS += $(ONVM)/onvm_nflib/onvm_nflib/$(RTE_TARGET)/onvm_nflib.o
+CFLAGS += -I/usr/local/cuda/include
+LDFLAGS += -L/usr/local/cuda/lib64 -lcudart -lstdc++
+
+#LDFLAGS += -L$(SRCDIR)/../../cntk_lib -L/home/adhak001/microsoft/cntk/build/release/lib -rpath-link,/home/adhak001/dev/openNetVM_sameer/cntk_lib -rpath-link,/home/adhak001/microsoft/cntk/build/release/lib/ -rpath,/home/adhak001/dev/openNetVM_sameer/cntk_lib -rpath,/home/adhak001/microsoft/cntk/build/release/lib 
+
+#LDFLAGS += $(ONVM)/shared/shared/$(RTE_TARGET)/onvm_shared.a
+#LDFLAGS += $(ONVM)/shared/shared/$(RTE_TARGET)/onvm_pkt_helper.o
+#LDFLAGS += $(ONVM)/shared/shared/$(RTE_TARGET)/onvm_sc_common.o
+#LDFLAGS += $(ONVM)/shared/shared/$(RTE_TARGET)/onvm_flow_table.o
+#LDFLAGS += $(ONVM)/shared/shared/$(RTE_TARGET)/onvm_flow_dir.o
+
+#CFLAGS += -I$(ONVM)/../cntk_lib/
+CFLAGS += -I$(RTE_SDK)/$(RTE_TARGET)/include/
+LDFLAGS += $(RTE_SDK)/$(RTE_TARGET)/lib/librte_timer.a
+#LDFLAGS += $(RTE_SDK)/lib/librte_timer
+#LDFLAGS += -L$(RTE_SDK)/lib
+#LDLIBS += -lrte_timer
 
 # workaround for a gcc bug with noreturn attribute
 # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=12603

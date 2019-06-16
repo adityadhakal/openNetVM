@@ -5,8 +5,8 @@
  *   BSD LICENSE
  *
  *   Copyright(c)
- *            2015-2016 George Washington University
- *            2015-2016 University of California Riverside
+ *            2015-2017 George Washington University
+ *            2015-2017 University of California Riverside
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -19,9 +19,9 @@
  *       notice, this list of conditions and the following disclaimer in
  *       the documentation and/or other materials provided with the
  *       distribution.
- *     * Neither the name of Intel Corporation nor the names of its
- *       contributors may be used to endorse or promote products derived
- *       from this software without specific prior written permission.
+ *     * The name of the author may not be used to endorse or promote
+ *       products derived from this software without specific prior
+ *       written permission.
  *
  *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -62,8 +62,9 @@
 struct onvm_nf_info *nf_info;
 
 /* number of package between each print */
-static uint32_t print_delay = 1000000;
+static uint32_t print_delay = 50000000;
 
+extern struct port_info *ports;
 /*
  * Print a usage message
  */
@@ -111,7 +112,7 @@ static void
 do_stats_display(struct rte_mbuf* pkt) {
         const char clr[] = { 27, '[', '2', 'J', '\0' };
         const char topLeft[] = { 27, '[', '1', ';', '1', 'H', '\0' };
-        static int pkt_process = 0;
+        static uint64_t pkt_process = 0;
 
         struct ipv4_hdr* ip;
 
@@ -125,7 +126,7 @@ do_stats_display(struct rte_mbuf* pkt) {
         printf("Port : %d\n", pkt->port);
         printf("Size : %d\n", pkt->pkt_len);
         printf("Type : %d\n", pkt->packet_type);
-        printf("Number of packet processed : %d\n", pkt_process);
+        printf("Number of packet processed : %"PRIu64"\n", pkt_process);
 
         ip = onvm_pkt_ipv4_hdr(pkt);
         if(ip != NULL) {
@@ -139,20 +140,34 @@ do_stats_display(struct rte_mbuf* pkt) {
 }
 
 static int
-packet_handler(struct rte_mbuf* pkt, struct onvm_pkt_meta* meta) {
+packet_handler(struct rte_mbuf *pkt, struct onvm_pkt_meta *meta, __attribute__((unused)) struct onvm_nf_info *nf_info) {
         static uint32_t counter = 0;
+	//printf("Got the packet \n");
+        //meta->reserved_word=NF_BYPASS_RSYNC;
+        if(likely(NULL != ports)) {
+                if(likely(ports->num_ports > 1)) {
+                        meta->destination = (pkt->port == 0)? (1):(0);
+                        if((PRIMARY_OUT_PORT == meta->destination) && (ports->down_status[PRIMARY_OUT_PORT])) {
+                                meta->destination = SECONDARY_OUT_PORT;
+                                //printf("Shifted traffic from primary out port sts=%d, to secondary out port\n", ports->down_status[PRIMARY_OUT_PORT]);
+                        }
+                }
+                else {
+                        meta->destination = (pkt->port);
+                }
+        } else {
+                if (pkt->port == 0) {
+                        meta->destination = 1;
+                }
+                else {
+                        meta->destination = 0;
+                }
+        }
+        meta->action = ONVM_NF_ACTION_OUT;
         if (counter++ == print_delay) {
                 do_stats_display(pkt);
                 counter = 0;
         }
-
-        if (pkt->port == 0) {
-                meta->destination = 1;
-        }
-        else {
-                meta->destination = 0;
-        }
-        meta->action = ONVM_NF_ACTION_OUT;
         return 0;
 }
 
@@ -162,15 +177,17 @@ int main(int argc, char *argv[]) {
 
         const char *progname = argv[0];
 
-        if ((arg_offset = onvm_nf_init(argc, argv, NF_TAG)) < 0)
+        if ((arg_offset = onvm_nflib_init(argc, argv, NF_TAG, &nf_info)) < 0)
                 return -1;
         argc -= arg_offset;
         argv += arg_offset;
 
-        if (parse_app_args(argc, argv, progname) < 0)
+        if (parse_app_args(argc, argv, progname) < 0) {
+                onvm_nflib_stop(nf_info);
                 rte_exit(EXIT_FAILURE, "Invalid command-line arguments\n");
+        }
 
-        onvm_nf_run(nf_info, &packet_handler);
-        printf("If we reach here, program is ending");
+        onvm_nflib_run(nf_info, &packet_handler);
+        printf("If we reach here, program is ending\n");
         return 0;
 }

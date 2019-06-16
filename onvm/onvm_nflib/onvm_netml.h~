@@ -1,0 +1,92 @@
+#ifndef _ONVM_NETML_H
+#define _ONVM_NETML_H
+
+//#include "onvm_common.h"
+
+//#ifdef ONVM_GPU
+#include "onvm_ml_libraries.h"
+#include "onvm_stream.h"
+
+#define MAX_CHUNKS_PER_IMAGE 2352
+#define MAX_IMAGES_BATCH_SIZE 32
+
+#define SIZE_OF_EACH_ELEMENT sizeof(float)
+
+#define SIZE_OF_AN_IMAGE_BYTES (SIZE_OF_EACH_ELEMENT*3*224*224)
+#define IMAGE_BATCH_DEV_BUFFER_SIZE (MAX_IMAGES_BATCH_SIZE*SIZE_OF_AN_IMAGE_BYTES)
+
+/* structure that defines a chunk of data included in a packet*/
+typedef struct __attribute__ ((packed)) chunk_info_t {
+	uint32_t start_offset;
+	uint32_t size_in_bytes;
+} chunk_info_t;
+
+/* struct that defines the image chunk header */
+typedef struct __attribute__ ((packed)) image_chunk_header_t {
+	//char padding1;
+	//char padding2;
+	uint32_t image_id;
+	chunk_info_t image_chunk;
+} image_chunk_header_t;
+
+/* struct that points to the raw data that goes to GPU*/
+typedef struct chunk_copy_info_t {
+	void *src_cpy_ptr;
+	chunk_info_t image_chunk;
+} chunk_copy_info_t;
+
+/* struct that tracks the single image's chunks */
+typedef struct image_copy_info_t {
+	uint32_t image_id;
+	chunk_copy_info_t copy_info[MAX_CHUNKS_PER_IMAGE];
+} image_copy_info_t;
+
+/* struct that defines the status of each aggregated image */
+typedef struct image_aggregation_info_t {
+	uint8_t usage_status; // 0-free, 1-aggregating, 2-ready, 3-sent_to_inference, 4-inference_complete, 3-sent_to_copy, 4-copy_complete 
+	size_t bytes_count;
+        uint16_t packets_count;
+        struct timespec first_packet_time;
+	image_copy_info_t image_info;
+	struct rte_mbuf * image_packets[MAX_CHUNKS_PER_IMAGE];
+} image_aggregation_info_t;
+
+/* the struct that NF really accesses */
+typedef struct image_batched_aggregation_info_t {
+	uint32_t ready_mask;
+	//uint32_t temp_mask;
+	image_aggregation_info_t images[MAX_IMAGES_BATCH_SIZE];
+} image_batched_aggregation_info_t;
+
+//callback struct, for GPU callback
+typedef struct gpu_callback {
+	struct onvm_nf_info *nf_info;
+	uint8_t status; // 0- available 1-in use
+	image_batched_aggregation_info_t *batch_aggregation;
+	uint32_t bitmask_images;
+	struct timespec start_time;
+	stream_tracker *stream_track;
+} gpu_callback;
+
+//TODO: Remove the below array.. and make an array that will rather store the pair of image data and nf_info pointers
+struct gpu_callback gpu_callbacks[MAX_STREAMS * PARALLEL_EXECUTION];
+
+/* Functions */
+// void as there will be a data transfer callback from GPU that will update the stats, there is nothing this function needs to return
+uint32_t data_aggregation(struct rte_mbuf *pkt,
+		image_batched_aggregation_info_t *image_aggregation_info);
+
+void transfer_to_gpu(void *data_ptrs, int number_of_data_pts, void *destination,
+		cudaStream_t *stream);
+
+void transfer_to_gpu_copy(void * data_ptrs, int num_of_payload_data, void *cpu_destination, void * gpu_destination, cudaStream_t *stream);
+
+/* the function to load and execute in GPU */
+void load_data_to_gpu_and_execute(struct onvm_nf_info *nf_info,
+		image_batched_aggregation_info_t * batch_agg_info,
+		ml_framework_operations_t *ml_operations,
+		cudaHostFn_t callback_function);
+
+void check_kernel(void *ptr);
+#endif
+//#endif

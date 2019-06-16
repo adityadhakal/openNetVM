@@ -46,6 +46,9 @@ _preinstall
 *.i*86
 *.x86_64
 *.hex
-
+#Pcap and GPU specific files
+*.trt
+*.nvpp
+*.pcap
 # Debug files
 *.dSYM/

@@ -4,8 +4,8 @@
 # BSD LICENSE
 #
 # Copyright(c)
-#          2015-2016 George Washington University
-#          2015-2016 University of California Riverside
+#          2015-2017 George Washington University
+#          2015-2017 University of California Riverside
 #          2010-2014 Intel Corporation.
 # All rights reserved.
 #
@@ -19,9 +19,9 @@
 # notice, this list of conditions and the following disclaimer in
 # the documentation and/or other materials provided with the
 # distribution.
-# Neither the name of Intel Corporation nor the names of its
-# contributors may be used to endorse or promote products derived
-# from this software without specific prior written permission.
+# The name of the author may not be used to endorse or promote
+# products derived from this software without specific prior
+# written permission.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -53,20 +53,46 @@ endif
 APP = onvm_mgr
 
 # all source are stored in SRCS-y
-SRCS-y := main.c init.c args.c
+SRCS-y := main.c onvm_init.c onvm_args.c onvm_stats.c onvm_pkt.c onvm_nf.c 
+SRCS-y += onvm_bfd.c onvm_wakemgr.c onvm_special_nf0.c onvm_ft_install.c onvm_rsync.c
+SRCS-y += onvm_gpu.c
+#SRCS-y += onvm_zookeeper.c onvm_zk_watch.c onvm_zk_common.c onvm_vxlan.c
 
-INC := $(wildcard *.h)
+INC := onvm_mgr.h onvm_init.h onvm_args.h onvm_stats.h onvm_nf.h onvm_pkt.h 
+INC += onvm_bfd.h onvm_wakemgr.h onvm_special_nf0.h onvm_ft_install.h onvm_rsync.h
+INC += onvm_zookeeper.h onvm_zk_watch.h onvm_zk_common.h onvm_vxlan.h zoo_queue.h
+INC += onvm_gpu.h
 
-CFLAGS += $(WERROR_FLAGS) -O3 $(USER_FLAGS)
+LDFLAGS += -L/usr/lib
+CFLAGS += $(WERROR_FLAGS) -O3 -g $(USER_FLAGS)
 CFLAGS += -I$(SRCDIR)/../
-LDFLAGS += $(SRCDIR)/../shared/shared/$(RTE_TARGET)/onvm_sc_common.o
-LDFLAGS += $(SRCDIR)/../shared/shared/$(RTE_TARGET)/onvm_sc_mgr.o
-LDFLAGS += $(SRCDIR)/../shared/shared/$(RTE_TARGET)/onvm_flow_table.o
-LDFLAGS += $(SRCDIR)/../shared/shared/$(RTE_TARGET)/onvm_pkt_helper.o
-LDFLAGS += $(SRCDIR)/../shared/shared/$(RTE_TARGET)/onvm_flow_dir.o
+CFLAGS += -I$(SRCDIR)/../lib/
+CFLAGS += -I$(SRCDIR)/../onvm_nflib/
+
+LDFLAGS += $(SRCDIR)/../lib/$(RTE_TARGET)/libonvmhelper.a
+LDFLAGS += $(SRCDIR)/../onvm_nflib/$(RTE_TARGET)/libonvm.a -lstdc++
+CFLAGS += -I/usr/local/cuda/include
+#LDFLAGS += $(SRCDIR)/../shared/shared/$(RTE_TARGET)/onvm_shared.a
+
+LDFLAGS += -L/usr/local/lib
+LDFLAGS += -L/usr/local/cuda/lib64
+CFLAGS += -I$(SRCDIR)/../../cntk_lib/ #-Wl, #-Wl,-rpath-link,/home/adhak001/microsoft/cntk/build/release/lib/
+#CLFAGS += -I/home/adhak001/microsoft/cntk/Source/CNTKv2LibraryDll/API/
+LDFLAGS += -L$(SRCDIR)/../../cntk_lib -L/home/adhak001/microsoft/cntk/build/release/lib -rpath-link,/home/adhak001/dev/openNetVM_sameer/cntk_lib -rpath-link,/home/adhak001/microsoft/cntk/build/release/lib/ -rpath,/home/adhak001/dev/openNetVM_sameer/cntk_lib -rpath,/home/adhak001/microsoft/cntk/build/release/lib
+
+CFLAGS += -I$(SRCDIR)/../../tensorrt_lib/
+LDFLAGS += $(SRCDIR)/../../tensorrt_lib/libtensorrt.so
+LDLIBS += -lonvm_cntk
+LDLIBS += -lcudart -lstdc++ -lcuda
+
+
+LDLIBS += -lzmq 
+LDFLAGS += -L/usr/lib/x86_64-linux-gnu
+LDLIBS += -lpcap
+#EXTRA_LDLIBS += -lzookeeper_mt -lzooqueue
 
 # for newer gcc, e.g. 4.4, no-strict-aliasing may not be necessary
 # and so the next line can be removed in those cases.
-EXTRA_CFLAGS += -fno-strict-aliasing
+EXTRA_CFLAGS += -fno-strict-aliasing -lzmq
 
 include $(RTE_SDK)/mk/rte.extapp.mk

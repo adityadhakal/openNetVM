@@ -1,0 +1,32 @@
+#ifndef ONVM_CNTK_API_H
+#define ONVM_CNTK_API_H
+
+#define NUMBER_OF_MODELS 6
+/* This function loads the model file from disk
+ * Arguments are:
+ * model file path, reference to CPU side module pointer, reference to GPU side model pointer, flag 0 = load only on CPU, 1 = load only on GPU, 2 = load on both devices 
+ */
+int load_model(const wchar_t * file_path, void ** cpu_function_pointer, void ** gpu_function_pointer, int load_flag, int model_no);
+
+
+/* this function extracts the pointers for the GPU side models if there are GPU side models loaded 
+   the cudaIpcMemHandles_t array is also submitted as parameter which the function will update with the cuda Mem handles
+*/
+void get_cuda_pointers_handles(void * gpu_function_pointer, void * mem_handles);
+
+/* information about how many GPU-side pointer, i.e. how many CUDA handles you have with this model */
+int count_parameters(void * gpu_function_pointer);
+
+/* get the number of inputs a model have */
+int count_inputs(void *function_pointer);
+
+/* actually get the dimension of the inputs */
+void get_all_input_sizes(void * function_ptr, int *input_dim_array, int input_sequence);
+
+/* function to attach the GPU pointers with the models */
+int link_gpu_pointers(void * cpu_function_pointer, void * cuda_handles_for_gpu_data, int number_of_parameters);
+
+/* evaluate a data set */
+void evaluate_in_gpu_input_from_host(float *input, size_t input_size,float *output, void *function_pointer, float *evaluation_time, int cuda_event_flag);
+
+#endif

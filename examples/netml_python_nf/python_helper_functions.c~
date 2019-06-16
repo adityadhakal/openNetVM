@@ -1,0 +1,40 @@
+#include "Python.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <inttypes.h>
+#include <errno.h>
+#include <limits.h>
+#include <assert.h>
+#include <time.h>
+#include <unistd.h>
+#include <cuda_runtime.h>
+
+PyObject *pModule, *empty_tensor, *myFileName, *pDict, *run_image, *run_once_first, *pValue, *create_stream, *display_outputs;
+
+void python_initialize(){
+  //initialize python
+  printf("Initializing python \n");
+  Py_Initialize();
+
+  /*import few libraries to load the file */
+  PyRun_SimpleString("import sys");
+  PyRun_SimpleString("sys.path.append(\".\")");
+
+  /* load the file */
+  myFileName = PyUnicode_FromString((char *) "python_executable");
+  pModule = PyImport_Import(myFileName);
+
+
+  PyErr_Print();
+  /*load the namespace */
+  pDict = PyModule_GetDict(pModule);
+
+
+int python_load_model(){
+}
+
+int python_link_model(){
+}
+
+int python_execute_model(){
+}
