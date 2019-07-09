@@ -52,16 +52,16 @@ SRCS-y := bridge.c
 
 ONVM= $(SRCDIR)/../../onvm
 
-
+#find python 3 directory
+CFLAGS += -I/root/anaconda3/include/python3.7m/
+CFLAGS += -I/root/anaconda3/lib/ -lpython3.7m
 CFLAGS += -I/usr/local/cuda/include
 LDFLAGS += -L/usr/local/cuda/lib64
 LDFLAGS += -L/usr/local/cuda/lib64/stubs
 
-CFLAGS += -I/$(SRCDIR)/../../tensorrt_lib/
-
-CFLAGS += -I/$(SRCDIR)/../../tensorrt_lib/common
-
-LDFLAGS += $(SRCDIR)/../../tensorrt_lib/libtensorrt.so -rpath-link,/home/adhak001/dev/openNetVM_sameer/tensorrt_lib
+#CFLAGS += -I/$(SRCDIR)/../../tensorrt_lib/
+#CFLAGS += -I/$(SRCDIR)/../../tensorrt_lib/common
+#LDFLAGS += $(SRCDIR)/../../tensorrt_lib/libtensorrt.so -rpath-link,/home/adhak001/dev/openNetVM_sameer/tensorrt_lib
 
 CFLAGS += -I/usr/lib64
 CFLAGS += -I/usr/include/x86_64-linux-gnu/
@@ -79,7 +79,7 @@ LDFLAGS += $(ONVM)/lib/$(RTE_TARGET)/lib/libonvmhelper.a
 
 #CFLAGS += -I$(SRCDIR)/../../cntk_lib/ 
 #LDFLAGS += -L$(SRCDIR)/../../cntk_lib -L/home/adhak001/microsoft/cntk/build/release/lib -rpath-link,/home/adhak001/dev/openNetVM_sameer/cntk_lib -rpath-link,/home/adhak001/microsoft/cntk/build/release/lib/ -rpath,/home/adhak001/dev/openNetVM_sameer/cntk_lib -rpath,/home/adhak001/microsoft/cntk/build/release/lib
-LDLIBS += -lnvinfer -lcudart_static -lrt -ldl -lpthread -lstdc++ -lm -lcudart
+LDLIBS += -lnvinfer -lcudart_static -lrt -ldl -lpthread -lstdc++ -lm -lcudart -lpython3.7m
 
 
 LDFLAGS += $(RTE_SDK)/$(RTE_TARGET)/lib/librte_timer.a

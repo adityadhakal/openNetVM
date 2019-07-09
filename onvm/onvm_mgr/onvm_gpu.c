@@ -50,7 +50,8 @@ void init_ml_models(void) {
 
 	/* the file name of ml models */
 	const char *models[NUMBER_OF_MODELS];
-	models[0] = "AlexNet_ImageNet_CNTK.model";
+	//models[0] = "AlexNet_ImageNet_CNTK.model";
+	models[0] = "resnet50_batch64.trt";
 	models[1] = "ResNet50_ImageNet_CNTK.model";
 	models[2] = "VGG19_ImageNet_Caffe.model";
 	models[3] = "ResNet152_ImageNet_CNTK.model";
@@ -60,6 +61,7 @@ void init_ml_models(void) {
 	models[7] = "alexnet_batch128.trt";
 	models[8] = "resnet152_batch128.trt";
 	models[9] = "vgg19_batch128.trt";
+	models[10] = "resnet34_batch128.trt";
 
 	/*the file name of historical runtime data */
 	const char *models_historical_dir = "/home/adhak001/openNetVM-dev/models_data/";
@@ -74,10 +76,11 @@ void init_ml_models(void) {
 	models_runtime[7] = "alexnet_tensorrt.txt";
 	models_runtime[8] = "resnet152_tensorrt.txt";
 	models_runtime[9] = "vgg19_tensorrt.txt";
-
+	models_runtime[10] = "resnet34_tensorrt.txt";
 	/* platform type */
 	ml_platform platforms[NUMBER_OF_MODELS];
-	platforms[0] = cntk;
+	//platforms[0] = cntk;
+	platforms[0] = tensorrt;
 	platforms[1] = cntk;
 	platforms[2] = cntk;
 	platforms[3] = cntk;
@@ -87,7 +90,7 @@ void init_ml_models(void) {
 	platforms[7] = tensorrt;
 	platforms[8] = tensorrt;
 	platforms[9] = tensorrt;
-
+	platforms[10] = tensorrt;
 	/* now after setting all that up, let's allocate one information at a time and fill that up */
 	struct rte_mempool *ml_model_mempool = rte_mempool_lookup(_GPU_MODELS_POOL_NAME);
 
@@ -112,7 +115,9 @@ void init_ml_models(void) {
 
 		cuInit(0); //initializing GPU
 
+		//if(i>6)
 		load_gpu_model(ml_file);
+
 		ml_files[i] = ml_file;
 
 	}
@@ -327,6 +332,15 @@ void nf_is_gpu_ready(struct onvm_nf_info *nf) {
 //int suggest_gpu_percentage(float request_rate, int gpu_model);
 inline int onvm_gpu_adjust_nf_gpu_perecentage(struct onvm_nf_info *nf);
 inline int onvm_gpu_set_gpu_percentage(struct onvm_nf_info *nf, uint16_t gpu_percent);
+inline int onvm_gpu_check_any_readjustment(void);
+inline int onvm_gpu_check_any_readjustment(void) {
+	int i = 0;
+
+	for(i=0; i<MAX_NFS; i++) {
+		if(nfs[i].info->over_provisioned_for_slo || nfs[i].info->under_provisioned_for_slo) return 1;
+	}
+	return 0;
+}
 
 inline int onvm_gpu_set_gpu_percentage(struct onvm_nf_info *nf, uint16_t gpu_percent) {
 	nf->gpu_percentage = gpu_percent;
@@ -494,10 +508,13 @@ inline int onvm_gpu_get_gpu_percentage_for_nf(struct onvm_nf_info *nf) {
 	if(!nf) return (0);
 
 	//check for valid gpu model
-	if( (0> nf->gpu_model) || (ONVM_MAX_GPU_ML_MODELS <= nf->gpu_model)) return (0);
+	if( (0>= nf->gpu_model) || (ONVM_MAX_GPU_ML_MODELS <= nf->gpu_model)) return (0);
 
-	//IF NF already has percentage set, then ignore the call
-	if((nf->gpu_percentage)) return 0;
+	//IF NF already has percentage set, then ignore the call :: Double check what should be done here.. not clear yet!
+	if((nf->gpu_percentage) /*&& (GPU_RA_IS_SET == gpu_ra_mgt.ra_status[nf->instance_id])*/) return 0;
+
+	//IF NF is marked for readjustment or is marked to relinquish its GPU resource then ignore.
+	if(GPU_RA_NEEDS_READJUSTMENT == gpu_ra_mgt.ra_status[nf->instance_id] || GPU_RA_NEED_TO_RELINQUISH == gpu_ra_mgt.ra_status[nf->instance_id]) return 0;
 
 	onvm_gpu_model_operational_range_t *gpu_ml_info = &(onvm_gpu_ml_model_profiler_data[nf->gpu_model]);
 	//check if model has valid pre-profiled data
@@ -571,7 +588,8 @@ int onvm_gpu_check_gpu_ra_mgt(void) {
 	uint8_t act_nfs;
 	uint16_t gpu_ra_available;
 
-	if(0 == gpu_ra_mgt.gpu_ra_info->gpu_ra_wtlst) return 0;
+	//check if any NFs are waiting for RA
+	if((0 == gpu_ra_mgt.gpu_ra_info->gpu_ra_wtlst)||(0 == onvm_gpu_check_any_readjustment())) return 0;
 
 	compute_current_gpu_ra_stats(&act_nfs, &gpu_ra_available);
 	if((0==act_nfs)|| (gpu_ra_available == MAX_GPU_OVERPRIVISION_VALUE)) return 0;

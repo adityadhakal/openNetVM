@@ -1032,6 +1032,12 @@ typedef struct onvm_gpu_ra_info_t {
 	uint16_t gpu_ra_wtlst;
 } onvm_gpu_ra_info_t;
 
+typedef enum onvm_gpu_batching_mode_e {
+	ADAPTIVE_BATCHING_DISABLED = 0,		//Disable Adaptive batching
+	ADAPTIVE_BATCHING_OPPORTUNISTIC = 1,	//Basic (No learning/no cap on max)
+	ADAPTIVE_BATCHING_SELF_LEARNING = 2,//Self Learning (SLO based cap max batch size)
+} onvm_gpu_batching_mode_e;
+
 #endif
 /*
  * Define a structure to describe one NF
@@ -1100,8 +1106,17 @@ struct onvm_nf_info {
 
 	ml_model_info *model_info; //model information
 	void * ml_model_handle; //the ML function for CPU side.
-	int user_batch_size; //user can define the batch size.
-	int adaptive_batching; //user can choose to use adaptive batching or not
+	int adaptive_cur_batch_size; //user can define the batch size.
+	int enable_adaptive_batching; //user can choose to use adaptive batching or not {0=Disable Adaptive batching;1=Basic (No learning/no cap on max);2=Self Learning (SLO based cap max batch size)
+	uint32_t fixed_batch_size;		  //user can specify fixed batch size.
+	uint8_t learned_max_batch_size; //NF learns batch size to make sure it operates within SLO.
+	uint8_t aiad_aimd_increase_factor; //Batch size step increment when operating within SLO.
+	uint8_t aiad_aimd_decrease_factor; // Batch size step decrement factor when exceeding SLO.
+	uint16_t inference_slo_ms; //SLO latenency objective for the NF in milliseconds.
+	uint32_t batches_inferred_per_sec; //counter tracking number of batches inferred in a second.
+	uint32_t b_i_exceeding_slo_per_sec;	//counter tracking number of batches inferred exceeding the SLO in a second.
+	uint32_t over_provisioned_for_slo;//counter tracking when NFs GPU is overprovisioned (number of batches inferred has peaked (MAX) the ceiling and more than sufficient to meet SLO.
+	uint32_t under_provisioned_for_slo;	//counter tracking when NFs GPU is underprovisioned (number of batches inferred has floored (1) the current GPU% is not sufficient to meet SLO.
 	void * cpu_side_buffer; //CPU side buffer to copy packets for non netml methods
 	void * cpu_result_buffer; //the CPU side where the data is copied after processing
 	void * gpu_input_buffer; //the buffer where input for images are stored
@@ -1117,13 +1132,10 @@ struct onvm_nf_info {
 	unsigned int number_of_images_processed; //the number of images processed in the last time SPAN
 #endif
 	//throughput data etc...
-	histogram_v2_t latency_histogram; //histogram to compute latency
-	histogram_v2_t throughput_histogram; //histogram to process image processing throughput
-  histogram_v2_t gpu_wait_time;//histogram to compute latency in GPU
-
-	histogram_v2_t end_to_end_image_processing_time; //the time to have data transfer + image processing
-	histogram_v2_t image_processing_gpu_time; //the time for image processing only
-
+	histogram_v2_t cpu_latency; //histogram measuring latency for Inference starting from CPU (first image ready) to CPU inference output send for batch.
+	histogram_v2_t throughput_histogram; //histogram to process image processing throughput (images processed per second)
+	histogram_v2_t gpu_latency; //histogram measuring latency starting from time batch is given to GPU to inference callback from GPU.
+	histogram_v2_t image_aggregation_latency; //the time to have data transfer + image processing
 #endif //ONVM_GPU
 
 };

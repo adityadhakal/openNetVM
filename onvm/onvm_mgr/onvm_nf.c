@@ -396,7 +396,6 @@ void setup_nfs_priority_per_core_list(
 //#include <signal.h>
 inline void monitor_nf_node_liveliness_via_pid_monitoring(void) {
 	uint16_t nf_id = 0;
-
 	for (; nf_id < MAX_NFS; nf_id++) {
 		if (onvm_nf_is_valid (&nfs[nf_id])) {
 			if (kill(nfs[nf_id].info->pid, 0)) {
@@ -404,6 +403,8 @@ inline void monitor_nf_node_liveliness_via_pid_monitoring(void) {
 						"\n\n******* Moving NF with InstanceID:%d state %d to STOPPED\n\n",
 						nfs[nf_id].info->instance_id, nfs[nf_id].info->status);
 				nfs[nf_id].info->status = NF_STOPPED;
+
+
 				if (!onvm_nf_stop(nfs[nf_id].info))
 					num_nfs--; // directly perform in the calling thread; rather than enqueue/dequeue in nf_info_queue
 				//**** TO DO: Take necessary actions here: It still doesn't clean-up until the new_nf_pool is populated by adding/killing another NF instance.
@@ -1009,7 +1010,26 @@ int onvm_nf_stop(struct onvm_nf_info *nf_info) {
 		return 1;
 	}
 	rte_mempool_put(nf_info_mp, (void*) nf_info);
+#ifdef ONVM_GPU
+				//overlap scenario.. just provide ring access to secondary NF
+				//get the alternate ID
+				//static uint16_t alt_nf_id = get_associated_active_or_standby_nf_id(nf_id);
+	                        uint16_t alt_nf_id = get_associated_active_or_standby_nf_id(nf_id);
+				if(onvm_nf_is_valid(&nfs[alt_nf_id])){
+					//if the other NF is alive
+				  printf("+======__Another nf is valid \n");
+					//change the ring access info of another nf
+				  struct timespec ring_flag_released;
+				  clock_gettime(CLOCK_MONOTONIC, &ring_flag_released);
+				  uint64_t current_time = ring_flag_released.tv_sec*1000000+ring_flag_released.tv_nsec/1000;
+				  printf("Ring access granted to NF: %d at %"PRIu64"\n",alt_nf_id,current_time);
+					nfs[alt_nf_id].info->ring_flag = 1;
+				}
+				else
+				  printf("another nf is not valid \n");
+#endif
 	printf(" NF reclaimed to NF pool!!! \n ");
+
 	return 0;
 }
 

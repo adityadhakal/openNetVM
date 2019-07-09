@@ -10,7 +10,7 @@
 #include "ioHelper.h"
 #include "tensorrt_api.h"
 
-
+#include <inttypes.h>
 #include <cuda_runtime_api.h>
 #include <algorithm>
 #include <cassert>
@@ -38,7 +38,7 @@ unique_ptr<IExecutionContext, Destroy<IExecutionContext>> context2{nullptr};
 IExecutionContext *exe_context;
 
 cudaStream_t stream; //single stream for now
-void test_infer(IExecutionContext *context);
+void test_infer(IExecutionContext *context, void * bindings[2], cudaStream_t *cudastream);
 //GPU side space to store.
 void* bindings[2]{0};
 void* bindings2[2]{0};
@@ -149,6 +149,9 @@ extern "C"
 int tensorrt_link_model(nflib_ml_fw_link_params_t *link_params, void *ml)
 //int main()
 {
+  struct timespec begin,end;
+  clock_gettime(CLOCK_MONOTONIC, &begin);
+  
   //string buffer = readBuffer("/usr/src/tensorrt/bin/resnet50_batch64.trt");
   string buffer = readBuffer(link_params->file_path);
   std::cout<<"Buffer size "<<buffer.size()<<std::endl;
@@ -165,7 +168,7 @@ int tensorrt_link_model(nflib_ml_fw_link_params_t *link_params, void *ml)
   assert(engine->getNbBindings() == 2);
   assert(engine->bindingIsInput(0) ^ engine->bindingIsInput(1));
 
-
+  /*
   vector<float> inputTensor;
   vector<float> outputTensor;
   int batchSize = 64;
@@ -195,35 +198,39 @@ int tensorrt_link_model(nflib_ml_fw_link_params_t *link_params, void *ml)
 
   cudaHostRegister(inputTensor.data(), inputTensor.size()*sizeof(float), cudaHostRegisterDefault);
   cudaHostRegister(outputTensor.data(), outputTensor.size()*sizeof(float), cudaHostRegisterDefault);
-  
-    // Create Execution Context.
+    
+    */
+  // Create Execution Context.
   context.reset(engine->createExecutionContext());
-
+  context2.reset(engine->createExecutionContext());
   /* return the context created so it can be stored for future inferences */
   exe_context = context.get();
 
-  
+/*
   int inputId = getBindingInputIndex(exe_context);
-  cudaMemcpy(bindings[inputId],inputTensor.data(), (inputTensor.size() * sizeof(float)), cudaMemcpyHostToDevice);
-    
+  //cudaMemcpy(bindings[inputId],inputTensor.data(), (inputTensor.size() * sizeof(float)), cudaMemcpyHostToDevice);
+
+  cudaStream_t stream[4];
+  for(int i = 0; i <4; i++){
+    cudaStreamCreateWithFlags(&stream[i],cudaStreamNonBlocking);
+  }
   //test_infer(exe_context);
   printf("Testing inference \n");
-  
-  //bindings[0] = input;
-  //bindings[1] = output;
-
-
+  for(int i = 0 ; i<100;i++){
+    test_infer(exe_context, bindings, &stream[i%4]);
+  }
+*/
   //int inputId = getBindingInputIndex(context);
   //cudaMemcpyAsync(bindings[inputId], inputTensor, inputTensorSize* sizeof(float), cudaMemcpyHostToDevice, stream);
   //cudaMemcpy(bindings[inputId], inputTensor.data(), inputTensor.size() * sizeof(float), cudaMemcpyHostToDevice);
 
   //exe_context->enqueue(infer_params->batch_size, bindings, *infer_params->stream, nullptr);
-  /*
-  exe_context->enqueue(1, bindings, 0, nullptr);
+  
+  //exe_context->enqueue(1, bindings, 0, nullptr);
   //exe_context->execute(1,bindings);
-  cudaMemcpy(outputTensor.data(),bindings[1-inputId], (outputTensor.size() * sizeof(float)), cudaMemcpyDeviceToHost);
-  cudaDeviceSynchronize();
-
+  //cudaMemcpy(outputTensor.data(),bindings[1-inputId], (outputTensor.size() * sizeof(float)), cudaMemcpyDeviceToHost);
+  //cudaDeviceSynchronize();
+  /*
   std::cout<<"Inference finished \n";
   for(int i = 0; i<100; i++){
     std::cout<<" "<<inputTensor[i];
@@ -231,14 +238,34 @@ int tensorrt_link_model(nflib_ml_fw_link_params_t *link_params, void *ml)
     std::cout<<" "<<outputTensor[i]<<std::endl;
   }
   */
-
-  
+  clock_gettime(CLOCK_MONOTONIC, &end);
+  float time_spent = (end.tv_sec-begin.tv_sec)*1000+(end.tv_nsec-begin.tv_nsec)/1000000;
+  printf("Time taken to load the model is %f milliseconds\n", time_spent);
+  uint64_t microsec_timestp;
+  microsec_timestp = end.tv_sec*1000000+end.tv_nsec/1000;
+  printf("Model load timestamp %"PRIu64"\n",microsec_timestp);
   return 0;
 }
 
-void test_infer(IExecutionContext *context){
+/*
+cudaStreamCallback_t callback_function(cudaStream_t stream, void* a);
+cudaStreamCallback_t callback_function(void* a){
+  printf("Callback called...\n");
+  
+  
+}
+*/
+void callback_function(cudaStream_t stream, cudaError_t status, void* a);
+void callback_function(cudaStream_t stream, cudaError_t status, void* a){
+  printf("Callback called...\n");
+  
+  
+}
+
+
+void test_infer(IExecutionContext *context, void *bindings[2],cudaStream_t *stream){
   printf("Testing inference \n");
-  int batchSize = 64;
+  /*int batchSize = 64;
   for (int i = 0; i < engine->getNbBindings(); ++i)
     {
       Dims dims{engine->getBindingDimensions(i)};
@@ -246,6 +273,7 @@ void test_infer(IExecutionContext *context){
       // Create CUDA buffer for Tensor.
       cudaMalloc(&bindings[i], size * sizeof(float));
     }
+  */
   //bindings[0] = input;
   //bindings[1] = output;
 
@@ -254,8 +282,13 @@ void test_infer(IExecutionContext *context){
   //cudaMemcpyAsync(bindings[inputId], inputTensor, inputTensorSize* sizeof(float), cudaMemcpyHostToDevice, stream);
   //cudaMemcpy(bindings[inputId], inputTensor.data(), inputTensor.size() * sizeof(float), cudaMemcpyHostToDevice);
 
-  //exe_context->enqueue(infer_params->batch_size, bindings, *infer_params->stream, nullptr);
-  context->enqueue(1, bindings, 0, nullptr);
+  context2->enqueue(1, bindings, *stream, nullptr);
+  //context->enqueue(1, bindings, 0, nullptr);
+  /*  
+  int aa = 1;
+  void * a = &aa;
+  cudaStreamAddCallback(*stream, callback_function, a,0);
+  */
 }
 /* evaluate a batch of images */
 int tensorrt_infer_batch(nflib_ml_fw_infer_params_t *infer_params, void *aio){
@@ -321,13 +354,17 @@ int tensorrt_infer_batch(nflib_ml_fw_infer_params_t *infer_params, void *aio){
   //int inputId = getBindingInputIndex(context);
   //cudaMemcpyAsync(bindings[inputId], inputTensor, inputTensorSize* sizeof(float), cudaMemcpyHostToDevice, stream);
   //cudaMemcpy(bindings[inputId], inputTensor.data(), inputTensor.size() * sizeof(float), cudaMemcpyHostToDevice);
-  
-
+   
+  //static int a = 0;
   /* the execution part */
-  exe_context->enqueue(infer_params->batch_size, bindings, *(infer_params->stream), nullptr);
+  //if(a %2 == 0){
+    context->enqueue(infer_params->batch_size, bindings, *(infer_params->stream), nullptr);
+  //}
+  //if(a %2 == 1){
+  //  context2->enqueue(infer_params->batch_size, bindings, *(infer_params->stream), nullptr);
+  //}
 
-
-
+//  a++;
   //context2.get()->enqueue(infer_params->batch_size, bindings2, 0, nullptr);
   //context.get()->execute(1,bindings);
   //cudaMemcpyAsync(outputTensor, bindings[1 - inputId], outputTensorSize * sizeof(float), cudaMemcpyDeviceToHost, stream);
@@ -338,12 +375,12 @@ int tensorrt_infer_batch(nflib_ml_fw_infer_params_t *infer_params, void *aio){
   //cudaMemcpy(b, bindings2[1], sizeof(float)*100, cudaMemcpyDeviceToHost);
 
 
-
+/*
   if(infer_params->callback_function !=NULL){
     cudaLaunchHostFunc(*(infer_params->stream), infer_params->callback_function, infer_params->callback_data);
     //cudaLaunchHostFunc(0, infer_params->callback_function, infer_params->callback_data);
   }
-
+*/
   
 
   return 0;

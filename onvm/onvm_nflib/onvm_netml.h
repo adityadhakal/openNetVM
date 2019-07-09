@@ -47,6 +47,7 @@ typedef struct image_aggregation_info_t {
 	size_t bytes_count;
 	uint16_t packets_count;
 	struct timespec first_packet_time;
+	struct timespec last_packet_time;
 	image_copy_info_t image_info;
 	struct rte_mbuf * image_packets[MAX_CHUNKS_PER_IMAGE];
 } image_aggregation_info_t;
@@ -58,6 +59,16 @@ typedef struct image_batched_aggregation_info_t {
 	image_aggregation_info_t images[MAX_IMAGES_BATCH_SIZE];
 } image_batched_aggregation_info_t;
 
+inline int get_recent_ts(struct timespec smaller, struct timespec bigger) {
+	if (smaller.tv_sec < bigger.tv_sec)
+		return 0; //bigger is the recent one
+	else if ((smaller.tv_sec == bigger.tv_sec)
+			&& (smaller.tv_nsec < bigger.tv_nsec))
+		return 0; //bigger (Second) is the recent.
+	return 1; //smaller (first) is the recent
+}
+
+struct stream_tracker;
 //callback struct, for GPU callback
 typedef struct gpu_callback {
 	struct onvm_nf_info *nf_info;
@@ -65,11 +76,38 @@ typedef struct gpu_callback {
 	image_batched_aggregation_info_t *batch_aggregation;
 	uint32_t bitmask_images;
 	struct timespec start_time;
-	stream_tracker *stream_track;
+	struct stream_tracker *stream_track;
+	//void *stream_track;
 } gpu_callback;
 
-//TODO: Remove the below array.. and make an array that will rather store the pair of image data and nf_info pointers
-struct gpu_callback gpu_callbacks[MAX_STREAMS * PARALLEL_EXECUTION];
+#define MAX_STREAMS 2
+#define PARALLEL_EXECUTION 1
+#define STREAMS_ENABLED 1
+#define DEFAULT_STREAM 0
+struct gpu_callback;
+
+typedef struct stream_tracker {
+	cudaStream_t stream;
+	uint8_t status; //0 - being used in 2 executions, 1 being used in 1 execution, 1 slot available, 0 - available
+	uint8_t id;	  //0 - id of the stream
+	cudaEvent_t event;
+	gpu_callback callback_info; //information for callback.
+} stream_tracker;
+
+extern struct gpu_callback gpu_callbacks[MAX_STREAMS * PARALLEL_EXECUTION];
+
+/* Callback function after GPU process has ended*/
+void gpu_image_callback_function(void *data);
+
+/* this function initializes the number of streams desired by the program */
+int init_streams(void);
+
+/* this function provides an empty stream */
+stream_tracker *give_stream_v2(void);
+stream_tracker *give_stream(void);
+
+/* this function returns stream */
+void return_stream(stream_tracker *stream);
 
 /* Functions */
 // void as there will be a data transfer callback from GPU that will update the stats, there is nothing this function needs to return
@@ -85,7 +123,7 @@ void transfer_to_gpu_copy(void * data_ptrs, int num_of_payload_data,
 		void *cpu_destination, void * gpu_destination, cudaStream_t *stream);
 
 /* the function to load and execute in GPU */
-void load_data_to_gpu_and_execute(struct onvm_nf_info *nf_info,
+int load_data_to_gpu_and_execute(struct onvm_nf_info *nf_info,
 		image_batched_aggregation_info_t * batch_agg_info,
 		ml_framework_operations_t *ml_operations,
 		cudaHostFn_t callback_function, uint32_t new_images);

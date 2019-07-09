@@ -129,7 +129,7 @@ void register_gpu_msg_handling_function(gpu_message_processing_func gmpf) {
 
 //old code
 //timer threads...
-#define NF_INFERENCE_PERIOD_MS 200
+#define NF_INFERENCE_PERIOD_MS 100
 
 void initialize_ml_timers(struct onvm_nf_info *nf_info);
 static void conduct_inference(__attribute__((unused)) struct rte_timer *ptr_timer,
@@ -459,9 +459,9 @@ onvm_nflib_wait_till_notification(struct onvm_nf_info *nf_info) {
 #endif //ENABLE_NFV_RESL
 
 static inline void onvm_nflib_check_and_wait_if_interrupted(
-		__attribute__((unused))                                                struct onvm_nf_info *nf_info);
+		__attribute__((unused))                                                                                                          struct onvm_nf_info *nf_info);
 static inline void onvm_nflib_check_and_wait_if_interrupted(
-		__attribute__((unused))                                                struct onvm_nf_info *nf_info) {
+		__attribute__((unused))                                                                                                          struct onvm_nf_info *nf_info) {
 #if defined (INTERRUPT_SEM) && ((defined(NF_BACKPRESSURE_APPROACH_2) || defined(USE_ARBITER_NF_EXEC_PERIOD)) || defined(ENABLE_NFV_RESL))
 	if(unlikely(NF_PAUSED == (nf_info->status & NF_PAUSED))) {
 		//printf("\n Explicit Pause request from ONVM_MGR\n ");
@@ -616,12 +616,12 @@ static
 inline int onvm_nflib_post_process_packets_batch(struct onvm_nf_info *nf_info,
 		void **pktsTX, unsigned tx_batch_size,
 		__attribute__((unused)) unsigned non_det_evt,
-		__attribute__((unused))                                                uint64_t ts_info);
+		__attribute__((unused))                                                                                                          uint64_t ts_info);
 static
 inline int onvm_nflib_post_process_packets_batch(struct onvm_nf_info *nf_info,
 		void **pktsTX, unsigned tx_batch_size,
 		__attribute__((unused)) unsigned non_det_evt,
-		__attribute__((unused))                                                uint64_t ts_info) {
+		__attribute__((unused))                                                                                                          uint64_t ts_info) {
 	int ret = 0;
 	/* Perform Post batch processing actions */
 	/** Atomic Operations:
@@ -901,8 +901,8 @@ static inline int onvm_nflib_process_packets_batch_gpu(struct onvm_nf_info *nf_i
 		onvm_get_pkt_meta((struct rte_mbuf*) pkts[i])->action = ONVM_NF_ACTION_NEXT;
 	} //End Batch Process;
 
-	if(nf_info->image_info->ready_mask){//ttl_imgs_aggregated) { 
-                ttl_imgs_aggregated=nf_info->image_info->ready_mask; 
+	if(nf_info->image_info->ready_mask) { //ttl_imgs_aggregated) { 
+		ttl_imgs_aggregated=nf_info->image_info->ready_mask;
 		load_data_to_gpu_and_execute(nf_info,nf_info->image_info, ml_operations, gpu_image_callback_function, ttl_imgs_aggregated);
 	}
 
@@ -955,7 +955,16 @@ int onvm_nflib_run_callback(struct onvm_nf_info* nf_info,
 #ifdef ONVM_GPU
 		rte_timer_manage();
 		//block the access to ring unless the NF have ring flag set
-		if(nf_info->ring_flag == 1) {
+		if(nf_info->ring_flag) {
+			/*
+			 if(!nf_info->gpu_model){
+			 //only to be used for testing overlap
+			 nf_info->gpu_model = 6;
+			 //our function to process the batch of packets
+			 current_packet_processing_batch = onvm_nflib_process_packets_batch_gpu;
+			 initialize_gpu(nf_info);
+			 }
+			 */
 #endif
 		nb_pkts = onvm_nflib_fetch_packets(pkts, NF_PKT_BATCH_SIZE);
 		if (likely(nb_pkts)) {
@@ -1028,7 +1037,7 @@ int onvm_nflib_return_pkt_bulk(struct onvm_nf_info *nf_info,
 	return 0;
 }
 
-void onvm_nflib_stop(__attribute__((unused))                                                struct onvm_nf_info* nf_info) {
+void onvm_nflib_stop(__attribute__((unused))                                                                                                          struct onvm_nf_info* nf_info) {
 	rte_exit(EXIT_SUCCESS, "Done.");
 }
 
@@ -1188,7 +1197,7 @@ void notify_for_ecb(void) {
 }
 
 int onvm_nflib_handle_msg(struct onvm_nf_msg *msg,
-		__attribute__((unused))                                                struct onvm_nf_info *nf_info) {
+		__attribute__((unused))                                                                                                          struct onvm_nf_info *nf_info) {
 	switch (msg->msg_type) {
 	printf("\n Received MESSAGE [%d]\n!!", msg->msg_type);
 case MSG_STOP:
@@ -1306,10 +1315,10 @@ onvm_nflib_info_init(const char *tag) {
 	printf("original instance id %d \n", original_instance_id);
 
 	//initialize the histograms
-	hist_init_v2(&(info->latency_histogram));
-	hist_init_v2(&(info->gpu_wait_time));
+	hist_init_v2(&(info->cpu_latency));
+	hist_init_v2(&(info->gpu_latency));
 	hist_init_v2(&(info->throughput_histogram));
-	hist_init_v2(&(info->end_to_end_image_processing_time));
+	hist_init_v2(&(info->image_aggregation_latency));
 	get_batch_agg_and_dev_buffer_mempool(info);//find the mempool for agg info and dev buffer
 	initialize_ml_timers(info);
 
@@ -1454,7 +1463,7 @@ static void onvm_nflib_handle_signal(int sig) {
 }
 
 static inline void onvm_nflib_cleanup(
-		__attribute__((unused))                                                struct onvm_nf_info *nf_info) {
+		__attribute__((unused))                                                                                                          struct onvm_nf_info *nf_info) {
 	struct onvm_nf_msg *shutdown_msg;
 	nf_info->status = NF_STOPPED;
 
@@ -1559,7 +1568,11 @@ static inline int onvm_nflib_notify_ready(struct onvm_nf_info *nf_info) {
 
 		/* this NF should have been registered to manager and have all info
 		 * We can also then give its batch aggregation pointers and dev buffer pointer */
+		nf_info->gpu_percentage = 70;
+		printf("GPU Percentage now %d \n", nf_info->gpu_percentage);
+
 		if(nf_info->gpu_percentage > 0) {
+
 			//call a function to initialize GPU
 			initialize_gpu(nf_info);
 		}
@@ -1576,6 +1589,19 @@ static inline int onvm_nflib_notify_ready(struct onvm_nf_info *nf_info) {
 
 /* the function to initialize things on GPU */
 void initialize_gpu(struct onvm_nf_info *nf_info) {
+
+	nf_info->learned_max_batch_size=0;
+	nf_info->adaptive_cur_batch_size=0;
+
+	nf_info->aiad_aimd_decrease_factor=1;
+	nf_info->aiad_aimd_increase_factor=1;
+
+	nf_info->b_i_exceeding_slo_per_sec=0;
+	nf_info->batches_inferred_per_sec=0;
+
+	nf_info->under_provisioned_for_slo=0;
+	nf_info->over_provisioned_for_slo=0;
+
 	//0. fix the link parameters and infer parameters
 	void * status = NULL;
 	//nflib_ml_fw_link_params_t ml_link_params;
@@ -1587,6 +1613,7 @@ void initialize_gpu(struct onvm_nf_info *nf_info) {
 	ml_link_params.gpu_side_input_pointer = NULL;
 	ml_link_params.gpu_side_output_pointer = NULL;
 	printf("Linking the cuda memhandles from %p \n", ml_link_params.cuda_handles_for_gpu_data);
+	printf("pointer to gpu agg buffer %p\n",nf_info->image_info);
 	int retval;
 
 	// 1. set the GPU percentage
@@ -1878,11 +1905,165 @@ void onvm_send_gpu_msg_to_mgr(void *message_to_manager, int message_type) {
  
  }
  */
+#define MIN_GAP_THRESHOLD (50)	//Latency gap between SLO and observed latency below which the scaling cannot be performed.
+#define MAX_OVERFLOW_THRESHOLD (5)
+#define NEW_LEARNING_BATCH_APPROACH
+#ifdef NEW_LEARNING_BATCH_APPROACH
+#define SLO_OFFSET_THRESHOLD_PERCENTAGE (10)
 //GPU callback function to report after the evaluation is finished...
+inline void gpu_compute_batch_size_for_slo(void *data, uint32_t num_of_images_inferred, uint32_t cur_lat);
+inline void gpu_compute_batch_size_for_slo(void *data, uint32_t num_of_images_inferred, uint32_t cur_lat) {
+	struct gpu_callback *callback_data = (struct gpu_callback *) data;
+	uint32_t slo_time_us = (callback_data->nf_info->inference_slo_ms*1000);
+	//Exactly match ( rare)
+	if(unlikely(slo_time_us == cur_lat)) {
+		callback_data->nf_info->adaptive_cur_batch_size = num_of_images_inferred;
+		callback_data->nf_info->learned_max_batch_size = callback_data->nf_info->adaptive_cur_batch_size;
+		return;
+	}
+	//exceeds the SLO
+	else if (unlikely(cur_lat > slo_time_us)) {
+		callback_data->nf_info->b_i_exceeding_slo_per_sec++;
+		uint32_t overflow_us = (cur_lat - slo_time_us);
+		if(unlikely(num_of_images_inferred == ((uint32_t) 1))) {
+			//Must request to increase the Resource % for this NF
+			callback_data->nf_info->under_provisioned_for_slo+=1;
+			callback_data->nf_info->adaptive_cur_batch_size = 1;
+			callback_data->nf_info->learned_max_batch_size = 1;
+			printf("Need More GPU pct2: %d to meet the SLO!!! LearnedSize: %d CPULatency: %d SLO: %d\n", callback_data->nf_info->gpu_percentage, callback_data->nf_info->learned_max_batch_size, cur_lat, slo_time_us);
+			return;
+		}
+		else {
+			//Compute the decrease factor to adapt batchsize to operate within SLO
+			uint32_t decrease_factor = ((overflow_us)/(cur_lat/num_of_images_inferred));
+			if(likely(decrease_factor == 0)) {
+				decrease_factor = 1;
+			} else {
+				//decrease_factor = (((uint32_t)callback_data->nf_info->adaptive_cur_batch_size)>decrease_factor)?(decrease_factor):(callback_data->nf_info->adaptive_cur_batch_size-1);
+				if(decrease_factor > ((uint32_t)callback_data->nf_info->adaptive_cur_batch_size)) decrease_factor = (callback_data->nf_info->adaptive_cur_batch_size-1);
+			}
+			//check if overflow is within permissible range
+			if(likely(overflow_us <= (SLO_OFFSET_THRESHOLD_PERCENTAGE*slo_time_us/100))) {
+				callback_data->nf_info->adaptive_cur_batch_size = num_of_images_inferred;
+				callback_data->nf_info->learned_max_batch_size = callback_data->nf_info->adaptive_cur_batch_size;
+				return;
+			}
+			else {
+				callback_data->nf_info->adaptive_cur_batch_size -= decrease_factor;
+				callback_data->nf_info->learned_max_batch_size = callback_data->nf_info->adaptive_cur_batch_size;
+			}
+		}
+	}
+	//Within SLO
+	else {
+		uint32_t headroom_us = (slo_time_us - cur_lat);
+		//have we used smaller batch than already learned then ignore current timing for adjustment
+		if(likely(num_of_images_inferred < ((uint32_t) callback_data->nf_info->adaptive_cur_batch_size))) {
+			// no need to account for this result, as this is opportunistic obtained value; We already know better/higher value
+			return;
+		} else if (unlikely(num_of_images_inferred >= MAX_IMAGES_BATCH_SIZE)) {
+			callback_data->nf_info->over_provisioned_for_slo+=headroom_us;
+			printf("Have more than necessary GPU pct: %d to meet the SLO!!! LearnedSize: %d GPULatency: %d SLO: %d\n", callback_data->nf_info->gpu_percentage, callback_data->nf_info->learned_max_batch_size, cur_lat, slo_time_us);
+			return;
+		}
+		//check if enough headroom to increase batch size;
+		if(likely(headroom_us >= (SLO_OFFSET_THRESHOLD_PERCENTAGE*slo_time_us/100))) {
+			uint32_t increase_factor = (headroom_us)/(cur_lat/num_of_images_inferred);
+			if(0 == increase_factor) {
+				increase_factor+=1;
+			}
+			callback_data->nf_info->adaptive_cur_batch_size += increase_factor;
+			callback_data->nf_info->learned_max_batch_size = callback_data->nf_info->adaptive_cur_batch_size;
+		}
+	}
+
+#if 0
+	/* Within the SLO range: Can opportunistically increase the batch size : But how much to increase by? Note: Opportunistic way could have aggregated lesser as well */
+	if((callback_data->nf_info->inference_slo_ms*1000) >= cur_lat) { //Compute the factor to increase based on linear interpolation?
+		if(num_of_images_inferred < (uint32_t) callback_data->nf_info->adaptive_cur_batch_size) {
+			// no need to account for this result, as this is opportunistic obtained value; We already know better/higher value
+		}
+		else { //if (num_of_images_inferred > callback_data->nf_info->adaptive_cur_batch_size) {
+			callback_data->nf_info->adaptive_cur_batch_size = num_of_images_inferred;
+			uint8_t increase_factor = ((callback_data->nf_info->inference_slo_ms*1000)-cur_lat)/(cur_lat/num_of_images_inferred);
+			if(increase_factor == 0) {
+				if(((callback_data->nf_info->inference_slo_ms*1000) -cur_lat) > ((MIN_GAP_THRESHOLD*cur_lat)/(num_of_images_inferred*100))) {
+					callback_data->nf_info->adaptive_cur_batch_size += callback_data->nf_info->aiad_aimd_increase_factor;
+					callback_data->nf_info->learned_max_batch_size = callback_data->nf_info->adaptive_cur_batch_size;
+				} else
+				callback_data->nf_info->learned_max_batch_size = num_of_images_inferred;
+			}
+			//(increase_factor > callback_data->nf_info->aiad_aimd_increase_factor) &&
+			else {
+				if(((increase_factor + callback_data->nf_info->adaptive_cur_batch_size) < MAX_IMAGES_BATCH_SIZE)) {
+					callback_data->nf_info->adaptive_cur_batch_size += increase_factor;
+					callback_data->nf_info->learned_max_batch_size = callback_data->nf_info->adaptive_cur_batch_size;
+				}
+				else {
+					if((callback_data->nf_info->aiad_aimd_increase_factor + callback_data->nf_info->adaptive_cur_batch_size) < MAX_IMAGES_BATCH_SIZE) {
+						callback_data->nf_info->adaptive_cur_batch_size += callback_data->nf_info->aiad_aimd_increase_factor;
+						callback_data->nf_info->learned_max_batch_size = callback_data->nf_info->adaptive_cur_batch_size;
+					} else {
+						//This is when we can ask for resource to be toned down for this NF
+						callback_data->nf_info->over_provisioned_for_slo+=1;
+						printf("Have more than necessary GPU pct: %d to meet the SLO!!! LearnedSize: %d GPULatency: %d SLO: %d\n", callback_data->nf_info->gpu_percentage, callback_data->nf_info->learned_max_batch_size, cur_lat, (callback_data->nf_info->inference_slo_ms*1000));
+					}
+				}
+			}
+		}
+	}
+
+	/* Exceeding the SLO objective; Tone down the batch size */
+	else {
+		callback_data->nf_info->b_i_exceeding_slo_per_sec++;
+		// Check if we had estimate earlier and current is lower than estimated value
+		//if(num_of_images_inferred < callback_data->nf_info->adaptive_cur_batch_size) { //is this check necessary: we have exceeded, must reduce no matter what.
+		//callback_data->nf_info->adaptive_cur_batch_size = num_of_images_inferred;
+		//}
+		/*
+		 if(1 == num_of_images_inferred) {
+		 callback_data->nf_info->learned_max_batch_size = callback_data->nf_info->adaptive_cur_batch_size;
+		 }
+		 else*/{
+			uint8_t decrease_factor = (cur_lat - (callback_data->nf_info->inference_slo_ms*1000))/(cur_lat/num_of_images_inferred);
+			if(decrease_factor == 0) {
+				if((callback_data->nf_info->adaptive_cur_batch_size >=2) && (cur_lat > ((callback_data->nf_info->inference_slo_ms*1000)*(100+MAX_OVERFLOW_THRESHOLD)/100))) {
+					callback_data->nf_info->adaptive_cur_batch_size-=1;
+				} else {
+					callback_data->nf_info->under_provisioned_for_slo+=1;
+					printf("Need More GPU pct1: %d to meet the SLO!!! LearnedSize: %d CPULatency: %d SLO: %d\n", callback_data->nf_info->gpu_percentage, callback_data->nf_info->learned_max_batch_size, cur_lat, (callback_data->nf_info->inference_slo_ms*1000));
+				}
+				callback_data->nf_info->learned_max_batch_size = callback_data->nf_info->adaptive_cur_batch_size;
+			}
+			/* Do we have sufficient head_room to decrease the batch_size? */ //Note: can be problematic say we have 8ms per img; 8 num_of_imgs_inferred, 64=current time and 50 SLO
+			else { //&& (callback_data->nf_info->adaptive_cur_batch_size > callback_data->nf_info->aiad_aimd_decrease_factor)
+				if( (decrease_factor < callback_data->nf_info->adaptive_cur_batch_size) ) {
+					callback_data->nf_info->adaptive_cur_batch_size -= decrease_factor;
+					callback_data->nf_info->learned_max_batch_size = callback_data->nf_info->adaptive_cur_batch_size;
+				}
+				/* No head room to decrease the batch_size? */
+				else {
+					if(callback_data->nf_info->adaptive_cur_batch_size >= 2) { //callback_data->nf_info->aiad_aimd_decrease_factor
+						callback_data->nf_info->adaptive_cur_batch_size--;
+						callback_data->nf_info->learned_max_batch_size = callback_data->nf_info->adaptive_cur_batch_size;
+					}
+					else {
+						//Must request to increase the Resource % for this NF
+						callback_data->nf_info->under_provisioned_for_slo+=1;
+						printf("Need More GPU pct2: %d to meet the SLO!!! LearnedSize: %d CPULatency: %d SLO: %d\n", callback_data->nf_info->gpu_percentage, callback_data->nf_info->learned_max_batch_size, cur_lat, (callback_data->nf_info->inference_slo_ms*1000));
+					}
+				}
+			}
+		}
+	}
+#endif
+	return;
+}
+#endif //NEW_LEARNING_BATCH_APPROACH
 void gpu_image_callback_function(void *data) {
 
 	//just update the stats here for now...
-	struct timespec call_back_time, image_timestamp;
+	struct timespec call_back_time, image_start_aggr_timestamp, image_ready_timestamp;
 	clock_gettime(CLOCK_MONOTONIC, &call_back_time);
 
 	struct gpu_callback *callback_data = (struct gpu_callback *) data;
@@ -1892,31 +2073,32 @@ void gpu_image_callback_function(void *data) {
 	/* we also have to clear the images status as inferred */
 	int num_of_images_inferred = __builtin_popcount(callback_data->bitmask_images);
 
-	printf("Batch Size: %d,",num_of_images_inferred);
-
 	int i;
 	int bit_position;
-	uint32_t latency = 0;
-	uint32_t temp_latency;
-	for( i = 0; i<num_of_images_inferred; i++) {
+	uint32_t temp_latency=0, nw_latency=0, cpu_latency=0;
 
+	uint32_t gpu_latency= (call_back_time.tv_sec-callback_data->start_time.tv_sec)*1000000+(call_back_time.tv_nsec-callback_data->start_time.tv_nsec)/1000;
+	hist_store_v2(&(callback_data->nf_info->gpu_latency),gpu_latency);
+
+	for( i = 0; i<num_of_images_inferred; i++) {
 		bit_position = ffs(callback_data->bitmask_images);
 		CLEAR_BIT(callback_data->batch_aggregation->ready_mask,(bit_position));
 		CLEAR_BIT(callback_data->bitmask_images,bit_position);
 		bit_position--; //as it reports bit position 0 as 1.
 		//printf("status[%d], The number of packets in the callback %d the bitmask is %x\n",callback_data->batch_aggregation->images[bit_position].usage_status, callback_data->batch_aggregation->images[bit_position].packets_count,callback_data->bitmask_images);
 
-		//also get the oldest timestamp.
-		image_timestamp = callback_data->batch_aggregation->images[bit_position].first_packet_time;
-		temp_latency = (call_back_time.tv_sec-image_timestamp.tv_sec)*1000000+(call_back_time.tv_nsec-image_timestamp.tv_nsec)/1000;
-		if(temp_latency>latency)
-		latency = temp_latency;
+		//compute the latencies for this batch across cpu, gpu and n/w.
+		image_start_aggr_timestamp = callback_data->batch_aggregation->images[bit_position].first_packet_time;
+		image_ready_timestamp = callback_data->batch_aggregation->images[bit_position].last_packet_time;
 
-		uint32_t gpu_latency = (call_back_time.tv_sec-callback_data->start_time.tv_sec)*1000000+(call_back_time.tv_nsec-callback_data->start_time.tv_nsec)/1000;
+		temp_latency = (call_back_time.tv_sec-image_ready_timestamp.tv_sec)*1000000+(call_back_time.tv_nsec-image_ready_timestamp.tv_nsec)/1000;
+		if(temp_latency>cpu_latency) cpu_latency = temp_latency;
+
+		temp_latency = (image_ready_timestamp.tv_sec - image_start_aggr_timestamp.tv_sec)*1000000+(image_ready_timestamp.tv_nsec - image_start_aggr_timestamp.tv_nsec)/1000;
+		if(temp_latency>nw_latency) nw_latency = temp_latency;
+
 		//printf("latency(ms):,%f \n batch_size,%d:", latency,num_of_images_inferred);
-		hist_store_v2(&(callback_data->nf_info->latency_histogram),temp_latency);
-		hist_store_v2(&(callback_data->nf_info->gpu_wait_time),gpu_latency);
-		
+
 #ifdef HOLD_PACKETS_TILL_CALLBACK
 		//REVERT FOR HOLDING THE PACKETS
 		int j=0;
@@ -1947,38 +2129,108 @@ void gpu_image_callback_function(void *data) {
 	}
 	//printf("Callback ended, we inferred %d images \n", num_of_images_inferred);
 	if(num_of_images_inferred) {
+		hist_store_v2(&(callback_data->nf_info->cpu_latency),cpu_latency);
+
 		//uint32_t latency = (call_back_time.tv_sec-callback_data->start_time.tv_sec)*1000000+(call_back_time.tv_nsec - callback_data->start_time.tv_nsec)/1000;
-	  
+
 		number_of_images_since_last_computation += num_of_images_inferred;
 		//printf("%d numbers of images processed %d \n",number_of_images_since_last_computation, num_of_images_inferred);
-	}
 
+		/** Adapt batch size to meet the SLO latency objective **/
+		if((callback_data->nf_info->inference_slo_ms) && (ADAPTIVE_BATCHING_SELF_LEARNING == callback_data->nf_info->enable_adaptive_batching)) {
+			callback_data->nf_info->batches_inferred_per_sec++;
+			if(0 == callback_data->nf_info->adaptive_cur_batch_size) {
+				callback_data->nf_info->adaptive_cur_batch_size=num_of_images_inferred;
+			}
+			uint32_t cur_lat = gpu_latency;		//cpu_latency;
+#ifdef NEW_LEARNING_BATCH_APPROACH
+			gpu_compute_batch_size_for_slo(data, (uint32_t)num_of_images_inferred, cur_lat);
+#else
+			/* Within the SLO range: Can opportunistically increase the batch size : But how much to increase by? Note: Opportunistic way could have aggregated lesser as well */
+			if((callback_data->nf_info->inference_slo_ms*1000) >= cur_lat) { //Compute the factor to increase based on linear interpolation?
+				if(num_of_images_inferred < callback_data->nf_info->adaptive_cur_batch_size) {
+					// no need to account for this result, as this is opportunistic obtained value; We already know better/higher value
+				}
+				else { //if (num_of_images_inferred > callback_data->nf_info->adaptive_cur_batch_size) {
+					callback_data->nf_info->adaptive_cur_batch_size = num_of_images_inferred;
+					uint8_t increase_factor = ((callback_data->nf_info->inference_slo_ms*1000)-cur_lat)/(cur_lat/num_of_images_inferred);
+					if(increase_factor == 0) {
+						if(((callback_data->nf_info->inference_slo_ms*1000) -cur_lat) > ((MIN_GAP_THRESHOLD*cur_lat)/(num_of_images_inferred*100))) {
+							callback_data->nf_info->adaptive_cur_batch_size += callback_data->nf_info->aiad_aimd_increase_factor;
+							callback_data->nf_info->learned_max_batch_size = callback_data->nf_info->adaptive_cur_batch_size;
+						} else
+						callback_data->nf_info->learned_max_batch_size = num_of_images_inferred;
+					}
+					//(increase_factor > callback_data->nf_info->aiad_aimd_increase_factor) &&
+					else {
+						if(((increase_factor + callback_data->nf_info->adaptive_cur_batch_size) < MAX_IMAGES_BATCH_SIZE)) {
+							callback_data->nf_info->adaptive_cur_batch_size += increase_factor;
+							callback_data->nf_info->learned_max_batch_size = callback_data->nf_info->adaptive_cur_batch_size;
+						}
+						else {
+							if((callback_data->nf_info->aiad_aimd_increase_factor + callback_data->nf_info->adaptive_cur_batch_size) < MAX_IMAGES_BATCH_SIZE) {
+								callback_data->nf_info->adaptive_cur_batch_size += callback_data->nf_info->aiad_aimd_increase_factor;
+								callback_data->nf_info->learned_max_batch_size = callback_data->nf_info->adaptive_cur_batch_size;
+							} else {
+								//This is when we can ask for resource to be toned down for this NF
+								callback_data->nf_info->over_provisioned_for_slo+=1;
+								printf("Have more than necessary GPU pct: %d to meet the SLO!!! LearnedSize: %d GPULatency: %d SLO: %d\n", callback_data->nf_info->gpu_percentage, callback_data->nf_info->learned_max_batch_size, cur_lat, (callback_data->nf_info->inference_slo_ms*1000));
+							}
+						}
+					}
+				}
+			}
+
+			/* Exceeding the SLO objective; Tone down the batch size */
+			else {
+				callback_data->nf_info->b_i_exceeding_slo_per_sec++;
+				// Check if we had estimate earlier and current is lower than estimated value
+				//if(num_of_images_inferred < callback_data->nf_info->adaptive_cur_batch_size) { //is this check necessary: we have exceeded, must reduce no matter what.
+				//callback_data->nf_info->adaptive_cur_batch_size = num_of_images_inferred;
+				//}
+				/*
+				 if(1 == num_of_images_inferred) {
+				 callback_data->nf_info->learned_max_batch_size = callback_data->nf_info->adaptive_cur_batch_size;
+				 }
+				 else*/{
+					uint8_t decrease_factor = (cur_lat - (callback_data->nf_info->inference_slo_ms*1000))/(cur_lat/num_of_images_inferred);
+					if(decrease_factor == 0) {
+						if((callback_data->nf_info->adaptive_cur_batch_size >=2) && (cur_lat > ((callback_data->nf_info->inference_slo_ms*1000)*(100+MAX_OVERFLOW_THRESHOLD)/100))) {
+							callback_data->nf_info->adaptive_cur_batch_size-=1;
+						} else {
+							callback_data->nf_info->under_provisioned_for_slo+=1;
+							printf("Need More GPU pct1: %d to meet the SLO!!! LearnedSize: %d CPULatency: %d SLO: %d\n", callback_data->nf_info->gpu_percentage, callback_data->nf_info->learned_max_batch_size, cur_lat, (callback_data->nf_info->inference_slo_ms*1000));
+						}
+						callback_data->nf_info->learned_max_batch_size = callback_data->nf_info->adaptive_cur_batch_size;
+					}
+					/* Do we have sufficient head_room to decrease the batch_size? */ //Note: can be problematic say we have 8ms per img; 8 num_of_imgs_inferred, 64=current time and 50 SLO
+					else { //&& (callback_data->nf_info->adaptive_cur_batch_size > callback_data->nf_info->aiad_aimd_decrease_factor)
+						if( (decrease_factor < callback_data->nf_info->adaptive_cur_batch_size) ) {
+							callback_data->nf_info->adaptive_cur_batch_size -= decrease_factor;
+							callback_data->nf_info->learned_max_batch_size = callback_data->nf_info->adaptive_cur_batch_size;
+						}
+						/* No head room to decrease the batch_size? */
+						else {
+							if(callback_data->nf_info->adaptive_cur_batch_size >= 2) { //callback_data->nf_info->aiad_aimd_decrease_factor
+								callback_data->nf_info->adaptive_cur_batch_size--;
+								callback_data->nf_info->learned_max_batch_size = callback_data->nf_info->adaptive_cur_batch_size;
+							}
+							else {
+								//Must request to increase the Resource % for this NF
+								callback_data->nf_info->under_provisioned_for_slo+=1;
+								printf("Need More GPU pct2: %d to meet the SLO!!! LearnedSize: %d CPULatency: %d SLO: %d\n", callback_data->nf_info->gpu_percentage, callback_data->nf_info->learned_max_batch_size, cur_lat, (callback_data->nf_info->inference_slo_ms*1000));
+							}
+						}
+					}
+				}
+			}
+#endif //NEW_LEARNING_BATCH_APPROACH
+		}
+	}
+	//long timestamp = call_back_time.tv_sec*1000000+call_back_time.tv_nsec/1000;
+	//printf("Timestamp: %ld TotalImages: %d BatchSize: %d LearnedSize: %d CPULatency: %d GPULatency: %d SLO: %d\n",timestamp, number_of_images_since_last_computation, num_of_images_inferred, callback_data->nf_info->learned_max_batch_size, cpu_latency, gpu_latency,(callback_data->nf_info->inference_slo_ms*1000));
 	return_device_buffer(callback_data->stream_track->id);
 	return_stream(callback_data->stream_track);
-
-	/*
-	 callback_data->ready_image->timestamps[3] = call_back_time;
-	 //get the stats updated and then delete the image
-	 callback_data->nf_info->number_of_images_processed++;
-	 //decrease the number of packets the image had
-	 #ifdef ONVM_GPU_SAME_SIZE_PKTS
-	 callback_data->nf_info->number_of_pkts_outstanding -= NUM_IN_PKTS;
-	 #endif
-
-	 //now compute GPU only time in callback
-	 //we do not need this time yet
-
-	 //put the time in histogram
-	 hist_store_v2(&(callback_data->nf_info->end_to_end_image_processing_time),(uint32_t)time_difference_usec(&(callback_data->ready_image->timestamps[0]),&(callback_data->ready_image->timestamps[4])));
-	 //store the time of execution only
-	 hist_store_v2(&(callback_data->nf_info->end_to_end_image_processing_time),(uint32_t)time_difference_usec(&(callback_data->ready_image->timestamps[2]),&(callback_data->ready_image->timestamps[4])));
-
-	 //we can delete the image now
-	 delete_image(callback_data->ready_image, callback_data->nf_info);
-
-	 //reduce the number of elements in gpu queue
-	 num_elements_in_gpu_queue--;
-	 */
 }
 
 /* initializes the images... 
@@ -2120,11 +2372,22 @@ void gpu_image_callback_function(void *data) {
 //timer function for inference Aditya check
 static void conduct_inference(__attribute__((unused)) struct rte_timer *ptr_timer,void * info) {
 	struct onvm_nf_info *nf_info = (struct onvm_nf_info *) info;
-	//hist_compute_v2(&(nf_info->latency_histogram));
+
 	uint32_t throughput = (number_of_images_since_last_computation*1000/NF_INFERENCE_PERIOD_MS);
-	uint32_t latency_median = hist_extract_v2(&nf_info->latency_histogram,VAL_TYPE_MEDIAN);
-	uint32_t gpu_latency = hist_extract_v2(&nf_info->gpu_wait_time, VAL_TYPE_MEDIAN);
-	printf("%"PRIu32",%"PRIu32",%"PRIu32"\n",throughput,gpu_latency,latency_median);
+	uint32_t cpu_latency = hist_extract_v2(&nf_info->cpu_latency,VAL_TYPE_99_PERCENTILE);
+	uint32_t gpu_latency = hist_extract_v2(&nf_info->gpu_latency, VAL_TYPE_99_PERCENTILE);
+
+	uint32_t batches_computed = nf_info->batches_inferred_per_sec*(1000/NF_INFERENCE_PERIOD_MS);
+	uint32_t batches_above_slo = nf_info->b_i_exceeding_slo_per_sec*(1000/NF_INFERENCE_PERIOD_MS);
+
+	nf_info->b_i_exceeding_slo_per_sec=0;
+	nf_info->batches_inferred_per_sec=0;
+
+	struct timespec timestamp;
+	clock_gettime(CLOCK_MONOTONIC, &timestamp);
+	uint64_t timestamp_64 = timestamp.tv_sec*1000000+timestamp.tv_nsec/1000;
+
+	printf("%"PRIu32",%"PRIu32",%"PRIu32",%"PRIu32",%"PRIu32",%d,%"PRIu64"\n",throughput,gpu_latency,cpu_latency, batches_computed, batches_above_slo,nf_info->ring_flag,timestamp_64);
 	number_of_images_since_last_computation = 0;
 }
 

@@ -38,6 +38,7 @@
  * bridge.c - send all packets from one port out the other.
  ********************************************************************/
 
+#include "Python.h"
 #include <unistd.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -64,8 +65,8 @@
 
 #include "onvm_nflib.h"
 #include "onvm_pkt_helper.h"
-#include "tensorrt_api.h"
 #include "onvm_ml_libraries.h"
+#include "python_helper_functions.h"
 
 #include <cuda_runtime.h>
 #include <cuda.h>
@@ -75,7 +76,7 @@
 
 #define NF_TAG "bridge"
 
-const char * percentage = "1";
+const char * percentage = "100";
 
 /* Struct that contains information about this NF */
 struct onvm_nf_info *nf_info;
@@ -271,16 +272,16 @@ int main(int argc, char *argv[]) {
 	//register_gpu_msg_handling_function(&function_to_process_gpu_message);
 
 	//create a struct of functions from the library to register with NFlib.
-	ml_fw_load_model load_mdl = tensorrt_load_model;
+	ml_fw_load_model load_mdl = python_load_model;
 	ml_functions.load_model_fptr = load_mdl;
-	ml_functions.link_model_fptr = tensorrt_link_model;
-	ml_functions.infer_batch_fptr = tensorrt_infer_batch;
+	ml_functions.link_model_fptr = python_link_model;
+	ml_functions.infer_batch_fptr = python_execute_model;
 	nflib_register_ml_fw_operations(&ml_functions);
 
 	//put in the batch size
 	//nf_info->user_batch_size = atoi(batchsize);
-	nf_info->user_batch_size = 1;
-
+	//nf_info->user_batch_size = 1;
+	
 	pid_t pid = getpid();
 
 	char huge_page_addr[128];

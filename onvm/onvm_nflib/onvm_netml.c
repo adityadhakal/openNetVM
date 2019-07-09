@@ -61,6 +61,7 @@ uint32_t data_aggregation(struct rte_mbuf *pkt, image_batched_aggregation_info_t
 			//printf("Image %d is complete \n", image->image_info.image_id);
 			SET_BIT(image_agg->ready_mask,(image_id+1));
 			SET_BIT(ready_images, (image_id+1));
+			clock_gettime(CLOCK_MONOTONIC, &image->last_packet_time);
 			//++(*ready_images_count);
 			//image_agg->ready_mask |= (1 << image_id);
 			//image_agg->temp_mask |= (1<<image_id);
@@ -82,7 +83,8 @@ uint32_t data_aggregation(struct rte_mbuf *pkt, image_batched_aggregation_info_t
 }
 
 /* the function to load and execute in GPU */
-void load_data_to_gpu_and_execute(struct onvm_nf_info *nf_info,image_batched_aggregation_info_t * batch_agg_info, ml_framework_operations_t *ml_operations, cudaHostFn_t callback_function, uint32_t new_images) {
+int load_data_to_gpu_and_execute(struct onvm_nf_info *nf_info,image_batched_aggregation_info_t * batch_agg_info, ml_framework_operations_t *ml_operations, cudaHostFn_t callback_function, uint32_t new_images) {
+	int ret = 0;
 	//prepare callback arguments
 	//first find the callback
 	//batch_agg_info->temp_mask = 0;
@@ -94,13 +96,18 @@ void load_data_to_gpu_and_execute(struct onvm_nf_info *nf_info,image_batched_agg
 
 	 printf("This function is called %d many times --------\n",how_many_times_called);
 	 */
-	__attribute__((unused)) static uint32_t last_processed_index = 0;//Note: need to use this to avoid starvation and not able to touch higher indexed imamges, when always overshooting.
+	__attribute__((unused)) static uint32_t last_processed_index = 0; //Note: need to use this to avoid starvation and not able to touch higher indexed imamges, when always overshooting.
+//	__attribute__((unused)) static onvm_interval_timer_t start_tsc = 0;
+//	__attribute__((unused)) static onvm_interval_timer_t end_tsc = 0;
+//	__attribute__((unused)) static uint64_t busy_interval_tsc = 0;
 
-	stream_tracker *cuda_stream = give_stream();
+	stream_tracker *cuda_stream = give_stream_v2();//give_stream();
 	if(cuda_stream != NULL) {
 
 		uint32_t i;
 		struct gpu_callback * callback_args = NULL;
+		callback_args = &cuda_stream->callback_info;
+#if 0  //This code is for explicit callback mode
 		for(i =0; i<MAX_STREAMS*PARALLEL_EXECUTION; i++) {
 			if(gpu_callbacks[i].status == 0) {
 				gpu_callbacks[i].status = 1;
@@ -108,8 +115,37 @@ void load_data_to_gpu_and_execute(struct onvm_nf_info *nf_info,image_batched_agg
 				break;
 			}
 		}
+		if(unlikely(NULL==callback_args)) {
+			printf("Failed to get callback args\n");
+			return_stream(cuda_stream);
+			return 2;
+		}
+#endif
 
-		uint32_t num_of_images = __builtin_popcount(new_images);
+		//Check if images were remaining last time; then pick them.
+		if(unlikely(0 == last_processed_index)) {last_processed_index = new_images;}
+		//for Freshness set (to avoid stale images comment below line
+		if(unlikely(nf_info->fixed_batch_size)) last_processed_index|=new_images;
+
+		uint32_t num_of_images = __builtin_popcount(last_processed_index);//(last_processed_index)?(__builtin_popcount(last_processed_index)):(__builtin_popcount(new_images));
+		//num_of_images = (nf_info->fixed_batch_size)? ((num_of_images>nf_info->fixed_batch_size)?(nf_info->fixed_batch_size):(num_of_images)):(num_of_images);
+		if(unlikely(nf_info->fixed_batch_size)) {
+			if(num_of_images > nf_info->fixed_batch_size) num_of_images = nf_info->fixed_batch_size;
+			else {
+				return_stream(cuda_stream);
+				return 0;
+			}
+		}
+		/* Should Adaptive batching be learning or not? */
+		else if (ADAPTIVE_BATCHING_SELF_LEARNING == nf_info->enable_adaptive_batching) {
+			// Check and cap to max batch size that is learnt and determined to not exceed SLO for the current operating settings
+			if((nf_info->learned_max_batch_size) && (num_of_images > nf_info->learned_max_batch_size)) num_of_images = nf_info->learned_max_batch_size;
+			//if((nf_info->learned_max_batch_size) && (num_of_images > nf_info->learned_max_batch_size)) num_of_images = nf_info->learned_max_batch_size;
+		}
+
+		uint32_t temp_bitmask = last_processed_index;//(last_processed_index)?(last_processed_index):(new_images);
+		//uint32_t num_of_images = __builtin_popcount(new_images);
+
 		void *in_buffers[MAX_IMAGES_PER_PARTITION] = {NULL,};
 		void *out_buffers[MAX_IMAGES_PER_PARTITION] = {NULL,};
 		void *in_cpu_buffers[MAX_IMAGES_PER_PARTITION] = {NULL,};
@@ -121,16 +157,15 @@ void load_data_to_gpu_and_execute(struct onvm_nf_info *nf_info,image_batched_agg
 		void * cpu_side_buffer = NULL;
 		void * cpu_side_output = NULL;
 
-		uint32_t temp_bitmask = new_images;
 		for(i=0; i< num_of_images; i++) {
 			//now get the GPU buffer for each image
 			give_device_addresses(cuda_stream->id, &input_dev_buffer, &output_dev_buffer);
 			if(NULL == input_dev_buffer || NULL == output_dev_buffer) break;
-			last_processed_index=0;
+			//last_processed_index=0;
 			int index = ffs(temp_bitmask);
 			CLEAR_BIT(temp_bitmask, index);
 			SET_BIT(actual_images_in_batch_bitmask, index);
-			SET_BIT(last_processed_index, index);
+			//SET_BIT(last_processed_index, index);
 			actual_images_in_batch++;
 			in_buffers[i] = input_dev_buffer;
 			out_buffers[i] = output_dev_buffer;
@@ -141,7 +176,7 @@ void load_data_to_gpu_and_execute(struct onvm_nf_info *nf_info,image_batched_agg
 			out_cpu_buffers[i] = cpu_side_output;
 
 		}
-		printf("number of images ready %d, can_be_processed=%d index of image %d \n", num_of_images, actual_images_in_batch, ffs(new_images)-1);
+		//printf("number of images ready %d, can_be_processed=%d index of image %d \n", num_of_images, actual_images_in_batch, ffs(new_images)-1);
 
 		//prepare execution arguments
 		callback_args->bitmask_images= actual_images_in_batch_bitmask;//actual_images_in_batch;//new_images;
@@ -150,8 +185,8 @@ void load_data_to_gpu_and_execute(struct onvm_nf_info *nf_info,image_batched_agg
 		callback_args->nf_info = nf_info;
 		clock_gettime(CLOCK_MONOTONIC, &(callback_args->start_time));
 
-		void * start_dev_buffer = NULL;
-		void * start_output_buffer = NULL;
+		void * start_dev_buffer = in_buffers[0];
+		void * start_output_buffer = out_buffers[0];
 
 		for(i = 0; i< actual_images_in_batch; i++) { //for(i = 0; i<num_of_images; i++) {
 			//find which image is ready
@@ -166,8 +201,6 @@ void load_data_to_gpu_and_execute(struct onvm_nf_info *nf_info,image_batched_agg
 				// for CPU buffer case
 				//give_cpu_addresses(cuda_stream->id,&cpu_side_buffer, &cpu_side_output);
 
-				start_dev_buffer = in_buffers[i];//input_dev_buffer;
-				start_output_buffer = out_buffers[i];//output_dev_buffer;
 				cpu_side_buffer = in_cpu_buffers[i];
 				cpu_side_output = out_cpu_buffers[i];
 
@@ -178,15 +211,18 @@ void load_data_to_gpu_and_execute(struct onvm_nf_info *nf_info,image_batched_agg
 					//change the status
 					batch_agg_info->images[image_index].usage_status = 3;
 
+					#define ENABLE_GPU_NETML
+#ifdef ENABLE_GPU_NETML
 					//NetML transfer
-					//transfer_to_gpu((void *)(batch_agg_info->images[image_index].image_info.copy_info),batch_agg_info->images[image_index].packets_count,input_dev_buffer,&(cuda_stream->stream));
-
+					transfer_to_gpu((void *)(batch_agg_info->images[image_index].image_info.copy_info),batch_agg_info->images[image_index].packets_count,in_buffers[i],&(cuda_stream->stream));
+#else
 					//Copy Transfer
-					transfer_to_gpu_copy((void *)(batch_agg_info->images[image_index].image_info.copy_info),batch_agg_info->images[image_index].packets_count,cpu_side_buffer,input_dev_buffer,&(cuda_stream->stream));
-					CLEAR_BIT(actual_images_in_batch_bitmask, (image_index+1));//CLEAR_BIT(new_images, (image_index+1));
+					transfer_to_gpu_copy((void *)(batch_agg_info->images[image_index].image_info.copy_info),batch_agg_info->images[image_index].packets_count,cpu_side_buffer,in_buffers[i],&(cuda_stream->stream));
+#endif
+
+					CLEAR_BIT(actual_images_in_batch_bitmask, (image_index+1));	//CLEAR_BIT(new_images, (image_index+1));
 					CLEAR_BIT(batch_agg_info->ready_mask, (image_index+1));
-					//local_bitmask &= (0<<image_index);//TODO: Comment it out
-					//callback_batch_info |= (1<<image_index);
+					CLEAR_BIT(last_processed_index, (image_index+1));
 
 					//printf("After posting image ready mask %"PRIu32",final_batch size %d \n", batch_agg_info->ready_mask, final_batch_size);
 				}
@@ -195,11 +231,6 @@ void load_data_to_gpu_and_execute(struct onvm_nf_info *nf_info,image_batched_agg
 					//printf("we could not get the GPU buffer\n");
 					break;
 				}
-
-			}
-			if(0 == nf_info->adaptive_batching) {
-				callback_args->bitmask_images ^= actual_images_in_batch_bitmask; //new_images;
-				break;
 			}
 		}
 
@@ -220,18 +251,29 @@ void load_data_to_gpu_and_execute(struct onvm_nf_info *nf_info,image_batched_agg
 		infer_params.input_size = SIZE_OF_AN_IMAGE_BYTES*infer_params.batch_size;
 		infer_params.output = start_output_buffer;
 
+
+		//struct timespec time_image_ready;
+		//clock_gettime(CLOCK_MONOTONIC, &time_image_ready);
+		//uint64_t image_ready_time = (time_image_ready.tv_sec)*1000000+(time_image_ready.tv_nsec)/1000;
+		//printf("Image ready at time %"PRIu64"\n",image_ready_time);
+
 		//conduct the inference.
 		void * aio = NULL;
 		//NO work in tensorrt now
 
+		//struct timespec begin_infer, end_infer;
+		//clock_gettime(CLOCK_MONOTONIC, &begin_infer);
 		ml_operations->infer_batch_fptr(&infer_params,aio );
+		cudaEventRecord(cuda_stream->event,cuda_stream->stream);
+		//clock_gettime(CLOCK_MONOTONIC, &end_infer);
 
+		//uint64_t infer_time = (end_infer.tv_sec-begin_infer.tv_sec)*1000000+(end_infer.tv_nsec-begin_infer.tv_nsec)/1000;
+		//printf("Inference launch time (us) %"PRIu64" \n", infer_time);
+	} else {
+		//printf("GPU IS BUSY\n");
+		return 1;// indicates busy
 	}
-	/*
-	 else {
-	 printf("GPU IS BUSY\n");
-	 }
-	 */
+	return ret;
 }
 
 /*

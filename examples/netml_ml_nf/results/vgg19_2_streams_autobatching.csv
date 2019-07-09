@@ -1,0 +1,246 @@
+sudo /home/adhak001/dev/openNetVM_sameer/examples/netml_ml_nf/build/app/bridge -l 10 -n 3 --proc-type=secondary -- -r 1 -n 1 -m 9 --
+EAL: Probing VFIO support...
+EAL: VFIO support initialized
+EAL: PCI device 0000:19:00.0 on NUMA socket 0
+EAL:   probe driver: 8086:1572 net_i40e
+EAL: PCI device 0000:19:00.1 on NUMA socket 0
+EAL:   probe driver: 8086:1572 net_i40e
+EAL: PCI device 0000:19:00.2 on NUMA socket 0
+EAL:   probe driver: 8086:1572 net_i40e
+EAL: PCI device 0000:19:00.3 on NUMA socket 0
+EAL:   probe driver: 8086:1572 net_i40e
+EAL: PCI device 0000:af:00.0 on NUMA socket 1
+EAL:   probe driver: 19ee:4000 net_nfp_pf
+original instance id 1 
+The instance ID of the nf is 1 and associated id 9
+NF_1_BATCH_AGG_POOL_NAME
+ address 0x17ff35980mempool get retval 0 
+Resolved CPU Dev Buffer 
+cur_index:1, action:4, destination:0
+
+APP: Waiting for manager to assign an ID...
+WAIT_TIME(INIT-->START): 3243995485 ns
+APP: Using Instance ID 1
+APP: Using Service ID 1
+
+ NF cgroup name and path: nf_1, /sys/fs/cgroup/cpu/nf_1/
+ CMD_TO_CREATE_CGROUP_for_NF: 1, mkdir /sys/fs/cgroup/cpu/nf_1
+ CMD_TO_ADD_NF_TO_CGROUP: echo 14169 > /sys/fs/cgroup/cpu/nf_1/tasks
+ CMD_TO_SET_CPU_SHARE: echo 1024 > /sys/fs/cgroup/cpu/nf_1/cpu.sharesNF on core=10 added to cgroup: nf_1, ret=0Timer subsystem init
+WAIT_TIME(INIT-->START-->Init_end): 3395516575 ns
+APP: Finished Process Init.
+huge_pages address 140000000
+ pointer 0x140000000 
+Can use host pointer for registered mem 1
+
+Client process 1 handling packets
+[Press Ctrl-C to quit ...]
+APP: Waiting for manager to put to RUN state...
+GPU model is 9
+NF using GPU
+Linking the cuda memhandles from (nil) 
+registered cuda memory mem-addr 0x140000000 size 1073741824 cuda error 0 
+Could not register memory mem-addr 0x980000000 size 1073741824 cuda error 1 
+Could not register memory mem-addr 0x11c0000000 size 1073741824 cuda error 1 
+Could not register memory mem-addr 0x1a00000000 size 1073741824 cuda error 1 
+Total time taken to register the mempages to cuda is 29507.338000 micro-seconds 
+Buffer size 629282648
+Resolved GPU Dev Buffer 
+WAIT_TIME(START-->RUN): 8908143069 ns
+WAIT_TIME(INIT-->START-->RUN-->RUNNING): 12313554379 ns
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+0,0,0
+80,0,0
+170,58321,86543
+200,57118,83278
+190,57118,82625
+170,55113,81319
+200,54712,81319
+200,54712,81319
+200,54712,81319
+190,54712,81319
+170,54712,80666
+200,54311,80666
+190,54311,80666
+210,54311,80666
+190,54311,80666
+170,54311,80666
+200,54311,80666
+190,54311,80666
+170,54311,80666
+200,54311,80666
+200,54311,80666
+200,54311,80013
+190,54311,80666
+170,54311,80666
+200,54311,80013
+200,54311,80013
+200,54311,80013
+190,54311,80013
+170,54311,80666
+200,54311,80013
+190,54311,80013
+210,54311,80013
+190,54311,80013
+170,54311,80013
+200,54311,80013
+190,54311,80013
+170,54311,80013
+200,54311,80013
+200,54311,80013
+200,54311,80013
+190,54311,80013
+170,54311,80013
+200,54311,80013
+200,54311,80013
+200,54311,80013
+190,54311,80013
+170,54311,80013
+200,54311,80013
+190,54311,80013
+210,54311,80013
+190,54311,80013
+170,54311,80013
+200,54311,80013
+190,54311,80013
+170,54311,80013
+200,54311,80013
+200,54311,80013
+200,54311,80013
+190,54311,80013
+170,54311,80013
+200,54311,80013
+200,54311,80013
+200,54311,80013
+190,54311,80013
+170,54311,80013
+200,54311,80013
+190,54311,80013
+210,53910,80013
+190,53910,80013
+170,53910,80013
+200,53910,80013
+190,53910,80013
+170,53910,80013
+200,53910,80013
+200,53910,80013
+200,53910,80013
+190,53910,80013
+170,53910,80013
+200,53910,80013
+200,53910,80013
+200,53910,80013
+190,53910,80013
+170,53910,80013
+200,53910,80013
+190,53910,80013
+210,53910,80013
+190,53910,80013
+170,53910,80013
+200,53910,80013
+190,53910,80013
+170,53910,80013
+230,53910,80013
+170,53910,80013
+200,53910,80013
+190,53910,80013
+170,53910,80013
+200,53910,80013
+200,53910,80013
+200,53910,80013
+190,53910,80013
+170,53910,80013
+200,53910,80013
+190,53910,80013
+210,53910,80013
+190,53910,80013
+170,53910,80013
+200,53910,80013
+190,53910,80013
+80,53910,80013
+
+ NF is Exiting...!
+If we reach here, program is ending

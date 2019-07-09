@@ -82,8 +82,13 @@ struct onvm_nf_info *nf_info;
 
 /* ML related variables */
 //static char *input_file_name = NULL;
-static char *batchsize = NULL;
+
 static char *gpu_percent = NULL;
+
+static uint32_t inference_slo_ms; // inference SLO
+static uint32_t fixed_batch_size; //user batch size
+static uint32_t adaptive_batching_flag; //adaptive batching flag. 0-no adaptive batching, 1 - adaptive batching with GPU, 2- learned adaptive batching
+
 void * cpu_func_ptr = NULL;
 void * gpu_func_ptr = NULL;
 
@@ -95,52 +100,53 @@ static uint32_t print_delay = 1000000;
 /*
  * Print a usage message
  */
-static void
-usage(const char *progname) {
-        printf("Usage: %s [EAL args] -- [NF_LIB args] -- -p <print_delay> -f <file_name> -m <model_name>\n\n", progname);
+static void usage(const char *progname) {
+	printf(
+			"Usage: %s [EAL args] -- [NF_LIB args] -- -p <print_delay> -a <adaptive_batching_flag [0,1,2]> -b <fixed_batch_size> -s <inference_slo (ms)>\n\n",
+			progname);
 }
 
 /*
  * Parse the application arguments.
  */
-static int
-parse_app_args(int argc, char *argv[], const char *progname) {
-        int c;
+static int parse_app_args(int argc, char *argv[], const char *progname) {
+	int c;
 
-        while ((c = getopt (argc, argv, "p:b:g:")) != -1) {
-                switch (c) {
-                case 'p':
-                        print_delay = strtoul(optarg, NULL, 10);
-                        break;
-			/*
-		case 'f':
-		        input_file_name = optarg;
-		        break;
-		case 'm':
-		        ml_model = optarg;
-		        break;
-			*/
+	while ((c = getopt(argc, argv, "p:b:g:a:s:")) != -1) {
+		switch (c) {
+		case 'p':
+			print_delay = strtoul(optarg, NULL, 10);
+			break;
+		case 'a':
+                         adaptive_batching_flag = strtoul(optarg,NULL,10);
+			 break; 
+			
 		case 'b':
-		  batchsize = optarg;
-		  break;
+		        fixed_batch_size = strtoul(optarg,NULL,10);
+			break;
+		case 's':
+		        inference_slo_ms = strtoul(optarg, NULL, 10);
+        		break;
 		case 'g':
-		  gpu_percent = optarg;
-		  break;
-                case '?':
-                        usage(progname);
-                        if (optopt == 'p')
-                                RTE_LOG(INFO, APP, "Option -%c requires an argument.\n", optopt);
-                        else if (isprint(optopt))
-                                RTE_LOG(INFO, APP, "Unknown option `-%c'.\n", optopt);
-                        else
-                                RTE_LOG(INFO, APP, "Unknown option character `\\x%x'.\n", optopt);
-                        return -1;
-                default:
-                        usage(progname);
-                        return -1;
-                }
-        }
-        return optind;
+			gpu_percent = optarg;
+			break;
+		case '?':
+			usage(progname);
+			if (optopt == 'p')
+				RTE_LOG(INFO, APP, "Option -%c requires an argument.\n",
+						optopt);
+			else if (isprint (optopt))
+				RTE_LOG(INFO, APP, "Unknown option `-%c'.\n", optopt);
+			else
+				RTE_LOG(INFO, APP, "Unknown option character `\\x%x'.\n",
+						optopt);
+			return -1;
+		default:
+			usage(progname);
+			return -1;
+		}
+	}
+	return optind;
 }
 
 /*
@@ -150,128 +156,131 @@ parse_app_args(int argc, char *argv[], const char *progname) {
  * than one lcore enabled.
  */
 /*
-static void
-do_stats_display(struct rte_mbuf* pkt) {
-  const char clr[] = { 27, '[', '2', 'J', '\0' };
-        const char topLeft[] = { 27, '[', '1', ';', '1', 'H', '\0' };
-        static uint64_t pkt_process = 0;
+ static void
+ do_stats_display(struct rte_mbuf* pkt) {
+ const char clr[] = { 27, '[', '2', 'J', '\0' };
+ const char topLeft[] = { 27, '[', '1', ';', '1', 'H', '\0' };
+ static uint64_t pkt_process = 0;
 
-        struct ipv4_hdr* ip;
+ struct ipv4_hdr* ip;
 
-        pkt_process += print_delay;
+ pkt_process += print_delay;
 
-        // Clear screen and move to top left 
-        printf("%s%s", clr, topLeft);
+ // Clear screen and move to top left 
+ printf("%s%s", clr, topLeft);
 
-        printf("PACKETS\n");
-        printf("-----\n");
-        printf("Port : %d\n", pkt->port);
-        printf("Size : %d\n", pkt->pkt_len);
-        printf("Type : %d\n", pkt->packet_type);
-        printf("Number of packet processed : %"PRIu64"\n", pkt_process);
+ printf("PACKETS\n");
+ printf("-----\n");
+ printf("Port : %d\n", pkt->port);
+ printf("Size : %d\n", pkt->pkt_len);
+ printf("Type : %d\n", pkt->packet_type);
+ printf("Number of packet processed : %"PRIu64"\n", pkt_process);
 
-        ip = onvm_pkt_ipv4_hdr(pkt);
-        if(ip != NULL) {
-                onvm_pkt_print(pkt);
-        }
-        else {
-                printf("Not IP4\n");
-        }
+ ip = onvm_pkt_ipv4_hdr(pkt);
+ if(ip != NULL) {
+ onvm_pkt_print(pkt);
+ }
+ else {
+ printf("Not IP4\n");
+ }
 
-        printf("\n\n");
-}
-*/
-static int
-packet_handler(struct rte_mbuf *pkt, struct onvm_pkt_meta *meta, __attribute__((unused)) struct onvm_nf_info *nf_info) {
-  //printf("packet addr : %p \n", pkt);
-  //printf("--Packet arrived-- \n");
-  static uint32_t counter = 0;
-        if (counter++ == print_delay) {
-	  //                do_stats_display(pkt);
-                counter = 0;
-        }
+ printf("\n\n");
+ }
+ */
+static int packet_handler(struct rte_mbuf *pkt, struct onvm_pkt_meta *meta,
+		__attribute__((unused))  struct onvm_nf_info *nf_info) {
+	//printf("packet addr : %p \n", pkt);
+	//printf("--Packet arrived-- \n");
+	static uint32_t counter = 0;
+	if (counter++ == print_delay) {
+		//                do_stats_display(pkt);
+		counter = 0;
+	}
 
 	//copying the packet data to the right buffer ...
 	//THis functionality has been moved to onvm_nflib
-	if(onvm_pkt_ipv4_hdr(pkt) != NULL){
-	  //void * packet_data = rte_pktmbuf_mtod_offset(pkt, void *, sizeof(struct ether_hdr)+sizeof(struct ipv4_hdr)+sizeof(struct udp_hdr));
-	  //copy_data_to_image_batch(packet_data, nf_info,nf_info->user_batch_size);
+	if (onvm_pkt_ipv4_hdr(pkt) != NULL) {
+		//void * packet_data = rte_pktmbuf_mtod_offset(pkt, void *, sizeof(struct ether_hdr)+sizeof(struct ipv4_hdr)+sizeof(struct udp_hdr));
+		//copy_data_to_image_batch(packet_data, nf_info,nf_info->user_batch_size);
 	}
-	
-        if (pkt->port == 0) {
-                meta->destination = 1;
-        }
-        else {
-                meta->destination = 0;
-        }
-        meta->action = ONVM_NF_ACTION_NEXT;
-        return 0;
+
+	if (pkt->port == 0) {
+		meta->destination = 1;
+	} else {
+		meta->destination = 0;
+	}
+	meta->action = ONVM_NF_ACTION_NEXT;
+	return 0;
 }
 
-void cuda_register_memseg_info(void){
+void cuda_register_memseg_info(void) {
 
-  //get the memory config
-  struct rte_config * rte_config = rte_eal_get_configuration();
+	//get the memory config
+	struct rte_config * rte_config = rte_eal_get_configuration();
 
-  //now get the memory locations
-  struct rte_mem_config * memory_config = rte_config->mem_config;
+	//now get the memory locations
+	struct rte_mem_config * memory_config = rte_config->mem_config;
 
-  int i;
-  struct timespec begin,end;
-  clock_gettime(CLOCK_MONOTONIC, &begin);
-  cudaError_t cudaerror;
-  printf("RTE_MAX_MEMSEG_LIST %d \n", RTE_MAX_MEMSEG_LISTS);
-    printf("RTE_MAX_MEMSEG__PER_LIST %d \n", RTE_MAX_MEMSEG_PER_LIST);
-  for(i = 0; i<RTE_MAX_MEMSEG_LISTS; i++){
-    struct rte_memseg_list *memseg_ptr = &(memory_config->memsegs[i]);
-    if(memseg_ptr->page_sz > 0 && memseg_ptr->socket_id == (int)rte_socket_id()){
-      //printf("Pointer to huge page %p and size of the page %"PRIu64"\n",memseg_ptr->base_va, memseg_ptr->page_sz);
-      cudaerror = cudaHostRegister(memseg_ptr->base_va, memseg_ptr->page_sz, cudaHostRegisterDefault);
-      if(cudaerror != cudaSuccess){
-	printf("Failed to pin error %d\n", cudaerror);
-      }
-    }
-  }
-  clock_gettime(CLOCK_MONOTONIC, &end);
-  double time_taken_to_register = (end.tv_sec-begin.tv_sec)*1000000.0 + (end.tv_nsec-begin.tv_nsec)/1000.0;
-  printf("Total time taken to register the mempages to cuda is %f micro-seconds \n",time_taken_to_register);
-    
+	int i;
+	struct timespec begin, end;
+	clock_gettime(CLOCK_MONOTONIC, &begin);
+	cudaError_t cudaerror;
+	printf("RTE_MAX_MEMSEG_LIST %d \n", RTE_MAX_MEMSEG_LISTS);
+	printf("RTE_MAX_MEMSEG__PER_LIST %d \n", RTE_MAX_MEMSEG_PER_LIST);
+	for (i = 0; i < RTE_MAX_MEMSEG_LISTS; i++) {
+		struct rte_memseg_list *memseg_ptr = &(memory_config->memsegs[i]);
+		if (memseg_ptr->page_sz > 0
+				&& memseg_ptr->socket_id == (int) rte_socket_id()) {
+			//printf("Pointer to huge page %p and size of the page %"PRIu64"\n",memseg_ptr->base_va, memseg_ptr->page_sz);
+			cudaerror = cudaHostRegister(memseg_ptr->base_va,
+					memseg_ptr->page_sz, cudaHostRegisterDefault);
+			if (cudaerror != cudaSuccess) {
+				printf("Failed to pin error %d\n", cudaerror);
+			}
+		}
+	}
+	clock_gettime(CLOCK_MONOTONIC, &end);
+	double time_taken_to_register = (end.tv_sec - begin.tv_sec) * 1000000.0
+			+ (end.tv_nsec - begin.tv_nsec) / 1000.0;
+	printf(
+			"Total time taken to register the mempages to cuda is %f micro-seconds \n",
+			time_taken_to_register);
+
 }
 
 ml_framework_operations_t ml_functions;
 
 int main(int argc, char *argv[]) {
-        int arg_offset;
-
+	int arg_offset;
 
 	const char *progname = argv[0];
-	
 
-        if ((arg_offset = onvm_nflib_init(argc, argv, NF_TAG, &nf_info)) < 0)
-                return -1;
-        argc -= arg_offset;
-        argv += arg_offset;
+	if ((arg_offset = onvm_nflib_init(argc, argv, NF_TAG, &nf_info)) < 0)
+		return -1;
+	argc -= arg_offset;
+	argv += arg_offset;
 
-        if (parse_app_args(argc, argv, progname) < 0) {
-                onvm_nflib_stop(nf_info);
-                rte_exit(EXIT_FAILURE, "Invalid command-line arguments\n");
-        }
+	if (parse_app_args(argc, argv, progname) < 0) {
+		onvm_nflib_stop(nf_info);
+		rte_exit(EXIT_FAILURE, "Invalid command-line arguments\n");
+	}
+	if(gpu_percent != NULL){
+	  nf_info->gpu_percentage = atoi(gpu_percent);
+	}
+	nf_info->enable_adaptive_batching = adaptive_batching_flag;
 
-	nf_info->gpu_percentage = 100;
-	nf_info->adaptive_batching = 1;
-	
+	nf_info->inference_slo_ms = inference_slo_ms;
 	//just for netml experiments
-	/*
-	setenv("CUDA_MPS_ACTIVE_THREAD_PERCENTAGE",percentage,1);
-	
-	int num_sms = 0;
-	cudaDeviceGetAttribute(&num_sms,cudaDevAttrMultiProcessorCount,0);
-	printf("Number of sms %d\n",num_sms);
-	*/
-	
-	//register the funtion for processing the GPU related message from manager
-	//register_gpu_msg_handling_function(&function_to_process_gpu_message);
 
+	printf("gpu percent %s\n",gpu_percent);
+
+	setenv("CUDA_MPS_ACTIVE_THREAD_PERCENTAGE", gpu_percent, 1);
+
+	int num_sms = 0;
+	cudaDeviceGetAttribute(&num_sms, cudaDevAttrMultiProcessorCount, 0);
+	printf("Number of sms %d\n", num_sms);
+
+	
 	//create a struct of functions from the library to register with NFlib.
 	ml_fw_load_model load_mdl = tensorrt_load_model;
 	ml_functions.load_model_fptr = load_mdl;
@@ -281,45 +290,59 @@ int main(int argc, char *argv[]) {
 
 	//put in the batch size
 	//nf_info->user_batch_size = atoi(batchsize);
-	nf_info->user_batch_size = 1;
 
+	//getting the batch size from user
+	nf_info->fixed_batch_size = fixed_batch_size; //0 = adaptive batching... max size is 8.
+
+	printf("User Flags Set:\n Adaptive_Batching: %"PRIu32"\n Fixed_Batch_size: %"PRIu32"\n ML OPS SLO: %"PRIu32"(ms)\n",adaptive_batching_flag, fixed_batch_size, inference_slo_ms);
+	
+	/*
 	pid_t pid = getpid();
 
 	char huge_page_addr[128];
 	char answer[128];
 	//a better method came along.. to use environ and put it in the file
-	sprintf(huge_page_addr, "grep \"kernelpagesize_kB=1048576\" /proc/%d/numa_maps | awk '{print $1;}'",pid);
+	sprintf(huge_page_addr,
+			"grep \"kernelpagesize_kB=1048576\" /proc/%d/numa_maps | awk '{print $1;}'",
+			pid);
 
 	FILE* fp;
 	fp = popen(huge_page_addr, "r");
-	if(fp == NULL){
-	  printf("Failed to run command\n");
-	  exit(1);
+	if (fp == NULL) {
+		printf("Failed to run command\n");
+		exit(1);
+	}
+	
+	
+
+	// now load the output in the path 
+	while (fgets(answer, sizeof(answer) - 1, fp) != NULL) {
+		//printf("%s", path);
 	}
 
-	/* now load the output in the path */
-	while(fgets(answer, sizeof(answer)-1, fp) != NULL){
-	  //printf("%s", path);
-	}
-
-	/* close the file */
+	// close the file 
 	pclose(fp);
 
 	unsigned long ul;
-	sscanf(answer,"%lx", &ul);
-	
+	sscanf(answer, "%lx", &ul);
 
-	printf("huge_pages address %s pointer %p \n",answer, (void *)ul);
+	printf("huge_pages address %s pointer %p \n", answer, (void *) ul);
 	//cudaError_t cudaerror;
 	//cudaerror = cudaHostRegister((void *) ul, (1024*1024*1024), cudaHostRegisterDefault);
 	//if(cudaerror == cudaSuccess)
 	//printf("memory pinned-------\n");
 	//receive packets.
- 
+	*/
+
 	int answer2;
-	cudaDeviceGetAttribute(&answer2,cudaDevAttrCanUseHostPointerForRegisteredMem, 0);
-	printf("Can use host pointer for registered mem %d\n",answer2);
+	cudaDeviceGetAttribute(&answer2,
+			cudaDevAttrCanUseHostPointerForRegisteredMem, 0);
+	printf("Can use host pointer for registered mem %d\n", answer2);
 	onvm_nflib_run(nf_info, &packet_handler);
-        printf("If we reach here, program is ending\n");
-        return 0;
+	printf("If we reach here, program is ending\n");
+	struct timespec death_time;
+	clock_gettime(CLOCK_MONOTONIC, &death_time);
+	uint64_t death_time_us = (death_time.tv_sec)*1000000+(death_time.tv_nsec)/1000;
+	printf("Time this NF died %"PRIu64"\n",death_time_us);
+	return 0;
 }

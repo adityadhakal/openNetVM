@@ -1,6 +1,12 @@
 #include <stdio.h>
 #include <cuda_runtime.h>
 #include "onvm_stream.h"
+#include <inttypes.h>
+#include <cuda_runtime.h>
+#include "onvm_common.h"
+
+//Remove the below array.. and make an array that will rather store the pair of image data and nf_info pointers
+struct gpu_callback gpu_callbacks[MAX_STREAMS * PARALLEL_EXECUTION];
 
 stream_tracker streams_track[MAX_STREAMS];
 
@@ -21,12 +27,29 @@ int init_streams(void) {
 		}
 		streams_track[i].status = PARALLEL_EXECUTION;
 		streams_track[i].id = i;
+		cudaEventCreate(&streams_track[i].event);
 	}
 	return 0;
 }
 
 //int status_tracker[MAX_STREAMS];
-
+stream_tracker *give_stream_v2(void) {
+	stream_tracker *st = give_stream();
+	int i = 0;
+	cudaError_t cuda_ret;
+	if (!st) {
+		//check and return null of retry give_stream();
+		for(i = 0; i<MAX_STREAMS; i++){
+			cuda_ret = cudaEventQuery(streams_track[i].event);
+			if(cuda_ret == cudaSuccess){
+				//we can run callback here.
+				gpu_image_callback_function(&streams_track[i].callback_info);
+			}
+		}
+		st = give_stream();
+	}
+	return st;
+}
 /* if the stream is available, then the stream will return otherwise it will return NULL, the client need to figure out what to do then */
 stream_tracker *give_stream(void) {
 	int i;

@@ -2,7 +2,7 @@
 #define _ONVM_ML_LIBRARIES_H
 #include <cuda_runtime.h>
 
-#define NUMBER_OF_MODELS 10
+#define NUMBER_OF_MODELS 11
 typedef struct nflib_ml_fw_load_params_t {
 	const char* file_path;
 	uint32_t file_len;

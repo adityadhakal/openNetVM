@@ -163,7 +163,9 @@ void transfer_to_gpu_copy(void * data_ptrs, int num_of_payload_data, void *cpu_d
   //now as the packets data is copied into CPU buffer, we can cuda memcpy it into GPU
   //cudaMemcpyAsync(gpu_destination, cpu_destination, total_bytes, cudaMemcpyHostToDevice, *stream);
   //clock_gettime(CLOCK_MONOTONIC, &begin_cudamemcpy);
+
   cudaMemcpyAsync(gpu_destination, cpu_destination, total_bytes, cudaMemcpyHostToDevice, *stream);
+
   //clock_gettime(CLOCK_MONOTONIC, &end_cudamemcpy);
   //float cpu_copy_time = (end_cpu_copy.tv_sec-begin_cpu_copy.tv_sec)*1000.0+(end_cpu_copy.tv_nsec-begin_cpu_copy.tv_nsec)/1000000.0;
   //float cudamemcpy_time = (end_cudamemcpy.tv_sec-begin_cudamemcpy.tv_sec)*1000.0+(end_cudamemcpy.tv_nsec-begin_cudamemcpy.tv_nsec)/1000000.0;

@@ -38,7 +38,9 @@ void python_initialize(){
   
 
 int python_load_model(nflib_ml_fw_load_params_t *load_params, void *aio){
+  python_initialize();
   printf("loaded python model \n");
+  return 0;
 }
 
 /* create a GPU buffer for image as well as load the model to GPU */

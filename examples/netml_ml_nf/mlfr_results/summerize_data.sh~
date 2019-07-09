@@ -1,0 +1,14 @@
+#! /bin/bash
+
+for models in alexnet resnet50 vgg19
+do
+    output_file="${models}_summary.csv"
+    rm $output_file
+
+    printf "#Data for %s "$models >$output_file
+    printf "#rows 1-MPS only, 2-Netml, 3-2 streams, 4-batch of 2, 5-batch of 4, 6-batch of 8, 7 adaptive batching">$output_file
+    for files in *$models*
+    do
+	cat $output_file
+    done
+done
